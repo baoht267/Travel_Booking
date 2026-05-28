@@ -1,9 +1,12 @@
 import { useRef } from 'react'
 import { Button, Card, Col, Container, Row } from 'react-bootstrap'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import SearchForm from '../components/search/SearchForm'
-import { selectRecentSearches } from '../features/stays/staysSlice'
+import {
+  selectRecentSearches,
+  updateCriteria,
+} from '../features/stays/staysSlice'
 
 const heroImage =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAEaX7BYrbtMiJw9VM_FHU3k2oOl6JYXlXsFlenG-leP24eJWDQMp2hHt8rHetzJECtH_yHcka5vjUQuvTMVAsP9Di3tqYeEHBp7Zmd3_k0ZOS_RMHSsPCCExULTcxaaO10LWMCY3ADCLl69VtDPAtZQxRxSnRQlifvZzyu-JPpvt99UjX0rdHML2JFISMcT6Ua5czTAWbpW32N-USVmPgTYw-YmROJtBY2ZKawkorO5Hm3m85ychhzbfeJtWVqDIWvfHf1_XcicY8J'
@@ -15,6 +18,7 @@ const trendingDestinations = [
   {
     id: 'tokyo',
     city: 'Tokyo',
+    country: 'Japan',
     flag: 'JP',
     properties: '4,521 properties',
     image:
@@ -24,6 +28,7 @@ const trendingDestinations = [
   {
     id: 'paris',
     city: 'Paris',
+    country: 'France',
     flag: 'FR',
     properties: '3,890 properties',
     image:
@@ -33,6 +38,7 @@ const trendingDestinations = [
   {
     id: 'london',
     city: 'London',
+    country: 'United Kingdom',
     flag: 'UK',
     properties: '5,102 properties',
     image:
@@ -42,6 +48,7 @@ const trendingDestinations = [
   {
     id: 'new-york',
     city: 'New York',
+    country: 'United States',
     flag: 'US',
     properties: '2,445 properties',
     image:
@@ -51,6 +58,7 @@ const trendingDestinations = [
   {
     id: 'dubai',
     city: 'Dubai',
+    country: 'United Arab Emirates',
     flag: 'AE',
     properties: '1,980 properties',
     image:
@@ -107,6 +115,8 @@ const unforgettableTours = [
 ]
 
 function HomePage() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const recentSearches = useSelector(selectRecentSearches)
   const tourRailRef = useRef(null)
 
@@ -119,6 +129,16 @@ function HomePage() {
       left: direction * 320,
       behavior: 'smooth',
     })
+  }
+
+  const handleTrendingDestinationClick = (event, destination) => {
+    event.preventDefault()
+    dispatch(
+      updateCriteria({
+        destination: `${destination.country}, ${destination.city}`,
+      }),
+    )
+    navigate('/search')
   }
 
   return (
@@ -156,6 +176,7 @@ function HomePage() {
               key={destination.id}
               to="/search"
               className={`destination-tile destination-tile-${destination.layout}`}
+              onClick={(event) => handleTrendingDestinationClick(event, destination)}
             >
               <img
                 src={destination.image}

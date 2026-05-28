@@ -21,6 +21,15 @@ function AppHeader() {
       return `nav-pill${location.pathname === '/saved' ? ' nav-pill-active' : ''}`
     }
 
+    if (tabName === 'car-rentals') {
+      return `nav-pill${
+        (location.pathname === '/search' && activeTab === 'car-rentals') ||
+        location.pathname.startsWith('/cars/')
+          ? ' nav-pill-active'
+          : ''
+      }`
+    }
+
     return `nav-pill${
       location.pathname === '/search' && activeTab === tabName ? ' nav-pill-active' : ''
     }`

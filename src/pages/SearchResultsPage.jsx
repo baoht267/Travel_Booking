@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import FilterSidebar from '../components/search/FilterSidebar'
 import StayCard from '../components/stay/StayCard'
 import { selectCriteria, selectFilteredStays } from '../features/stays/staysSlice'
 import { formatDestinationLabel, parseDestinationQuery } from '../utils/locationSearch'
+import CarRentalsPage from './CarRentalsPage'
 
-function SearchResultsPage() {
+function StaysSearchResultsContent() {
   const criteria = useSelector(selectCriteria)
   const filteredStays = useSelector(selectFilteredStays)
   const [sortBy, setSortBy] = useState('Top Picks')
@@ -117,6 +118,17 @@ function SearchResultsPage() {
       </div>
     </Container>
   )
+}
+
+function SearchResultsPage() {
+  const [searchParams] = useSearchParams()
+  const activeTab = searchParams.get('tab')
+
+  if (activeTab === 'car-rentals') {
+    return <CarRentalsPage />
+  }
+
+  return <StaysSearchResultsContent />
 }
 
 export default SearchResultsPage

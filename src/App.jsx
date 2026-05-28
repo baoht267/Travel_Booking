@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import AuthPage from './pages/AuthPage'
 import AppFooter from './components/layout/AppFooter'
 import AppHeader from './components/layout/AppHeader'
+import CarRentalCheckoutPage from './pages/CarRentalCheckoutPage'
 import CheckoutPage from './pages/CheckoutPage'
 import HotelDetailsPage from './pages/HotelDetailsPage'
 import HomePage from './pages/HomePage'
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/cars/:carId/checkout" element={<CarRentalCheckoutPage />} />
           <Route path="/checkout/:stayId" element={<CheckoutPage />} />
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/saved" element={<SavedPage />} />
