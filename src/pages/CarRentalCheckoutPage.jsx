@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Alert, Button, Container, Form } from 'react-bootstrap'
-import { useSearchParams, Navigate, useParams } from 'react-router-dom'
+import { useSearchParams, Navigate, useParams, useNavigate } from 'react-router-dom'
 import mockCars from '../data/mockCars'
 import { readSession } from '../utils/authSession'
 
@@ -22,7 +22,7 @@ function getRentalDays(pickupAt, dropoffAt) {
 function formatDateTimeLabel(value) {
   const date = new Date(value)
 
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('vi-VN', {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -48,22 +48,22 @@ function splitFullName(fullName) {
 const optionalExtras = [
   {
     id: 'insurance',
-    title: 'Full Insurance Coverage',
-    subtitle: 'Zero excess and theft protection',
+    title: 'Bảo Hiểm Toàn Diện',
+    subtitle: 'Không mức miễn thường và bảo vệ chống trộm',
     pricePerDay: 15,
     icon: 'shield',
   },
   {
     id: 'gps',
-    title: 'GPS Navigation System',
-    subtitle: 'Pre-loaded local maps',
+    title: 'Hệ Thống Định Vị GPS',
+    subtitle: 'Bản đồ địa phương được tải sẵn',
     pricePerDay: 8,
     icon: 'map',
   },
   {
     id: 'child-seat',
-    title: 'Child Safety Seat',
-    subtitle: 'ISOFIX compatible, age 2-7',
+    title: 'Ghế An Toàn Trẻ Em',
+    subtitle: 'Tương thích ISOFIX, trẻ 2-7 tuổi',
     pricePerDay: 12,
     icon: 'sentiment_satisfied',
   },
@@ -73,6 +73,7 @@ function CarRentalCheckoutPage() {
   const { carId } = useParams()
   const [searchParams] = useSearchParams()
   const session = useMemo(() => readSession(), [])
+  const navigate = useNavigate()
 
   const car = mockCars.find((item) => item.id === carId)
 
@@ -127,20 +128,28 @@ function CarRentalCheckoutPage() {
 
   return (
     <Container className="page-section car-checkout-page">
+      <button
+        type="button"
+        className="car-checkout-back-btn"
+        onClick={() => navigate(-1)}
+      >
+        <span className="material-symbols-outlined">arrow_back</span>
+        Quay lại
+      </button>
       <div className="car-checkout-stepper">
         <div className="car-checkout-step is-active">
           <span>1</span>
-          <strong>Details</strong>
+          <strong>Chi Tiết</strong>
         </div>
         <span className="car-checkout-step-line"></span>
         <div className="car-checkout-step is-current">
           <span>2</span>
-          <strong>Payment</strong>
+          <strong>Thanh Toán</strong>
         </div>
         <span className="car-checkout-step-line"></span>
         <div className="car-checkout-step">
           <span>3</span>
-          <strong>Confirmation</strong>
+          <strong>Xác Nhận</strong>
         </div>
       </div>
 
@@ -148,7 +157,7 @@ function CarRentalCheckoutPage() {
         <section className="car-checkout-main">
           {submitted && (
             <Alert variant="success" className="mb-4">
-              Car rental booking confirmed for {car.name}. This is a mock checkout flow.
+              Đặt xe đã được xác nhận cho {car.name}. Đây là luồng thanh toán mẫu.
             </Alert>
           )}
 
@@ -156,52 +165,52 @@ function CarRentalCheckoutPage() {
             <div className="car-checkout-panel">
               <h2>
                 <span className="material-symbols-outlined">person</span>
-                Primary Driver Details
+                Thông Tin Tài Xế Chính
               </h2>
 
               <div className="car-checkout-grid">
                 <div className="car-checkout-field">
-                  <label htmlFor="driver-first-name">First name</label>
+                  <label htmlFor="driver-first-name">Tên</label>
                   <input
                     id="driver-first-name"
                     name="firstName"
                     value={formValues.firstName}
                     onChange={handleFieldChange}
-                    placeholder="e.g. John"
+                    placeholder="vd. Văn A"
                     required
                   />
                 </div>
                 <div className="car-checkout-field">
-                  <label htmlFor="driver-last-name">Last name</label>
+                  <label htmlFor="driver-last-name">Họ</label>
                   <input
                     id="driver-last-name"
                     name="lastName"
                     value={formValues.lastName}
                     onChange={handleFieldChange}
-                    placeholder="e.g. Smith"
+                    placeholder="vd. Nguyễn"
                     required
                   />
                 </div>
                 <div className="car-checkout-field">
-                  <label htmlFor="driver-email">Email address</label>
+                  <label htmlFor="driver-email">Địa chỉ email</label>
                   <input
                     id="driver-email"
                     name="email"
                     type="email"
                     value={formValues.email}
                     onChange={handleFieldChange}
-                    placeholder="john.smith@example.com"
+                    placeholder="nguyenvana@example.com"
                     required
                   />
                 </div>
                 <div className="car-checkout-field">
-                  <label htmlFor="driver-phone">Phone number</label>
+                  <label htmlFor="driver-phone">Số điện thoại</label>
                   <input
                     id="driver-phone"
                     name="phone"
                     value={formValues.phone}
                     onChange={handleFieldChange}
-                    placeholder="+1 234 567 8900"
+                    placeholder="+84 0 000 000 000"
                     required
                   />
                 </div>
@@ -211,7 +220,7 @@ function CarRentalCheckoutPage() {
             <div className="car-checkout-panel">
               <h2>
                 <span className="material-symbols-outlined">add_circle</span>
-                Optional Extras
+                Dịch Vụ Tùy Chọn
               </h2>
 
               <div className="car-checkout-extras">
@@ -232,7 +241,7 @@ function CarRentalCheckoutPage() {
                         <strong>{extra.title}</strong>
                         <span>{extra.subtitle}</span>
                       </div>
-                      <div className="car-extra-price">+${formatMoney(extra.pricePerDay)} / day</div>
+                      <div className="car-extra-price">+${formatMoney(extra.pricePerDay)} / ngày</div>
                       <span className="car-extra-toggle"></span>
                     </button>
                   )
@@ -244,7 +253,7 @@ function CarRentalCheckoutPage() {
               <div className="car-checkout-panel-head">
                 <h2>
                   <span className="material-symbols-outlined">credit_card</span>
-                  Payment Information
+                  Thông Tin Thanh Toán
                 </h2>
                 <div className="car-checkout-cards">
                   <span>VISA</span>
@@ -253,19 +262,19 @@ function CarRentalCheckoutPage() {
               </div>
 
               <div className="car-checkout-field">
-                <label htmlFor="cardholder-name">Cardholder name</label>
+                <label htmlFor="cardholder-name">Tên chủ thẻ</label>
                 <input
                   id="cardholder-name"
                   name="cardholderName"
                   value={formValues.cardholderName}
                   onChange={handleFieldChange}
-                  placeholder="As written on card"
+                  placeholder="Tên như trên thẻ"
                   required
                 />
               </div>
 
               <div className="car-checkout-field">
-                <label htmlFor="card-number">Card number</label>
+                <label htmlFor="card-number">Số thẻ</label>
                 <div className="car-checkout-card-input">
                   <input
                     id="card-number"
@@ -281,7 +290,7 @@ function CarRentalCheckoutPage() {
 
               <div className="car-checkout-grid car-checkout-grid-tight">
                 <div className="car-checkout-field">
-                  <label htmlFor="expiry-date">Expiry date</label>
+                  <label htmlFor="expiry-date">Ngày hết hạn</label>
                   <input
                     id="expiry-date"
                     name="expiryDate"
@@ -323,15 +332,15 @@ function CarRentalCheckoutPage() {
               <div className="car-checkout-summary-specs">
                 <span>
                   <span className="material-symbols-outlined">person</span>
-                  {car.seats} Seats
+                  {car.seats} Chỗ Ngồi
                 </span>
                 <span>
                   <span className="material-symbols-outlined">work</span>
-                  {car.bags} Bags
+                  {car.bags} Túi
                 </span>
                 <span>
                   <span className="material-symbols-outlined">ac_unit</span>
-                  A/C
+                  Điều Hòa
                 </span>
               </div>
 
@@ -339,7 +348,7 @@ function CarRentalCheckoutPage() {
                 <div>
                   <span className="material-symbols-outlined is-blue">location_on</span>
                   <div>
-                    <strong>Pick-up</strong>
+                    <strong>Nhận Xe</strong>
                     <p>{location}</p>
                     <p>{formatDateTimeLabel(pickupAt)}</p>
                   </div>
@@ -347,7 +356,7 @@ function CarRentalCheckoutPage() {
                 <div>
                   <span className="material-symbols-outlined is-red">location_on</span>
                   <div>
-                    <strong>Drop-off</strong>
+                    <strong>Trả Xe</strong>
                     <p>{location}</p>
                     <p>{formatDateTimeLabel(dropoffAt)}</p>
                   </div>
@@ -357,45 +366,45 @@ function CarRentalCheckoutPage() {
           </div>
 
           <div className="car-checkout-pricing-card">
-            <h4>Price Breakdown</h4>
+            <h4>Chi Tiết Giá</h4>
             <div className="car-checkout-price-row">
-              <span>Rental price ({rentalDays} days)</span>
+              <span>Giá thuê xe ({rentalDays} ngày)</span>
               <strong>${formatMoney(rentalPrice)}</strong>
             </div>
             <div className="car-checkout-price-row">
-              <span>Taxes & Fees</span>
+              <span>Thuế & Phí</span>
               <strong>${formatMoney(taxesAndFees)}</strong>
             </div>
             <div className="car-checkout-price-row">
-              <span>Airport Surcharge</span>
+              <span>Phụ Phí Sân Bay</span>
               <strong>${formatMoney(airportSurcharge)}</strong>
             </div>
             {extrasTotal > 0 && (
               <div className="car-checkout-price-row">
-                <span>Selected Extras</span>
+                <span>Dịch Vụ Đã Chọn</span>
                 <strong>${formatMoney(extrasTotal)}</strong>
               </div>
             )}
             <div className="car-checkout-total-row">
               <div>
-                <strong>Total Price</strong>
-                <small>Includes all taxes & fees</small>
+                <strong>Tổng Giá</strong>
+                <small>Đã bao gồm tất cả thuế & phí</small>
               </div>
               <span>${formatMoney(totalPrice)}</span>
             </div>
 
             <Button type="submit" form="car-rental-checkout-form" className="car-checkout-confirm-button">
-              Confirm Booking
+              Xác Nhận Đặt Chỗ
             </Button>
 
             <div className="car-checkout-guarantees">
               <div>
                 <span className="material-symbols-outlined is-green">verified_user</span>
-                <span>SSL secured payment gateway</span>
+                <span>Cổng thanh toán SSL an toàn</span>
               </div>
               <div>
                 <span className="material-symbols-outlined">handyman</span>
-                <span>No hidden booking fees</span>
+                <span>Không có phí ẩn khi đặt chỗ</span>
               </div>
             </div>
           </div>

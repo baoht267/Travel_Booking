@@ -56,7 +56,7 @@ function AuthPage() {
       if (!matchedUser || matchedUser.password !== loginForm.password) {
         setMessage({
           type: 'danger',
-          text: 'Invalid email or password. Try the registered account or create a new one.',
+          text: 'Email hoặc mật khẩu không hợp lệ. Thử tài khoản đã đăng ký hoặc tạo tài khoản mới.',
         })
         setIsSubmitting(false)
         return
@@ -70,7 +70,7 @@ function AuthPage() {
 
       setMessage({
         type: 'success',
-        text: `Welcome back, ${matchedUser.fullName}. Redirecting to home...`,
+        text: `Chào mừng trở lại, ${matchedUser.fullName}. Đang chuyển hướng về trang chủ...`,
       })
       setIsSubmitting(false)
       window.setTimeout(() => navigate('/'), 700)
@@ -90,7 +90,7 @@ function AuthPage() {
       if (emailExists) {
         setMessage({
           type: 'danger',
-          text: 'This email is already registered. Sign in instead or use a different address.',
+          text: 'Email này đã được đăng ký. Đăng nhập hoặc sử dụng địa chỉ khác.',
         })
         setIsSubmitting(false)
         return
@@ -118,7 +118,7 @@ function AuthPage() {
       })
       setMessage({
         type: 'success',
-        text: 'Account created. You can sign in now with your new credentials.',
+        text: 'Tài khoản đã được tạo. Bạn có thể đăng nhập ngay với thông tin đăng nhập mới.',
       })
       setIsSubmitting(false)
       switchMode('login')
@@ -135,8 +135,8 @@ function AuthPage() {
         <Card className="auth-card">
           <div className="auth-header">
             <div className="auth-logo-mark">{logoLetters}</div>
-            <h1 className="auth-title">Global Explorer</h1>
-            <p className="auth-subtitle">Your gateway to the world.</p>
+            <h1 className="auth-title">GOCHIP</h1>
+            <p className="auth-subtitle">Cổng thông tin đến thế giới của bạn.</p>
           </div>
 
           <div className="auth-tabs">
@@ -145,14 +145,14 @@ function AuthPage() {
               className={`auth-tab ${mode === 'login' ? 'auth-tab-active' : ''}`}
               onClick={() => switchMode('login')}
             >
-              Login
+              Đăng Nhập
             </button>
             <button
               type="button"
               className={`auth-tab ${mode === 'register' ? 'auth-tab-active' : ''}`}
               onClick={() => switchMode('register')}
             >
-              Register
+              Đăng Ký
             </button>
           </div>
 
@@ -166,13 +166,13 @@ function AuthPage() {
             {mode === 'login' ? (
               <Form onSubmit={handleLogin} className="auth-form-stack">
                 <Form.Group>
-                  <Form.Label className="auth-label">Email Address</Form.Label>
+                  <Form.Label className="auth-label">Địa Chỉ Email</Form.Label>
                   <div className="auth-input-shell">
                     <span className="material-symbols-outlined auth-input-icon">mail</span>
                     <Form.Control
                       type="email"
                       name="email"
-                      placeholder="name@company.com"
+                      placeholder="ten@congty.com"
                       className="auth-input"
                       value={loginForm.email}
                       onChange={updateLoginField}
@@ -183,9 +183,9 @@ function AuthPage() {
 
                 <Form.Group>
                   <div className="d-flex justify-content-between align-items-center mb-2">
-                    <Form.Label className="auth-label mb-0">Password</Form.Label>
+                    <Form.Label className="auth-label mb-0">Mật Khẩu</Form.Label>
                     <button type="button" className="auth-link-button">
-                      Forgot Password?
+                      Quên Mật Khẩu?
                     </button>
                   </div>
                   <div className="auth-input-shell">
@@ -206,26 +206,26 @@ function AuthPage() {
                   id="remember"
                   name="remember"
                   type="checkbox"
-                  label="Keep me signed in"
+                  label="Duy trì đăng nhập"
                   className="auth-check"
                   checked={loginForm.remember}
                   onChange={updateLoginField}
                 />
 
                 <Button type="submit" className="auth-primary-button" disabled={isSubmitting}>
-                  {isSubmitting ? 'Signing in...' : 'Sign In'}
+                  {isSubmitting ? 'Đang đăng nhập...' : 'Đăng Nhập'}
                 </Button>
               </Form>
             ) : (
               <Form onSubmit={handleRegister} className="auth-form-stack">
                 <Form.Group>
-                  <Form.Label className="auth-label">Full Name</Form.Label>
+                  <Form.Label className="auth-label">Họ và Tên</Form.Label>
                   <div className="auth-input-shell">
                     <span className="material-symbols-outlined auth-input-icon">person</span>
                     <Form.Control
                       type="text"
                       name="fullName"
-                      placeholder="John Doe"
+                      placeholder="Nguyễn Văn A"
                       className="auth-input"
                       value={registerForm.fullName}
                       onChange={updateRegisterField}
@@ -235,13 +235,13 @@ function AuthPage() {
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Label className="auth-label">Email Address</Form.Label>
+                  <Form.Label className="auth-label">Địa Chỉ Email</Form.Label>
                   <div className="auth-input-shell">
                     <span className="material-symbols-outlined auth-input-icon">mail</span>
                     <Form.Control
                       type="email"
                       name="email"
-                      placeholder="name@company.com"
+                      placeholder="ten@congty.com"
                       className="auth-input"
                       value={registerForm.email}
                       onChange={updateRegisterField}
@@ -251,13 +251,13 @@ function AuthPage() {
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Label className="auth-label">Password</Form.Label>
+                  <Form.Label className="auth-label">Mật Khẩu</Form.Label>
                   <div className="auth-input-shell">
                     <span className="material-symbols-outlined auth-input-icon">lock</span>
                     <Form.Control
                       type="password"
                       name="password"
-                      placeholder="Min. 8 characters"
+                      placeholder="Tối thiểu 8 ký tự"
                       className="auth-input"
                       value={registerForm.password}
                       onChange={updateRegisterField}
@@ -268,18 +268,21 @@ function AuthPage() {
                 </Form.Group>
 
                 <p className="auth-policy-copy">
-                  By registering, you agree to our <button type="button" className="auth-link-inline">Terms of Service</button> and{' '}
-                  <button type="button" className="auth-link-inline">Privacy Policy</button>.
+                  Khi đăng ký, bạn đồng ý với{' '}
+                  <button type="button" className="auth-link-inline">Điều Khoản Dịch Vụ</button>{' '}
+                  và{' '}
+                  <button type="button" className="auth-link-inline">Chính Sách Bảo Mật</button>{' '}
+                  của chúng tôi.
                 </p>
 
                 <Button type="submit" className="auth-primary-button" disabled={isSubmitting}>
-                  {isSubmitting ? 'Creating account...' : 'Create Account'}
+                  {isSubmitting ? 'Đang tạo tài khoản...' : 'Tạo Tài Khoản'}
                 </Button>
               </Form>
             )}
 
             <div className="auth-divider">
-              <span>Or continue with</span>
+              <span>Hoặc tiếp tục với</span>
             </div>
 
             <Row className="g-3">
@@ -299,7 +302,7 @@ function AuthPage() {
           </Card.Body>
 
           <div className="auth-footer">
-            Need help? Visit our <Link to="/" className="auth-footer-link">Help Center</Link>
+            Cần hỗ trợ? Truy cập <Link to="/" className="auth-footer-link">Trung Tâm Hỗ Trợ</Link> của chúng tôi
           </div>
         </Card>
       </Container>

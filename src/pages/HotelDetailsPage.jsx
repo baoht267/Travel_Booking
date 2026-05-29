@@ -33,206 +33,206 @@ const galleryByTheme = {
 
 const detailsByTheme = {
   sea: {
-    badge: 'Top Rated',
-    departure: 'Departs from private marina transfer',
-    aboutTitle: 'About this stay',
-    duration: '8 hours of curated experiences',
-    instantLabel: 'Instant confirmation',
-    languages: 'Live guide: English, Vietnamese',
+    badge: 'Được Đánh Giá Cao Nhất',
+    departure: 'Khởi hành từ bến tàu riêng',
+    aboutTitle: 'Về chỗ ở này',
+    duration: '8 giờ trải nghiệm được tuyển chọn',
+    instantLabel: 'Xác nhận ngay lập tức',
+    languages: 'Hướng dẫn trực tiếp: Tiếng Anh, Tiếng Việt',
     highlights: [
       {
-        title: 'Sunrise Coastline Cruise',
+        title: 'Hành Trình Dọc Bờ Biển Bình Minh',
         description:
-          'Start with a smooth harbor pickup and a guided cruise past the best shoreline viewpoints near your stay.',
+          'Bắt đầu với chuyến đón tàu suôn sẻ từ cảng và hành trình có hướng dẫn qua những điểm nhìn bờ biển đẹp nhất gần chỗ ở.',
       },
       {
-        title: 'Island Leisure Window',
+        title: 'Thời Gian Thư Giãn Trên Đảo',
         description:
-          'Spend flexible time swimming, relaxing, and using the resort concierge plan for optional island stops.',
+          'Dành thời gian linh hoạt để bơi lội, thư giãn, và sử dụng dịch vụ của khu nghỉ dưỡng cho các điểm dừng đảo tùy chọn.',
       },
       {
-        title: 'Sunset Dining & Return',
+        title: 'Bữa Tối Hoàng Hôn & Trở Về',
         description:
-          'Wrap the day with a premium waterfront dinner suggestion and a comfortable transfer back to the property.',
+          'Kết thúc ngày với gợi ý bữa tối cao cấp ven biển và chuyến đưa tiễn thoải mái trở về chỗ ở.',
       },
     ],
     reviewMetrics: [
-      ['Cleanliness', 9.2],
-      ['Professionalism', 9.5],
-      ['Value for Money', 8.4],
-      ['Location', 9.8],
+      ['Sạch Sẽ', 9.2],
+      ['Chuyên Nghiệp', 9.5],
+      ['Đáng Giá Tiền', 8.4],
+      ['Vị Trí', 9.8],
     ],
     guestReviews: [
       {
         initials: 'JD',
         name: 'Julianne Davies',
-        location: 'United Kingdom',
-        date: 'May 2024',
+        location: 'Vương Quốc Anh',
+        date: 'Tháng 5, 2024',
         score: '10',
         copy:
-          "Absolutely phenomenal stay. The staff was attentive and the sea views from the room were worth every minute.",
+          'Chỗ ở hoàn toàn tuyệt vời. Nhân viên chu đáo và tầm nhìn biển từ phòng rất xứng đáng với từng phút.',
       },
       {
         initials: 'ML',
         name: 'Marco Lombardi',
-        location: 'Italy',
-        date: 'June 2024',
+        location: 'Ý',
+        date: 'Tháng 6, 2024',
         score: '9.0',
         copy:
-          'Excellent organization and great staff. The waterfront breakfast setup was perfect for a slower luxury trip.',
+          'Tổ chức xuất sắc và nhân viên tuyệt vời. Bữa sáng ven bờ nước hoàn hảo cho chuyến đi sang trọng thư thái.',
       },
     ],
   },
   city: {
-    badge: 'Editor Pick',
-    departure: 'Close to major city landmarks',
-    aboutTitle: 'About this stay',
-    duration: 'Flexible city-break schedule',
-    instantLabel: 'Instant confirmation',
-    languages: 'Host support: English, Vietnamese',
+    badge: 'Lựa Chọn Biên Tập',
+    departure: 'Gần các mốc quan trọng của thành phố',
+    aboutTitle: 'Về chỗ ở này',
+    duration: 'Lịch trình linh hoạt cho kỳ nghỉ thành phố',
+    instantLabel: 'Xác nhận ngay lập tức',
+    languages: 'Hỗ trợ chủ nhà: Tiếng Anh, Tiếng Việt',
     highlights: [
       {
-        title: 'Check-in & Local Orientation',
+        title: 'Nhận Phòng & Hướng Dẫn Địa Phương',
         description:
-          'Arrive with an easy self-check-in flow, neighborhood notes, and curated dining picks around the property.',
+          'Đến với quy trình tự nhận phòng dễ dàng, ghi chú về khu phố, và các lựa chọn ăn uống được tuyển chọn xung quanh chỗ ở.',
       },
       {
-        title: 'Walkable District Access',
+        title: 'Tiếp Cận Khu Vực Đi Bộ',
         description:
-          'Use the central location for markets, cafes, and late-night food routes without needing long transfers.',
+          'Sử dụng vị trí trung tâm cho chợ, quán cà phê, và các tuyến ăn đêm mà không cần di chuyển xa.',
       },
       {
-        title: 'Comfortable Extended Stay Setup',
+        title: 'Thiết Lập Cho Kỳ Lưu Trú Dài Thoải Mái',
         description:
-          'Enjoy apartment-style amenities, quiet work corners, and a practical layout for couples or small groups.',
+          'Tận hưởng tiện nghi kiểu căn hộ, góc làm việc yên tĩnh, và bố cục thực tế cho các cặp đôi hoặc nhóm nhỏ.',
       },
     ],
     reviewMetrics: [
-      ['Cleanliness', 8.8],
-      ['Professionalism', 9.1],
-      ['Value for Money', 9.0],
-      ['Location', 9.6],
+      ['Sạch Sẽ', 8.8],
+      ['Chuyên Nghiệp', 9.1],
+      ['Đáng Giá Tiền', 9.0],
+      ['Vị Trí', 9.6],
     ],
     guestReviews: [
       {
         initials: 'AN',
         name: 'Anh Nguyen',
-        location: 'Vietnam',
-        date: 'April 2024',
+        location: 'Việt Nam',
+        date: 'Tháng 4, 2024',
         score: '9.2',
         copy:
-          'The location was excellent for exploring the old quarter. Clean room, smooth check-in, and very practical for two travelers.',
+          'Vị trí tuyệt vời để khám phá phố cổ. Phòng sạch, nhận phòng thuận lợi, và rất thực tế cho hai du khách.',
       },
       {
         initials: 'PS',
         name: 'Paolo Serra',
-        location: 'Italy',
-        date: 'May 2024',
+        location: 'Ý',
+        date: 'Tháng 5, 2024',
         score: '8.9',
         copy:
-          'Great base for a city trip. Cafes, street food, and key attractions were all within a short walk.',
+          'Căn cứ tuyệt vời cho chuyến du lịch thành phố. Quán cà phê, đồ ăn đường phố và các điểm tham quan đều trong tầm đi bộ.',
       },
     ],
   },
   nature: {
-    badge: 'Scenic Escape',
-    departure: 'Panoramic mountain access included',
-    aboutTitle: 'About this stay',
-    duration: 'Full-day nature itinerary support',
-    instantLabel: 'Instant confirmation',
-    languages: 'Host support: English, Local guide',
+    badge: 'Thoát Vào Thiên Nhiên',
+    departure: 'Bao gồm quyền tiếp cận núi toàn cảnh',
+    aboutTitle: 'Về chỗ ở này',
+    duration: 'Hỗ trợ lịch trình thiên nhiên cả ngày',
+    instantLabel: 'Xác nhận ngay lập tức',
+    languages: 'Hỗ trợ chủ nhà: Tiếng Anh, Hướng dẫn địa phương',
     highlights: [
       {
-        title: 'Arrival & Valley Views',
+        title: 'Đến Nơi & Ngắm Nhìn Thung Lũng',
         description:
-          'Settle into a scenic room with balcony access and a first look over mist-covered ridgelines.',
+          'Ổn định trong phòng có cảnh đẹp với ban công và cái nhìn đầu tiên về các đường đỉnh núi phủ sương mù.',
       },
       {
-        title: 'Guided Trek Planning',
+        title: 'Lên Kế Hoạch Trekking Có Hướng Dẫn',
         description:
-          'Coordinate day routes, transport, and local guide support directly through the lodge team.',
+          'Phối hợp các tuyến ngày, vận chuyển và hỗ trợ hướng dẫn địa phương trực tiếp qua đội ngũ nhà nghỉ.',
       },
       {
-        title: 'Slow Evening Return',
+        title: 'Trở Về Buổi Tối Thư Thái',
         description:
-          'Come back to a quieter property with warm dining options and uninterrupted mountain air.',
+          'Trở về chỗ ở yên tĩnh hơn với các lựa chọn ăn uống ấm áp và không khí núi trong lành.',
       },
     ],
     reviewMetrics: [
-      ['Cleanliness', 9.0],
-      ['Professionalism', 8.9],
-      ['Value for Money', 8.8],
-      ['Location', 9.7],
+      ['Sạch Sẽ', 9.0],
+      ['Chuyên Nghiệp', 8.9],
+      ['Đáng Giá Tiền', 8.8],
+      ['Vị Trí', 9.7],
     ],
     guestReviews: [
       {
         initials: 'LK',
         name: 'Lena Kovacs',
         location: 'Hungary',
-        date: 'March 2024',
+        date: 'Tháng 3, 2024',
         score: '9.1',
         copy:
-          'Beautiful sunrise views and genuinely peaceful surroundings. The team helped us organize trekking without any friction.',
+          'Tầm nhìn bình minh đẹp và môi trường thực sự yên bình. Đội ngũ đã giúp chúng tôi tổ chức trekking rất thuận lợi.',
       },
       {
         initials: 'TR',
         name: 'Thanh R.',
-        location: 'Vietnam',
-        date: 'April 2024',
+        location: 'Việt Nam',
+        date: 'Tháng 4, 2024',
         score: '8.8',
         copy:
-          'A strong choice if you want scenery first. Clean rooms, warm service, and a very calm atmosphere.',
+          'Lựa chọn tuyệt vời nếu bạn muốn phong cảnh là ưu tiên. Phòng sạch, dịch vụ ấm áp và bầu không khí rất yên bình.',
       },
     ],
   },
   sun: {
-    badge: 'Beachfront Favorite',
-    departure: 'Private beach access included',
-    aboutTitle: 'About this stay',
-    duration: 'Resort-style all-day access',
-    instantLabel: 'Instant confirmation',
-    languages: 'Host support: English, Vietnamese',
+    badge: 'Yêu Thích Bãi Biển',
+    departure: 'Bao gồm quyền tiếp cận bãi biển riêng',
+    aboutTitle: 'Về chỗ ở này',
+    duration: 'Quyền tiếp cận cả ngày kiểu khu nghỉ dưỡng',
+    instantLabel: 'Xác nhận ngay lập tức',
+    languages: 'Hỗ trợ chủ nhà: Tiếng Anh, Tiếng Việt',
     highlights: [
       {
-        title: 'Lagoon Arrival Experience',
+        title: 'Trải Nghiệm Đến Khu Lagoon',
         description:
-          'Start with a resort welcome, luggage support, and direct access to the beachfront zone.',
+          'Bắt đầu với sự chào đón của khu nghỉ dưỡng, hỗ trợ hành lý, và quyền tiếp cận trực tiếp vào khu vực ven biển.',
       },
       {
-        title: 'Relaxed Day by the Water',
+        title: 'Ngày Thư Giãn Bên Nước',
         description:
-          'Move between villas, pools, and the private beach with optional family-friendly activities.',
+          'Di chuyển giữa các biệt thự, hồ bơi và bãi biển riêng với các hoạt động thân thiện cho gia đình tùy chọn.',
       },
       {
-        title: 'Evening Sunset Dining',
+        title: 'Bữa Ăn Hoàng Hôn Buổi Tối',
         description:
-          'Finish with sunset-facing dinner recommendations and a quieter return to your villa.',
+          'Kết thúc với các gợi ý bữa tối hướng hoàng hôn và trở về biệt thự yên tĩnh hơn.',
       },
     ],
     reviewMetrics: [
-      ['Cleanliness', 9.4],
-      ['Professionalism', 9.2],
-      ['Value for Money', 8.9],
-      ['Location', 9.5],
+      ['Sạch Sẽ', 9.4],
+      ['Chuyên Nghiệp', 9.2],
+      ['Đáng Giá Tiền', 8.9],
+      ['Vị Trí', 9.5],
     ],
     guestReviews: [
       {
         initials: 'CM',
         name: 'Claire Martin',
-        location: 'France',
-        date: 'February 2024',
+        location: 'Pháp',
+        date: 'Tháng 2, 2024',
         score: '9.6',
         copy:
-          'Excellent resort for a warm-weather reset. The private beach and sunset-facing dining were the standout moments.',
+          'Khu nghỉ dưỡng tuyệt vời cho kỳ nghỉ thời tiết ấm áp. Bãi biển riêng và bữa ăn hướng hoàng hôn là những khoảnh khắc nổi bật.',
       },
       {
         initials: 'VT',
         name: 'Vu Tran',
-        location: 'Vietnam',
-        date: 'May 2024',
+        location: 'Việt Nam',
+        date: 'Tháng 5, 2024',
         score: '9.1',
         copy:
-          'Very easy for family travel. The pool, rooms, and beach access all felt thoughtfully planned.',
+          'Rất phù hợp cho du lịch gia đình. Hồ bơi, phòng và đường ra bãi biển đều được lên kế hoạch chu đáo.',
       },
     ],
   },
@@ -261,7 +261,7 @@ function HotelDetailsPage() {
   const detailContent = detailsByTheme[stay.theme] || detailsByTheme.city
   const gallery = [stay.image, ...(galleryByTheme[stay.theme] || galleryByTheme.city)]
   const baseTotal = stay.pricePerNight * travelerCount
-  const bookingFee = stay.perks.includes('Pay at property') ? 0 : stay.taxesAndFees
+  const bookingFee = stay.perks.includes('Thanh toán tại chỗ') ? 0 : stay.taxesAndFees
   const total = baseTotal + bookingFee
 
   return (
@@ -273,13 +273,13 @@ function HotelDetailsPage() {
         <div className="stay-detail-gallery-grid">
           {gallery.slice(1, 5).map((image, index) => (
             <div key={`${stay.id}-gallery-${index}`} className="stay-detail-gallery-tile">
-              <img src={image} alt={`${stay.name} view ${index + 2}`} />
+              <img src={image} alt={`${stay.name} góc nhìn ${index + 2}`} />
             </div>
           ))}
         </div>
         <button type="button" className="stay-detail-gallery-action">
           <span className="material-symbols-outlined">grid_view</span>
-          Show all photos
+          Xem tất cả ảnh
         </button>
       </section>
 
@@ -306,18 +306,18 @@ function HotelDetailsPage() {
           <section className="stay-detail-section">
             <h2>{detailContent.aboutTitle}</h2>
             <p>
-              {stay.description} This premium booking experience is designed for travelers who
-              want a smoother arrival, clearer logistics, and a more polished local base.
+              {stay.description} Trải nghiệm đặt phòng cao cấp này được thiết kế cho các du khách
+              muốn đến nơi thuận lợi hơn, hậu cần rõ ràng hơn, và căn cứ địa phương hoàn chỉnh hơn.
             </p>
             <p>
-              From curated amenities to better neighborhood access, the stay blends comfort and
-              pace well. Use it as a practical home base for sightseeing, dining, and easy daily
-              planning without overcomplicating the trip.
+              Từ các tiện nghi được tuyển chọn đến quyền tiếp cận khu phố tốt hơn, chỗ ở này
+              kết hợp sự thoải mái và nhịp độ tốt. Sử dụng như căn cứ thực tế để tham quan,
+              ăn uống và lên kế hoạch hàng ngày dễ dàng.
             </p>
           </section>
 
           <section className="stay-detail-section">
-            <h2>Tour Schedule & Highlights</h2>
+            <h2>Lịch Trình & Điểm Nổi Bật</h2>
             <div className="stay-detail-accordion">
               {detailContent.highlights.map((item, index) => {
                 const isOpen = activeHighlight === index
@@ -350,9 +350,9 @@ function HotelDetailsPage() {
 
           <section className="stay-detail-section">
             <div className="stay-detail-review-head">
-              <h2>Guest Reviews</h2>
+              <h2>Đánh Giá Của Khách</h2>
               <div className="stay-detail-review-score">
-                <span>{stay.reviewsCount.toLocaleString()} reviews</span>
+                <span>{stay.reviewsCount.toLocaleString()} đánh giá</span>
                 <strong>{stay.reviewScore}</strong>
               </div>
             </div>
@@ -397,14 +397,14 @@ function HotelDetailsPage() {
           <div className="stay-detail-booking-card">
             <div className="stay-detail-booking-price">
               <div>
-                <span>From</span>
+                <span>Từ</span>
                 <strong>€{formatPrice(stay.pricePerNight)}</strong>
               </div>
-              <small>per person</small>
+              <small>mỗi người</small>
             </div>
 
             <div className="stay-detail-booking-field">
-              <label htmlFor="detail-date">Select Date</label>
+              <label htmlFor="detail-date">Chọn Ngày</label>
               <div className="stay-detail-booking-input">
                 <input
                   id="detail-date"
@@ -417,7 +417,7 @@ function HotelDetailsPage() {
             </div>
 
             <div className="stay-detail-booking-field">
-              <label>Travelers</label>
+              <label>Du Khách</label>
               <div className="stay-detail-travelers">
                 <button
                   type="button"
@@ -425,7 +425,7 @@ function HotelDetailsPage() {
                 >
                   <span className="material-symbols-outlined">remove</span>
                 </button>
-                <strong>{travelerCount} adults</strong>
+                <strong>{travelerCount} người lớn</strong>
                 <button type="button" onClick={() => setTravelerCount((current) => current + 1)}>
                   <span className="material-symbols-outlined">add</span>
                 </button>
@@ -434,31 +434,31 @@ function HotelDetailsPage() {
 
             <div className="stay-detail-price-box">
               <div>
-                <span>€{formatPrice(stay.pricePerNight)} × {travelerCount} travelers</span>
+                <span>€{formatPrice(stay.pricePerNight)} × {travelerCount} du khách</span>
                 <strong>€{formatPrice(baseTotal)}</strong>
               </div>
               <div>
-                <span>Booking Fee</span>
-                <strong>{bookingFee === 0 ? 'Free' : `€${formatPrice(bookingFee)}`}</strong>
+                <span>Phí Đặt Chỗ</span>
+                <strong>{bookingFee === 0 ? 'Miễn Phí' : `€${formatPrice(bookingFee)}`}</strong>
               </div>
               <div className="stay-detail-price-total">
-                <span>Total</span>
+                <span>Tổng Cộng</span>
                 <strong>€{formatPrice(total)}</strong>
               </div>
             </div>
 
             <Button as={Link} to={`/checkout/${stay.id}`} className="stay-detail-book-now">
-              Book Now
+              Đặt Ngay
             </Button>
 
             <div className="stay-detail-trust-list">
               <div>
                 <span className="material-symbols-outlined is-success">verified</span>
-                <span>Free cancellation until 24h before</span>
+                <span>Hủy miễn phí trước 24 giờ</span>
               </div>
               <div>
                 <span className="material-symbols-outlined">schedule</span>
-                <span>Duration: {detailContent.duration}</span>
+                <span>Thời lượng: {detailContent.duration}</span>
               </div>
               <div>
                 <span className="material-symbols-outlined">bolt</span>

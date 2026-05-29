@@ -19,11 +19,11 @@ function FilterSidebar() {
   return (
     <Card className="search-filter-card">
       <Card.Body className="p-4">
-        <h2 className="search-filter-title">Filter by</h2>
+        <h2 className="search-filter-title">Lọc Theo</h2>
 
         <div className="search-filter-block">
           <label className="search-filter-label" htmlFor="destination-filter">
-            Destination (Country, City)
+            Điểm Đến (Quốc Gia, Thành Phố)
           </label>
           <div className="search-filter-input-wrap">
             <span className="material-symbols-outlined search-filter-icon">search</span>
@@ -41,7 +41,7 @@ function FilterSidebar() {
 
         <div className="search-filter-block">
           <label className="search-filter-label" htmlFor="price-range">
-            Price Range (per night)
+            Khoảng Giá (mỗi đêm)
           </label>
           <Form.Range
             id="price-range"
@@ -55,18 +55,18 @@ function FilterSidebar() {
             }
           />
           <div className="search-filter-range-labels">
-            <span>EUR0</span>
-            <span>EUR1,000+</span>
+            <span>0 EUR</span>
+            <span>1.000 EUR+</span>
           </div>
         </div>
 
         <div className="search-filter-block">
-          <div className="search-filter-label">Guest Rating</div>
+          <div className="search-filter-label">Đánh Giá Khách</div>
           <div className="search-filter-options">
             <Form.Check
               id="rating-9"
               type="checkbox"
-              label="9+ Superb"
+              label="9+ Xuất Sắc"
               checked={filters.minReviewScore === 9}
               onChange={(event) =>
                 dispatch(updateFilters({ minReviewScore: event.target.checked ? 9 : 0 }))
@@ -75,7 +75,7 @@ function FilterSidebar() {
             <Form.Check
               id="rating-8"
               type="checkbox"
-              label="8+ Very Good"
+              label="8+ Rất Tốt"
               checked={filters.minReviewScore === 8}
               onChange={(event) =>
                 dispatch(updateFilters({ minReviewScore: event.target.checked ? 8 : 0 }))
@@ -84,7 +84,7 @@ function FilterSidebar() {
             <Form.Check
               id="rating-7"
               type="checkbox"
-              label="7+ Good"
+              label="7+ Tốt"
               checked={filters.minReviewScore === 7}
               onChange={(event) =>
                 dispatch(updateFilters({ minReviewScore: event.target.checked ? 7 : 0 }))
@@ -94,7 +94,7 @@ function FilterSidebar() {
         </div>
 
         <div className="search-filter-block mb-0">
-          <div className="search-filter-label">Category</div>
+          <div className="search-filter-label">Danh Mục</div>
           <div className="search-filter-options">
             {categories.map((category) => (
               <Form.Check

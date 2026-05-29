@@ -19,7 +19,7 @@ function getRentalDays(pickupAt, dropoffAt) {
 }
 
 function normalizeSearchLabel(value) {
-  return value.trim() || 'All destinations'
+  return value.trim() || 'Tất cả điểm đến'
 }
 
 function CarRentalsPage() {
@@ -39,7 +39,7 @@ function CarRentalsPage() {
     maxDailyPrice: 250,
     companies: [],
   })
-  const [sortBy, setSortBy] = useState('Recommended')
+  const [sortBy, setSortBy] = useState('Đề Xuất')
 
   const rentalDays = useMemo(
     () => getRentalDays(activeSearch.pickupAt, activeSearch.dropoffAt),
@@ -81,11 +81,11 @@ function CarRentalsPage() {
 
     const sorted = [...matches]
 
-    if (sortBy === 'Price: Lowest First') {
+    if (sortBy === 'Giá: Thấp Nhất Trước') {
       sorted.sort((first, second) => first.totalPrice - second.totalPrice)
-    } else if (sortBy === 'Price: Highest First') {
+    } else if (sortBy === 'Giá: Cao Nhất Trước') {
       sorted.sort((first, second) => second.totalPrice - first.totalPrice)
-    } else if (sortBy === 'Top Rated') {
+    } else if (sortBy === 'Đánh Giá Cao Nhất') {
       sorted.sort((first, second) => second.reviewScore - first.reviewScore)
     }
 
@@ -123,7 +123,7 @@ function CarRentalsPage() {
               onChange={(event) =>
                 setDraftSearch((current) => ({ ...current, location: event.target.value }))
               }
-              placeholder="Search city or country"
+              placeholder="Tìm kiếm thành phố hoặc quốc gia"
             />
           </div>
           <div className="cars-search-field">
@@ -147,7 +147,7 @@ function CarRentalsPage() {
             />
           </div>
           <Button type="submit" className="cars-search-button">
-            Search
+            Tìm Kiếm
           </Button>
         </form>
       </section>
@@ -158,19 +158,19 @@ function CarRentalsPage() {
             <div className="cars-map-pin pin-a"></div>
             <div className="cars-map-pin pin-b"></div>
             <div className="cars-map-pin pin-c"></div>
-            <button type="button">Show on map</button>
+            <button type="button">Hiển thị trên bản đồ</button>
           </div>
 
           <Card className="cars-filter-card">
             <Card.Body>
-              <h2>Filter by</h2>
+              <h2>Lọc Theo</h2>
 
               <div className="cars-filter-block">
-                <h3>Car type</h3>
+                <h3>Loại xe</h3>
                 {[
-                  ['Economy', 3],
+                  ['Kinh Tế', 3],
                   ['SUV', 3],
-                  ['Luxury', 3],
+                  ['Sang Trọng', 3],
                 ].map(([label, count]) => (
                   <Form.Check
                     key={label}
@@ -184,8 +184,8 @@ function CarRentalsPage() {
               </div>
 
               <div className="cars-filter-block">
-                <h3>Transmission</h3>
-                {['Manual', 'Automatic'].map((label) => (
+                <h3>Hộp Số</h3>
+                {['Số Tay', 'Số Tự Động'].map((label) => (
                   <Form.Check
                     key={label}
                     type="checkbox"
@@ -198,7 +198,7 @@ function CarRentalsPage() {
               </div>
 
               <div className="cars-filter-block">
-                <h3>Price per day</h3>
+                <h3>Giá mỗi ngày</h3>
                 <Form.Range
                   min={20}
                   max={250}
@@ -218,7 +218,7 @@ function CarRentalsPage() {
               </div>
 
               <div className="cars-filter-block mb-0">
-                <h3>Rental company</h3>
+                <h3>Công ty cho thuê</h3>
                 {['Hertz', 'Europcar', 'Enterprise'].map((label) => (
                   <Form.Check
                     key={label}
@@ -237,19 +237,19 @@ function CarRentalsPage() {
         <section className="cars-results">
           <div className="cars-results-toolbar">
             <h1>
-              {locationLabel}: {filteredCars.length} cars found
+              {locationLabel}: {filteredCars.length} xe được tìm thấy
             </h1>
             <div className="cars-sort-wrap">
-              <label htmlFor="car-sort">Sort by:</label>
+              <label htmlFor="car-sort">Sắp xếp theo:</label>
               <select
                 id="car-sort"
                 value={sortBy}
                 onChange={(event) => setSortBy(event.target.value)}
               >
-                <option>Recommended</option>
-                <option>Price: Lowest First</option>
-                <option>Price: Highest First</option>
-                <option>Top Rated</option>
+                <option>Đề Xuất</option>
+                <option>Giá: Thấp Nhất Trước</option>
+                <option>Giá: Cao Nhất Trước</option>
+                <option>Đánh Giá Cao Nhất</option>
               </select>
             </div>
           </div>
@@ -273,7 +273,7 @@ function CarRentalsPage() {
                     <div className="car-rental-score">
                       <div>
                         <strong>{car.reviewLabel}</strong>
-                        <span>{car.reviewsCount} reviews</span>
+                        <span>{car.reviewsCount} đánh giá</span>
                       </div>
                       <b>{car.reviewScore}</b>
                     </div>
@@ -282,7 +282,7 @@ function CarRentalsPage() {
                   <div className="car-rental-specs">
                     <div>
                       <span className="material-symbols-outlined">person</span>
-                      <span>{car.seats} seats</span>
+                      <span>{car.seats} chỗ ngồi</span>
                     </div>
                     <div>
                       <span className="material-symbols-outlined">settings</span>
@@ -290,7 +290,7 @@ function CarRentalsPage() {
                     </div>
                     <div>
                       <span className="material-symbols-outlined">work</span>
-                      <span>{car.bags} bags</span>
+                      <span>{car.bags} túi</span>
                     </div>
                     <div>
                       <span className="material-symbols-outlined">check_circle</span>
@@ -310,15 +310,15 @@ function CarRentalsPage() {
                     </div>
 
                     <div className="car-rental-price">
-                      <span>Price for {rentalDays} day{rentalDays > 1 ? 's' : ''}:</span>
+                      <span>Giá cho {rentalDays} ngày:</span>
                       <strong>£{formatPrice(car.totalPrice)}</strong>
-                      <small>£{formatPrice(car.dailyPrice)} per day</small>
+                      <small>£{formatPrice(car.dailyPrice)} mỗi ngày</small>
                       <Button
                         as={Link}
                         to={`/cars/${car.id}/checkout?tab=car-rentals&location=${encodeURIComponent(activeSearch.location)}&pickupAt=${encodeURIComponent(activeSearch.pickupAt)}&dropoffAt=${encodeURIComponent(activeSearch.dropoffAt)}`}
                         className="car-rental-deal-button"
                       >
-                        View Deal
+                        Xem Ưu Đãi
                       </Button>
                     </div>
                   </div>
@@ -328,8 +328,8 @@ function CarRentalsPage() {
 
             {filteredCars.length === 0 && (
               <div className="search-results-empty">
-                <h3>No cars match this search</h3>
-                <p>Try another city, country, or reduce the filters on the left.</p>
+                <h3>Không có xe nào phù hợp với tìm kiếm này</h3>
+                <p>Hãy thử thành phố, quốc gia khác, hoặc giảm bộ lọc bên trái.</p>
               </div>
             )}
           </div>

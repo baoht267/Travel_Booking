@@ -41,7 +41,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                     className="search-home-control"
                     value={criteria.destination}
                     onChange={handleFieldChange}
-                    placeholder="Country, then city"
+                    placeholder="Quốc gia, sau đó thành phố"
                   />
                 </div>
               </Col>
@@ -84,7 +84,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                     >
                       {[1, 2, 3, 4, 5, 6].map((count) => (
                         <option key={count} value={count}>
-                          {count} adults
+                          {count} người lớn
                         </option>
                       ))}
                     </Form.Select>
@@ -98,7 +98,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                     >
                       {[1, 2, 3, 4].map((count) => (
                         <option key={count} value={count}>
-                          {count} room
+                          {count} phòng
                         </option>
                       ))}
                     </Form.Select>
@@ -110,7 +110,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
               </Col>
               <Col lg={2}>
                 <Button type="submit" className="search-submit search-submit-home w-100">
-                  Search
+                  Tìm Kiếm
                 </Button>
               </Col>
             </Row>
@@ -120,7 +120,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                 id="travel-for-work"
                 type="checkbox"
                 className="home-work-toggle"
-                label="I'm traveling for work"
+                label="Tôi đang đi công tác"
                 checked={travelForWork}
                 onChange={(event) => setTravelForWork(event.target.checked)}
               />
@@ -139,7 +139,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
             <Col lg={4}>
               <div className="search-input-group">
                 <label htmlFor="destination-default" className="search-input-label">
-                  Destination
+                  Điểm Đến
                 </label>
                 <Form.Control
                   id="destination-default"
@@ -147,14 +147,14 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                   className="search-input-control"
                   value={criteria.destination}
                   onChange={handleFieldChange}
-                  placeholder="Country, then city"
+                  placeholder="Quốc gia, sau đó thành phố"
                 />
               </div>
             </Col>
             <Col sm={6} lg={2}>
               <div className="search-input-group">
                 <label htmlFor="checkIn-default" className="search-input-label">
-                  Check-in
+                  Nhận Phòng
                 </label>
                 <Form.Control
                   id="checkIn-default"
@@ -169,7 +169,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
             <Col sm={6} lg={2}>
               <div className="search-input-group">
                 <label htmlFor="checkOut-default" className="search-input-label">
-                  Check-out
+                  Trả Phòng
                 </label>
                 <Form.Control
                   id="checkOut-default"
@@ -184,7 +184,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
             <Col xs={6} lg={1}>
               <div className="search-input-group">
                 <label htmlFor="guests-default" className="search-input-label">
-                  Guests
+                  Khách
                 </label>
                 <Form.Select
                   id="guests-default"
@@ -204,7 +204,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
             <Col xs={6} lg={1}>
               <div className="search-input-group">
                 <label htmlFor="rooms-default" className="search-input-label">
-                  Rooms
+                  Phòng
                 </label>
                 <Form.Select
                   id="rooms-default"
@@ -223,7 +223,7 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
             </Col>
             <Col lg={2}>
               <Button type="submit" className="search-submit w-100">
-                Search
+                Tìm Kiếm
               </Button>
             </Col>
           </Row>

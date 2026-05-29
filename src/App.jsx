@@ -6,6 +6,10 @@ import AppFooter from './components/layout/AppFooter'
 import AppHeader from './components/layout/AppHeader'
 import CarRentalCheckoutPage from './pages/CarRentalCheckoutPage'
 import CheckoutPage from './pages/CheckoutPage'
+import AttractionsPage from './pages/AttractionsPage'
+import FlightCheckoutPage from './pages/FlightCheckoutPage'
+import TaxiCheckoutPage from './pages/TaxiCheckoutPage'
+import ExperienceDetailsPage from './pages/ExperienceDetailsPage'
 import HotelDetailsPage from './pages/HotelDetailsPage'
 import HomePage from './pages/HomePage'
 import SavedPage from './pages/SavedPage'
@@ -14,7 +18,9 @@ import SearchResultsPage from './pages/SearchResultsPage'
 function App() {
   const location = useLocation()
   const isAuthRoute = location.pathname === '/auth'
-  const isCheckoutRoute = location.pathname.startsWith('/checkout')
+  const isCheckoutRoute =
+    location.pathname.startsWith('/checkout') ||
+    location.pathname.includes('/checkout')
 
   return (
     <div className="app-shell">
@@ -26,8 +32,12 @@ function App() {
           <Route path="/cars/:carId/checkout" element={<CarRentalCheckoutPage />} />
           <Route path="/checkout/:stayId" element={<CheckoutPage />} />
           <Route path="/search" element={<SearchResultsPage />} />
+          <Route path="/attractions" element={<AttractionsPage />} />
           <Route path="/saved" element={<SavedPage />} />
+          <Route path="/flights/:flightId/checkout" element={<FlightCheckoutPage />} />
+          <Route path="/taxis/:taxiId/checkout" element={<TaxiCheckoutPage />} />
           <Route path="/stays/:stayId" element={<HotelDetailsPage />} />
+          <Route path="/experiences/:experienceId" element={<ExperienceDetailsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

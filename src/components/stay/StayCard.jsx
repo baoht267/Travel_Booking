@@ -28,7 +28,7 @@ function StayCard({ stay }) {
             type="button"
             className={`experience-save-button ${isSaved ? 'is-saved' : ''}`}
             onClick={() => dispatch(toggleSaved(stay.id))}
-            aria-label={isSaved ? 'Remove from saved' : 'Save experience'}
+            aria-label={isSaved ? 'Xóa khỏi đã lưu' : 'Lưu trải nghiệm'}
           >
             <span className="material-symbols-outlined">
               {isSaved ? 'favorite' : 'favorite_outline'}
@@ -45,7 +45,7 @@ function StayCard({ stay }) {
                   <div className="experience-card-score-copy">
                     <span className="experience-card-score-label">{stay.reviewLabel}</span>
                     <span className="experience-card-score-reviews">
-                      {stay.reviewsCount.toLocaleString()} reviews
+                      {stay.reviewsCount.toLocaleString()} đánh giá
                     </span>
                   </div>
                   <span className="experience-card-score-box">{stay.reviewScore}</span>
@@ -63,14 +63,14 @@ function StayCard({ stay }) {
             <div className="experience-card-footer">
               <div className="experience-card-meta">
                 <span className={`experience-tag ${tagToneClass}`}>{stay.tagLabel}</span>
-                <span className="experience-duration">Duration: {stay.duration}</span>
+                <span className="experience-duration">Thời lượng: {stay.duration}</span>
               </div>
 
               <div className="experience-card-price-block">
-                <span className="experience-price-prefix">From</span>
+                <span className="experience-price-prefix">Từ</span>
                 <span className="experience-price">EUR{formatPrice(stay.pricePerNight)}</span>
-                <Button type="button" className="experience-availability-button">
-                  See availability
+                <Button as={Link} to={`/experiences/${stay.id}`} type="button" className="experience-availability-button">
+                  Xem Chi Tiết
                 </Button>
               </div>
             </div>
@@ -95,7 +95,7 @@ function StayCard({ stay }) {
                   <Link to={`/stays/${stay.id}`}>{stay.name}</Link>
                 </h3>
                 <div className="hotel-search-location">
-                  {stay.city}, {stay.country} | {stay.distanceToCenter} km from center
+                  {stay.city}, {stay.country} | {stay.distanceToCenter} km từ trung tâm
                 </div>
               </div>
 
@@ -103,7 +103,7 @@ function StayCard({ stay }) {
                 <div className="experience-card-score-copy">
                   <span className="experience-card-score-label">{stay.reviewLabel}</span>
                   <span className="experience-card-score-reviews">
-                    {stay.reviewsCount.toLocaleString()} reviews
+                    {stay.reviewsCount.toLocaleString()} đánh giá
                   </span>
                 </div>
                 <div className="experience-card-score-box">{stay.reviewScore}</div>
@@ -126,7 +126,7 @@ function StayCard({ stay }) {
               <span className="experience-duration">{stay.propertyType}</span>
             </div>
             <div className="experience-card-price-block">
-              <span className="experience-price-prefix">From</span>
+              <span className="experience-price-prefix">Từ</span>
               <span className="experience-price">EUR{formatPrice(stay.pricePerNight)}</span>
               <div className="hotel-search-actions">
                 <Button
@@ -134,7 +134,7 @@ function StayCard({ stay }) {
                   className="save-toggle"
                   onClick={() => dispatch(toggleSaved(stay.id))}
                 >
-                  {isSaved ? 'Saved' : 'Save'}
+                  {isSaved ? 'Đã Lưu' : 'Lưu'}
                 </Button>
                 <Button
                   as={Link}
@@ -142,7 +142,7 @@ function StayCard({ stay }) {
                   variant="primary"
                   className="experience-availability-button"
                 >
-                  See availability
+                  Xem Lịch Trống
                 </Button>
               </div>
             </div>

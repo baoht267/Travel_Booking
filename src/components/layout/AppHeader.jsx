@@ -10,15 +10,19 @@ function AppHeader() {
 
   const getNavPillClass = (tabName) => {
     if (tabName === 'stays') {
-      return `nav-pill${
-        location.pathname === '/' || location.pathname.startsWith('/stays')
-          ? ' nav-pill-active'
-          : ''
-      }`
+      const isStaysActive =
+        (location.pathname === '/search' && !activeTab) ||
+        location.pathname.startsWith('/stays') ||
+        location.pathname === '/'
+      return `nav-pill${isStaysActive ? ' nav-pill-active' : ''}`
     }
 
     if (tabName === 'attractions') {
-      return `nav-pill${location.pathname === '/saved' ? ' nav-pill-active' : ''}`
+      return `nav-pill${
+        location.pathname === '/attractions' || location.pathname.startsWith('/experiences')
+          ? ' nav-pill-active'
+          : ''
+      }`
     }
 
     if (tabName === 'car-rentals') {
@@ -56,47 +60,47 @@ function AppHeader() {
       <Navbar expand="lg" className="home-navbar">
         <Container>
           <Navbar.Brand as={NavLink} to="/" className="home-brand">
-            Global Explorer
+            GOCHIP
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="main-nav" className="home-navbar-toggle" />
           <Navbar.Collapse id="main-nav">
             <Nav className="me-auto ms-lg-4 align-items-lg-center gap-lg-1">
-              <Nav.Link as={NavLink} to="/" end className={getNavPillClass('stays')}>
-                Stays
+              <Nav.Link as={NavLink} to="/search" className={getNavPillClass('stays')}>
+                Chỗ Ở
               </Nav.Link>
               <Nav.Link as={NavLink} to="/search?tab=flights" className={getNavPillClass('flights')}>
-                Flights
+                Chuyến Bay
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
                 to="/search?tab=car-rentals"
                 className={getNavPillClass('car-rentals')}
               >
-                Car rentals
+                Thuê Xe
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/saved" className={getNavPillClass('attractions')}>
-                Attractions
+              <Nav.Link as={NavLink} to="/attractions" className={getNavPillClass('attractions')}>
+                Địa Điểm
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
                 to="/search?tab=airport-taxis"
                 className={getNavPillClass('airport-taxis')}
               >
-                Airport taxis
+                Taxi Sân Bay
               </Nav.Link>
             </Nav>
 
             <div className="home-header-tools d-none d-md-flex">
-              <button type="button" className="home-icon-button" aria-label="Help">
+              <button type="button" className="home-icon-button" aria-label="Trợ Giúp">
                 <span className="material-symbols-outlined">help_outline</span>
               </button>
-              <button type="button" className="home-icon-button" aria-label="Language">
+              <button type="button" className="home-icon-button" aria-label="Ngôn Ngữ">
                 <span className="material-symbols-outlined">language</span>
               </button>
               <NavLink
                 to={session ? '/saved' : '/auth'}
                 className="home-icon-button"
-                aria-label="Account"
+                aria-label="Tài Khoản"
               >
                 <span className="material-symbols-outlined">person_outline</span>
               </NavLink>
@@ -113,16 +117,16 @@ function AppHeader() {
                   className="home-header-action home-header-action-secondary"
                   onClick={handleSignOut}
                 >
-                  Sign out
+                  Đăng Xuất
                 </button>
               </div>
             ) : (
               <Nav className="home-header-actions mt-3 mt-lg-0">
                 <NavLink to="/auth?mode=register" className="home-header-action">
-                  Register
+                  Đăng Ký
                 </NavLink>
                 <NavLink to="/auth" className="home-header-action">
-                  Sign in
+                  Đăng Nhập
                 </NavLink>
               </Nav>
             )}

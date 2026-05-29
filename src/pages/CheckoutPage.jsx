@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Alert, Button, Form } from 'react-bootstrap'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectAllStays, selectCriteria } from '../features/stays/staysSlice'
 import { readSession } from '../utils/authSession'
@@ -14,7 +14,7 @@ function toCurrency(value) {
 }
 
 function formatDateRange(checkIn, checkOut) {
-  const format = new Intl.DateTimeFormat('en-US', {
+  const format = new Intl.DateTimeFormat('vi-VN', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -50,6 +50,7 @@ function CheckoutPage() {
   const stays = useSelector(selectAllStays)
   const criteria = useSelector(selectCriteria)
   const session = useMemo(() => readSession(), [])
+  const navigate = useNavigate()
   const [submitted, setSubmitted] = useState(false)
 
   const stay = stays.find((item) => item.id === stayId)
@@ -78,7 +79,7 @@ function CheckoutPage() {
   const taxes = Number((stay.taxesAndFees * nights * criteria.rooms).toFixed(2))
   const discount = nights >= 3 ? Number((basePrice * 0.06).toFixed(2)) : 0
   const total = basePrice + serviceFee + taxes - discount
-  const cardLabel = `${stay.propertyType} Booking`
+  const cardLabel = `Đặt ${stay.propertyType}`
 
   const handleFieldChange = (event) => {
     const { name, value, type, checked } = event.target
@@ -97,10 +98,18 @@ function CheckoutPage() {
     <div className="checkout-page">
       <header className="checkout-header">
         <div className="checkout-header-inner">
-          <div className="checkout-brand">Global Explorer</div>
+          <button
+            type="button"
+            className="checkout-back-btn"
+            onClick={() => navigate(-1)}
+          >
+            <span className="material-symbols-outlined">arrow_back</span>
+            Quay lại
+          </button>
+          <div className="checkout-brand">GOCHIP</div>
           <div className="checkout-security">
             <span className="material-symbols-outlined">lock</span>
-            Secure Checkout
+            Thanh Toán An Toàn
           </div>
         </div>
       </header>
@@ -109,17 +118,17 @@ function CheckoutPage() {
         <div className="checkout-stepper">
           <div className="checkout-step is-active">
             <span className="checkout-step-badge">1</span>
-            <span>Selection</span>
+            <span>Lựa Chọn</span>
           </div>
           <span className="checkout-step-line"></span>
           <div className="checkout-step is-current">
             <span className="checkout-step-badge">2</span>
-            <span>Details & Payment</span>
+            <span>Chi Tiết & Thanh Toán</span>
           </div>
           <span className="checkout-step-line"></span>
           <div className="checkout-step">
             <span className="checkout-step-badge">3</span>
-            <span>Confirmation</span>
+            <span>Xác Nhận</span>
           </div>
         </div>
 
@@ -127,70 +136,70 @@ function CheckoutPage() {
           <section className="checkout-form-column">
             {submitted && (
               <Alert variant="success" className="checkout-success-alert">
-                Booking confirmed for {stay.name}. This is a mock checkout flow.
+                Đặt phòng đã được xác nhận cho {stay.name}. Đây là luồng thanh toán mẫu.
               </Alert>
             )}
 
             <Form onSubmit={handleSubmit} className="checkout-form-stack">
               <div className="checkout-panel">
-                <h2 className="checkout-panel-title">Enter your details</h2>
+                <h2 className="checkout-panel-title">Nhập thông tin của bạn</h2>
                 <div className="checkout-form-grid">
                   <div className="checkout-field">
-                    <label htmlFor="firstName">First Name</label>
+                    <label htmlFor="firstName">Tên</label>
                     <input
                       id="firstName"
                       name="firstName"
                       value={formValues.firstName}
                       onChange={handleFieldChange}
-                      placeholder="e.g. John"
+                      placeholder="vd. Văn A"
                       required
                     />
                   </div>
                   <div className="checkout-field">
-                    <label htmlFor="lastName">Last Name</label>
+                    <label htmlFor="lastName">Họ</label>
                     <input
                       id="lastName"
                       name="lastName"
                       value={formValues.lastName}
                       onChange={handleFieldChange}
-                      placeholder="e.g. Doe"
+                      placeholder="vd. Nguyễn"
                       required
                     />
                   </div>
                   <div className="checkout-field">
-                    <label htmlFor="email">Email Address</label>
+                    <label htmlFor="email">Địa Chỉ Email</label>
                     <input
                       id="email"
                       name="email"
                       type="email"
                       value={formValues.email}
                       onChange={handleFieldChange}
-                      placeholder="john.doe@example.com"
+                      placeholder="nguyenvana@example.com"
                       required
                     />
-                    <small>Confirmation will be sent here</small>
+                    <small>Xác nhận sẽ được gửi đến đây</small>
                   </div>
                   <div className="checkout-field">
-                    <label htmlFor="phone">Phone Number</label>
+                    <label htmlFor="phone">Số Điện Thoại</label>
                     <input
                       id="phone"
                       name="phone"
                       value={formValues.phone}
                       onChange={handleFieldChange}
-                      placeholder="+1 (555) 000-0000"
+                      placeholder="+84 (0) 000 000 000"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="checkout-field">
-                  <label htmlFor="requests">Special Requests (Optional)</label>
+                  <label htmlFor="requests">Yêu Cầu Đặc Biệt (Tùy Chọn)</label>
                   <textarea
                     id="requests"
                     name="requests"
                     value={formValues.requests}
                     onChange={handleFieldChange}
-                    placeholder="Dietary requirements, accessibility needs, etc."
+                    placeholder="Yêu cầu ăn uống, nhu cầu tiếp cận, v.v."
                     rows={4}
                   />
                 </div>
@@ -198,7 +207,7 @@ function CheckoutPage() {
 
               <div className="checkout-panel">
                 <div className="checkout-payment-head">
-                  <h2 className="checkout-panel-title">Secure Payment</h2>
+                  <h2 className="checkout-panel-title">Thanh Toán An Toàn</h2>
                   <div className="checkout-card-brands">
                     <span>VISA</span>
                     <span>MC</span>
@@ -206,19 +215,19 @@ function CheckoutPage() {
                 </div>
 
                 <div className="checkout-field">
-                  <label htmlFor="cardholderName">Cardholder Name</label>
+                  <label htmlFor="cardholderName">Tên Chủ Thẻ</label>
                   <input
                     id="cardholderName"
                     name="cardholderName"
                     value={formValues.cardholderName}
                     onChange={handleFieldChange}
-                    placeholder="Name as it appears on card"
+                    placeholder="Tên như trên thẻ"
                     required
                   />
                 </div>
 
                 <div className="checkout-field">
-                  <label htmlFor="cardNumber">Card Number</label>
+                  <label htmlFor="cardNumber">Số Thẻ</label>
                   <div className="checkout-card-input">
                     <input
                       id="cardNumber"
@@ -234,7 +243,7 @@ function CheckoutPage() {
 
                 <div className="checkout-form-grid checkout-form-grid-tight">
                   <div className="checkout-field">
-                    <label htmlFor="expiryDate">Expiry Date</label>
+                    <label htmlFor="expiryDate">Ngày Hết Hạn</label>
                     <input
                       id="expiryDate"
                       name="expiryDate"
@@ -267,29 +276,29 @@ function CheckoutPage() {
                     required
                   />
                   <span>
-                    I have read and agree to the <Link to="/">Terms & Conditions</Link> and the{' '}
-                    <Link to="/">Privacy Policy</Link>.
+                    Tôi đã đọc và đồng ý với <Link to="/">Điều Khoản & Điều Kiện</Link> và{' '}
+                    <Link to="/">Chính Sách Bảo Mật</Link>.
                   </span>
                 </label>
               </div>
 
               <Button type="submit" className="checkout-confirm-button">
-                Confirm Booking
+                Xác Nhận Đặt Chỗ
               </Button>
             </Form>
 
             <div className="checkout-trust-row">
               <div className="checkout-trust-item">
                 <span className="material-symbols-outlined is-success">verified_user</span>
-                <span>SSL Secured Connection</span>
+                <span>Kết Nối SSL An Toàn</span>
               </div>
               <div className="checkout-trust-item">
                 <span className="material-symbols-outlined is-blue">verified</span>
-                <span>Travel Trust Certified</span>
+                <span>Được Chứng Nhận Du Lịch An Toàn</span>
               </div>
               <div className="checkout-trust-item">
                 <span className="material-symbols-outlined is-primary">shield</span>
-                <span>Payment Protected</span>
+                <span>Thanh Toán Được Bảo Vệ</span>
               </div>
             </div>
           </section>
@@ -320,20 +329,20 @@ function CheckoutPage() {
                   <div>
                     <span className="material-symbols-outlined">person</span>
                     <span>
-                      {criteria.guests} Adults
-                      {criteria.rooms > 1 ? ` · ${criteria.rooms} Rooms` : ''}
+                      {criteria.guests} Người Lớn
+                      {criteria.rooms > 1 ? ` · ${criteria.rooms} Phòng` : ''}
                     </span>
                   </div>
                 </div>
 
                 <div className="checkout-price-summary">
-                  <h4>Price Summary</h4>
-                  <div><span>Base Price</span><span>{toCurrency(basePrice)}</span></div>
-                  <div><span>Service Fee</span><span>{toCurrency(serviceFee)}</span></div>
-                  <div><span>Taxes & VAT</span><span>{toCurrency(taxes)}</span></div>
+                  <h4>Tóm Tắt Giá</h4>
+                  <div><span>Giá Cơ Bản</span><span>{toCurrency(basePrice)}</span></div>
+                  <div><span>Phí Dịch Vụ</span><span>{toCurrency(serviceFee)}</span></div>
+                  <div><span>Thuế & VAT</span><span>{toCurrency(taxes)}</span></div>
                   {discount > 0 && (
                     <div className="checkout-discount-row">
-                      <span>Early Bird Discount</span>
+                      <span>Giảm Giá Đặt Sớm</span>
                       <span>-{toCurrency(discount)}</span>
                     </div>
                   )}
@@ -341,8 +350,8 @@ function CheckoutPage() {
 
                 <div className="checkout-total-row">
                   <div>
-                    <strong>Total</strong>
-                    <small>All taxes included</small>
+                    <strong>Tổng Cộng</strong>
+                    <small>Đã bao gồm tất cả thuế</small>
                   </div>
                   <span>{toCurrency(total)}</span>
                 </div>
@@ -350,9 +359,9 @@ function CheckoutPage() {
                 <div className="checkout-info-note">
                   <span className="material-symbols-outlined">info</span>
                   <p>
-                    {stay.perks.includes('Free cancellation')
-                      ? 'Free cancellation is included in this mock booking. No hidden fees.'
-                      : 'This mock booking includes all shown charges. No hidden fees.'}
+                    {stay.perks.some((p) => p.toLowerCase().includes('hủy'))
+                      ? 'Hủy miễn phí được bao gồm trong đặt chỗ mẫu này. Không có phí ẩn.'
+                      : 'Đặt chỗ mẫu này bao gồm tất cả các khoản phí hiển thị. Không có phí ẩn.'}
                   </p>
                 </div>
               </div>
@@ -363,14 +372,14 @@ function CheckoutPage() {
 
       <footer className="checkout-footer">
         <div>
-          <div className="checkout-footer-brand">Global Explorer</div>
-          <p>© 2024 Global Explorer. All rights reserved. Built for travelers.</p>
+          <div className="checkout-footer-brand">GOCHIP</div>
+          <p>© 2024 GOCHIP. Bảo lưu mọi quyền. Được xây dựng cho du khách.</p>
         </div>
         <div className="checkout-footer-links">
-          <Link to="/">About Us</Link>
-          <Link to="/">Customer Service</Link>
-          <Link to="/">Privacy Policy</Link>
-          <Link to="/">Terms & Conditions</Link>
+          <Link to="/">Về Chúng Tôi</Link>
+          <Link to="/">Dịch Vụ Khách Hàng</Link>
+          <Link to="/">Chính Sách Bảo Mật</Link>
+          <Link to="/">Điều Khoản & Điều Kiện</Link>
         </div>
       </footer>
     </div>
