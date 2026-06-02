@@ -31,8 +31,21 @@ const staysSlice = createSlice({
   name: 'stays',
   initialState,
   reducers: {
+    replacePersistedStaysState(state, action) {
+      state.filters = {
+        ...initialState.filters,
+        ...action.payload?.filters,
+      }
+      state.recentSearches = Array.isArray(action.payload?.recentSearches)
+        ? action.payload.recentSearches
+        : []
+      state.criteria = { ...initialState.criteria }
+    },
     updateCriteria(state, action) {
       state.criteria = { ...state.criteria, ...action.payload }
+    },
+    resetCriteria(state) {
+      state.criteria = { ...initialState.criteria }
     },
     addRecentSearch(state, action) {
       const criteria = action.payload
@@ -68,6 +81,8 @@ const staysSlice = createSlice({
 
 export const {
   addRecentSearch,
+  replacePersistedStaysState,
+  resetCriteria,
   resetFilters,
   togglePropertyType,
   updateCriteria,

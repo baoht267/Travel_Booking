@@ -100,7 +100,7 @@ function AppHeader() {
                 <span className="material-symbols-outlined">language</span>
               </button>
               <NavLink
-                to={session ? '/saved' : '/auth'}
+                to={session ? '/profile' : '/auth'}
                 className="home-icon-button"
                 aria-label="Tài Khoản"
               >
@@ -110,10 +110,10 @@ function AppHeader() {
 
             {session ? (
               <div className="home-header-session mt-3 mt-lg-0">
-                <div className="home-session-chip">
+                <NavLink to="/profile" className="home-session-chip">
                   <span className="material-symbols-outlined">person</span>
                   <span>{session.fullName || session.email}</span>
-                </div>
+                </NavLink>
                 <NavLink
                   to="/my-bookings"
                   className="home-header-action home-header-action-secondary"

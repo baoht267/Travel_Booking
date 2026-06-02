@@ -10,6 +10,7 @@ import CheckoutPage from './pages/CheckoutPage'
 import AttractionsPage from './pages/AttractionsPage'
 import FlightCheckoutPage from './pages/FlightCheckoutPage'
 import MyBookingsPage from './pages/MyBookingsPage'
+import ProfilePage from './pages/ProfilePage'
 import TaxiCheckoutPage from './pages/TaxiCheckoutPage'
 import ExperienceDetailsPage from './pages/ExperienceDetailsPage'
 import HotelDetailsPage from './pages/HotelDetailsPage'
@@ -42,6 +43,7 @@ function App() {
           <Route path="/stays/:stayId" element={<HotelDetailsPage />} />
           <Route path="/experiences/:experienceId" element={<ExperienceDetailsPage />} />
           <Route path="/my-bookings" element={<MyBookingsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/booking-confirmation/:bookingId" element={<BookingConfirmationPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

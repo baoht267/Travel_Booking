@@ -10,14 +10,23 @@ const bookingsSlice = createSlice({
     bookings: [],
   },
   reducers: {
-    addBooking(state, action) {
-      const booking = {
-        id: generateBookingId(),
-        bookedAt: new Date().toISOString(),
-        status: 'upcoming',
-        ...action.payload,
-      }
-      state.bookings.unshift(booking)
+    replaceBookingsState(state, action) {
+      state.bookings = Array.isArray(action.payload?.bookings) ? action.payload.bookings : []
+    },
+    addBooking: {
+      reducer(state, action) {
+        state.bookings.unshift(action.payload)
+      },
+      prepare(data) {
+        return {
+          payload: {
+            id: generateBookingId(),
+            bookedAt: new Date().toISOString(),
+            status: 'upcoming',
+            ...data,
+          },
+        }
+      },
     },
     cancelBooking(state, action) {
       const booking = state.bookings.find((b) => b.id === action.payload)
@@ -28,7 +37,7 @@ const bookingsSlice = createSlice({
   },
 })
 
-export const { addBooking, cancelBooking } = bookingsSlice.actions
+export const { addBooking, cancelBooking, replaceBookingsState } = bookingsSlice.actions
 
 export const selectBookings = (state) => state.bookings.bookings
 export const selectBookingById = (id) => (state) =>

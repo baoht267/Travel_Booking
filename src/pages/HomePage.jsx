@@ -1,12 +1,14 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Button, Card, Col, Container, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import SearchForm from '../components/search/SearchForm'
 import {
+  resetCriteria,
   selectRecentSearches,
   updateCriteria,
 } from '../features/stays/staysSlice'
+import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 const heroImage =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAEaX7BYrbtMiJw9VM_FHU3k2oOl6JYXlXsFlenG-leP24eJWDQMp2hHt8rHetzJECtH_yHcka5vjUQuvTMVAsP9Di3tqYeEHBp7Zmd3_k0ZOS_RMHSsPCCExULTcxaaO10LWMCY3ADCLl69VtDPAtZQxRxSnRQlifvZzyu-JPpvt99UjX0rdHML2JFISMcT6Ua5czTAWbpW32N-USVmPgTYw-YmROJtBY2ZKawkorO5Hm3m85ychhzbfeJtWVqDIWvfHf1_XcicY8J'
@@ -75,7 +77,7 @@ const unforgettableTours = [
     rating: '4.9',
     label: 'Xuất Sắc',
     reviews: '1.240 đánh giá',
-    price: '$1.299',
+    price: 1299,
     image:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBHb6pd9TWdR7-mIyVaKwBNG7_8z5NnLCVFt0OAygUuuoThCYquuixeSDe1_3CtXx-G7bOeQzfF7vTH39CjzQKlOuhBP6oP1m6cgMO-olR4pnsjSIsv0-zX1S8V0KuF2UOCnwdr4-BmUyQOsvGYBAqiuCFMGYuJTj0nR2WI4wWeFwajKGfaN78F3sZPU-I7ms3CKTOTCpZS94icJW8_WrvbqVQvk9BYx5y3sS0kBIDrO1J35PRmpy915Hixf0JWGRPoWwrFcsdaEMTx',
   },
@@ -86,7 +88,7 @@ const unforgettableTours = [
     rating: '4.7',
     label: 'Tuyệt Vời',
     reviews: '856 đánh giá',
-    price: '$850',
+    price: 850,
     image:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBEjeFDGW4QHD1QwbM4FRs3foWdwPfjOVlw5rGKhjpbXoZ5ell0GlEo8ORqBa9RtLkzQ2NLg8MEm4K9vhkM8acKtqY_jIhf2GJWVW-OhqhArh_Oxjpw_f5atsLcYSDbL4SQX6zYzcMvpfwHInczUi5nXzAq-POqYE8rIhVVNJV83_E2zVnCyVGvX8nX1M5ep6a3ry4BIREmsnmqG4Jpgmc7R0wNbylCqB5Xp5RQd5h-NBN3djYNHqEXIWpBXbrVc1LkgCf9raJzM1Wy',
   },
@@ -97,7 +99,7 @@ const unforgettableTours = [
     rating: '4.8',
     label: 'Xuất Sắc',
     reviews: '2.105 đánh giá',
-    price: '$540',
+    price: 540,
     image:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuCKUoSmCO4-h9FvQzZibAFbMXHtamUM-UlnSdm1jKMM0SOqxrf-ByCianA56YJ2Y2_AUrc0pJQCLEEvqKGhylikQbf_63mQGFT88yLiJeXhQmNWLH73KqRUkOC7X8dPaMMTQqTmI5rFKf4Ru1Kd3bcEerpq2vON0avENooiM8C3lamwpTejyq91QnT_OyO_s7lciSqy9fJHGSCx0WPJVw2I9CIrLvVRgFh11aRh7547tst6-eNIad6_XXjzCByep7he7S5QyNHVP4lS',
   },
@@ -108,7 +110,7 @@ const unforgettableTours = [
     rating: '4.9',
     label: 'Xuất Sắc',
     reviews: '4.320 đánh giá',
-    price: '$299',
+    price: 299,
     image:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuCwZCP_vE5w8SL3zkxw5y7an2UkGvzfDfhGWHq5D6j47IB8QTRApBgrgehLtAeGLfihJNyaRWdrqq6BvP38s7i2_FKRsmjFXKmrNrvDvXnzulPl0QWZrjS0FxYrP80oAqJFxMGP9oaG7Ouqu4dm3s6Jo0i7a0E9K1PEKqZrfb_ridP5FGf3FmK9y1wGKEUEdSKS8pms2eo0ibSc-nPX06auP5R8vA6tsG9GczAAtHgcEAS9wPJMTgYX6jDgZV6DzpanHNtiyfwAhQo6',
   },
@@ -119,6 +121,10 @@ function HomePage() {
   const navigate = useNavigate()
   const recentSearches = useSelector(selectRecentSearches)
   const tourRailRef = useRef(null)
+
+  useEffect(() => {
+    dispatch(resetCriteria())
+  }, [dispatch])
 
   const scrollTours = (direction) => {
     if (!tourRailRef.current) {
@@ -237,7 +243,7 @@ function HomePage() {
                   <div className="tour-card-footer">
                     <div>
                       <div className="tour-card-label">Bắt đầu từ</div>
-                      <div className="tour-card-price">{tour.price}</div>
+                      <div className="tour-card-price">{formatBasePriceToVndCurrency(tour.price)}</div>
                     </div>
                     <Button
                       as={Link}

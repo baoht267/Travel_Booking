@@ -1,18 +1,16 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button, Container, Form } from 'react-bootstrap'
 import { useSearchParams, Navigate, useParams, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import mockCars from '../data/mockCars'
 import { readSession } from '../utils/authSession'
 import { addBooking } from '../features/bookings/bookingsSlice'
-import { useToast } from '../context/ToastContext'
-
-function formatMoney(value) {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
+import { useToast } from '../context/toastState'
+import {
+  convertBasePriceToVnd,
+  formatBasePriceToVndCurrency,
+  formatVndCurrency,
+} from '../utils/currency'
 
 function getRentalDays(pickupAt, dropoffAt) {
   const pickup = new Date(pickupAt)
@@ -115,6 +113,11 @@ function CarRentalCheckoutPage() {
   const taxesAndFees = Number((rentalPrice * 0.18).toFixed(2))
   const airportSurcharge = 15
   const totalPrice = rentalPrice + taxesAndFees + airportSurcharge + extrasTotal
+  const rentalPriceVnd = convertBasePriceToVnd(rentalPrice)
+  const taxesAndFeesVnd = convertBasePriceToVnd(taxesAndFees)
+  const airportSurchargeVnd = convertBasePriceToVnd(airportSurcharge)
+  const extrasTotalVnd = convertBasePriceToVnd(extrasTotal)
+  const totalPriceVnd = convertBasePriceToVnd(totalPrice)
 
   const handleFieldChange = (event) => {
     const { name, value } = event.target
@@ -131,13 +134,21 @@ function CarRentalCheckoutPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    if (new Date(pickupAt).getTime() < Date.now()) {
+      showToast('Ngày nhận xe không thể là thời gian trong quá khứ', 'danger')
+      return
+    }
+    if (new Date(dropoffAt).getTime() <= new Date(pickupAt).getTime()) {
+      showToast('Ngày trả xe phải sau ngày nhận xe', 'danger')
+      return
+    }
     const booking = dispatch(addBooking({
       type: 'car',
       title: car.name,
       subtitle: `${car.subtitle} · ${location}`,
       image: car.image,
-      total: totalPrice,
-      currency: 'USD',
+      total: totalPriceVnd,
+      currency: 'VND',
       details: {
         'Địa điểm': location,
         'Nhận xe': formatDateTimeLabel(pickupAt),
@@ -261,7 +272,7 @@ function CarRentalCheckoutPage() {
                         <strong>{extra.title}</strong>
                         <span>{extra.subtitle}</span>
                       </div>
-                      <div className="car-extra-price">+${formatMoney(extra.pricePerDay)} / ngày</div>
+                      <div className="car-extra-price">+{formatBasePriceToVndCurrency(extra.pricePerDay)} / ngày</div>
                       <span className="car-extra-toggle"></span>
                     </button>
                   )
@@ -389,20 +400,20 @@ function CarRentalCheckoutPage() {
             <h4>Chi Tiết Giá</h4>
             <div className="car-checkout-price-row">
               <span>Giá thuê xe ({rentalDays} ngày)</span>
-              <strong>${formatMoney(rentalPrice)}</strong>
+              <strong>{formatVndCurrency(rentalPriceVnd)}</strong>
             </div>
             <div className="car-checkout-price-row">
               <span>Thuế & Phí</span>
-              <strong>${formatMoney(taxesAndFees)}</strong>
+              <strong>{formatVndCurrency(taxesAndFeesVnd)}</strong>
             </div>
             <div className="car-checkout-price-row">
               <span>Phụ Phí Sân Bay</span>
-              <strong>${formatMoney(airportSurcharge)}</strong>
+              <strong>{formatVndCurrency(airportSurchargeVnd)}</strong>
             </div>
             {extrasTotal > 0 && (
               <div className="car-checkout-price-row">
                 <span>Dịch Vụ Đã Chọn</span>
-                <strong>${formatMoney(extrasTotal)}</strong>
+                <strong>{formatVndCurrency(extrasTotalVnd)}</strong>
               </div>
             )}
             <div className="car-checkout-total-row">
@@ -410,7 +421,7 @@ function CarRentalCheckoutPage() {
                 <strong>Tổng Giá</strong>
                 <small>Đã bao gồm tất cả thuế & phí</small>
               </div>
-              <span>${formatMoney(totalPrice)}</span>
+              <span>{formatVndCurrency(totalPriceVnd)}</span>
             </div>
 
             <Button type="submit" form="car-rental-checkout-form" className="car-checkout-confirm-button">

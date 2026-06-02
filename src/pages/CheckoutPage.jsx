@@ -1,12 +1,13 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import VNPayQR from '../components/payment/VNPayQR'
+import CardPaymentForm from '../components/payment/CardPaymentForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAllStays, selectCriteria } from '../features/stays/staysSlice'
 import { addBooking, selectHotelBookingsByStay } from '../features/bookings/bookingsSlice'
 import { readSession } from '../utils/authSession'
-import { useToast } from '../context/ToastContext'
+import { useToast } from '../context/toastState'
 import { convertBasePriceToVnd, formatVndCurrency } from '../utils/currency'
 
 function toCurrency(value) {
@@ -58,7 +59,8 @@ function CheckoutPage() {
   const stay = stays.find((item) => item.id === stayId)
 
   const initialName = splitFullName(session?.fullName)
-  const payRef = useRef(`GC${Date.now().toString(36).toUpperCase().slice(-6)}`)
+  const [payReference] = useState(() => `GC${Date.now().toString(36).toUpperCase().slice(-6)}`)
+  const [paymentMethod, setPaymentMethod] = useState('vnpay')
   const [formValues, setFormValues] = useState({
     firstName: initialName.firstName,
     lastName: initialName.lastName,
@@ -66,6 +68,10 @@ function CheckoutPage() {
     phone: '',
     requests: '',
     acceptedTerms: false,
+    cardholderName: session?.fullName || '',
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
   })
 
   if (!session) {
@@ -114,6 +120,12 @@ function CheckoutPage() {
     if (conflict) {
       showToast('Phòng đã được đặt trong khoảng thời gian này, vui lòng chọn ngày khác', 'danger')
       return
+    }
+    if (paymentMethod === 'card') {
+      if (!formValues.cardholderName || !formValues.cardNumber || !formValues.expiryDate || !formValues.cvv) {
+        showToast('Vui lòng điền đầy đủ thông tin thẻ ngân hàng', 'danger')
+        return
+      }
     }
     const booking = dispatch(addBooking({
       type: 'hotel',
@@ -242,14 +254,45 @@ function CheckoutPage() {
                 </div>
               </div>
 
-              <VNPayQR
-                amount={toCurrency(totalVnd)}
-                reference={payRef.current}
-                confirmed={formValues.acceptedTerms}
-                onConfirmChange={(e) =>
-                  setFormValues((v) => ({ ...v, acceptedTerms: e.target.checked }))
-                }
-              />
+              <div className="checkout-payment-tabs">
+                <button
+                  type="button"
+                  className={`checkout-payment-tab${paymentMethod === 'vnpay' ? ' is-active' : ''}`}
+                  onClick={() => setPaymentMethod('vnpay')}
+                >
+                  <span className="material-symbols-outlined">qr_code_2</span>
+                  QR VNPay
+                </button>
+                <button
+                  type="button"
+                  className={`checkout-payment-tab${paymentMethod === 'card' ? ' is-active' : ''}`}
+                  onClick={() => setPaymentMethod('card')}
+                >
+                  <span className="material-symbols-outlined">credit_card</span>
+                  Thẻ ngân hàng
+                </button>
+              </div>
+
+              {paymentMethod === 'vnpay' ? (
+                <VNPayQR
+                  amount={toCurrency(totalVnd)}
+                  reference={payReference}
+                  confirmed={formValues.acceptedTerms}
+                  onConfirmChange={(e) =>
+                    setFormValues((v) => ({ ...v, acceptedTerms: e.target.checked }))
+                  }
+                />
+              ) : (
+                <CardPaymentForm
+                  values={{
+                    cardholderName: formValues.cardholderName,
+                    cardNumber: formValues.cardNumber,
+                    expiryDate: formValues.expiryDate,
+                    cvv: formValues.cvv,
+                  }}
+                  onChange={handleFieldChange}
+                />
+              )}
 
               <Button type="submit" className="checkout-confirm-button">
                 Xác Nhận Đặt Chỗ

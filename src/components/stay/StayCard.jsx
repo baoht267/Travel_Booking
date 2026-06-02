@@ -2,7 +2,7 @@ import { Button, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toggleSaved } from '../../features/saved/savedSlice'
-import { useToast } from '../../context/ToastContext'
+import { useToast } from '../../context/toastState'
 import { formatBasePriceToVndCurrency } from '../../utils/currency'
 
 function StayCard({ stay }) {

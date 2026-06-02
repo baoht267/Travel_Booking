@@ -4,10 +4,27 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { addRecentSearch, selectCriteria, updateCriteria } from '../../features/stays/staysSlice'
 
+function formatDate(offsetDays) {
+  const date = new Date()
+  date.setDate(date.getDate() + offsetDays)
+  return date.toISOString().slice(0, 10)
+}
+
+function getDefaultHomeCriteria() {
+  return {
+    destination: '',
+    checkIn: formatDate(6),
+    checkOut: formatDate(9),
+    guests: 2,
+    rooms: 1,
+  }
+}
+
 function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
   const criteria = useSelector(selectCriteria)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [homeCriteria, setHomeCriteria] = useState(() => getDefaultHomeCriteria())
   const [travelForWork, setTravelForWork] = useState(false)
 
   const handleFieldChange = (event) => {
@@ -20,9 +37,24 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
     )
   }
 
+  const handleHomeFieldChange = (event) => {
+    const { name, value } = event.target
+
+    setHomeCriteria((current) => ({
+      ...current,
+      [name]: name === 'guests' || name === 'rooms' ? Number(value) : value,
+    }))
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
-    dispatch(addRecentSearch(criteria))
+    const submittedCriteria = home ? homeCriteria : criteria
+
+    if (home) {
+      dispatch(updateCriteria(submittedCriteria))
+    }
+
+    dispatch(addRecentSearch(submittedCriteria))
     navigate('/search')
   }
 
@@ -39,8 +71,8 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                     id="destination"
                     name="destination"
                     className="search-home-control"
-                    value={criteria.destination}
-                    onChange={handleFieldChange}
+                    value={homeCriteria.destination}
+                    onChange={handleHomeFieldChange}
                     placeholder="Quốc gia, sau đó thành phố"
                   />
                 </div>
@@ -56,8 +88,8 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                       name="checkIn"
                       type="date"
                       className="search-home-control"
-                      value={criteria.checkIn}
-                      onChange={handleFieldChange}
+                      value={homeCriteria.checkIn}
+                      onChange={handleHomeFieldChange}
                     />
                     <span className="search-home-separator">-</span>
                     <Form.Control
@@ -65,8 +97,8 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                       name="checkOut"
                       type="date"
                       className="search-home-control"
-                      value={criteria.checkOut}
-                      onChange={handleFieldChange}
+                      value={homeCriteria.checkOut}
+                      onChange={handleHomeFieldChange}
                     />
                   </div>
                 </div>
@@ -79,8 +111,8 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                       id="guests"
                       name="guests"
                       className="search-home-control search-home-select"
-                      value={criteria.guests}
-                      onChange={handleFieldChange}
+                      value={homeCriteria.guests}
+                      onChange={handleHomeFieldChange}
                     >
                       {[1, 2, 3, 4, 5, 6].map((count) => (
                         <option key={count} value={count}>
@@ -93,8 +125,8 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                       id="rooms"
                       name="rooms"
                       className="search-home-control search-home-select"
-                      value={criteria.rooms}
-                      onChange={handleFieldChange}
+                      value={homeCriteria.rooms}
+                      onChange={handleHomeFieldChange}
                     >
                       {[1, 2, 3, 4].map((count) => (
                         <option key={count} value={count}>

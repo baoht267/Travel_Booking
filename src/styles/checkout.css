@@ -541,3 +541,41 @@
   font-size: 0.75rem;
   font-weight: 600;
 }
+
+.checkout-payment-tabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid #c4c6d3;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.checkout-payment-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 12px 16px;
+  background: #f9f9f9;
+  border: none;
+  color: #434651;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.checkout-payment-tab + .checkout-payment-tab {
+  border-left: 1px solid #c4c6d3;
+}
+
+.checkout-payment-tab.is-active {
+  background: #006ce4;
+  color: #ffffff;
+}
+
+.checkout-payment-tab .material-symbols-outlined {
+  font-size: 20px;
+}

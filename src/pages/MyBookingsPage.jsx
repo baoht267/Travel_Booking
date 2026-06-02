@@ -4,6 +4,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { cancelBooking, selectBookings } from '../features/bookings/bookingsSlice'
 import { readSession } from '../utils/authSession'
+import { formatVndCurrency } from '../utils/currency'
 
 const TYPE_ICON = {
   hotel: 'hotel',
@@ -27,13 +28,9 @@ const TABS = [
 
 function formatCurrency(value, currency) {
   if (currency === 'VND') {
-    return new Intl.NumberFormat('vi-VN').format(value) + '₫'
+    return formatVndCurrency(value)
   }
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(value)
+  return formatVndCurrency(value)
 }
 
 function formatDate(iso) {

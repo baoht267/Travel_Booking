@@ -4,7 +4,7 @@ import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-r
 import { useDispatch } from 'react-redux'
 import { readSession } from '../utils/authSession'
 import { addBooking } from '../features/bookings/bookingsSlice'
-import { useToast } from '../context/ToastContext'
+import { useToast } from '../context/toastState'
 import mockFlights from '../data/mockFlights'
 
 function formatPrice(value) {
@@ -23,29 +23,17 @@ export default function FlightCheckoutPage() {
   const [searchParams] = useSearchParams()
   const session = useMemo(() => readSession(), [])
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const showToast = useToast()
 
   const flight = mockFlights.find((f) => f.id === flightId)
   const passengers = Math.max(1, Number(searchParams.get('passengers') || 1))
   const departDate = searchParams.get('departDate') || new Date().toISOString().split('T')[0]
   const selectedClass = searchParams.get('class') || 'economy'
   const isBusinessClass = selectedClass === 'business'
-
-  if (!session) return <Navigate to="/auth" replace />
-  if (!flight) return <Navigate to="/search?tab=flights" replace />
-
-  const pricePerPerson = isBusinessClass
-    ? (flight.businessPrice ?? flight.price)
-    : flight.price
-  const baseFare = pricePerPerson * passengers
-  const taxRate = 0.1
-  const taxes = Math.round(baseFare * taxRate)
-  const serviceFee = 55000 * passengers
-  const total = baseFare + taxes + serviceFee
+  const todayStr = new Date().toISOString().split('T')[0]
 
   const initialName = splitFullName(session?.fullName)
-
-  const dispatch = useDispatch()
-  const showToast = useToast()
   const [step, setStep] = useState(1)
 
   const [leadPassenger, setLeadPassenger] = useState({
@@ -74,6 +62,18 @@ export default function FlightCheckoutPage() {
     acceptedTerms: false,
   })
 
+  if (!session) return <Navigate to="/auth" replace />
+  if (!flight) return <Navigate to="/search?tab=flights" replace />
+
+  const pricePerPerson = isBusinessClass
+    ? (flight.businessPrice ?? flight.price)
+    : flight.price
+  const baseFare = pricePerPerson * passengers
+  const taxRate = 0.1
+  const taxes = Math.round(baseFare * taxRate)
+  const serviceFee = 55000 * passengers
+  const total = baseFare + taxes + serviceFee
+
   const handleLeadChange = (e) => {
     const { name, value } = e.target
     setLeadPassenger((p) => ({ ...p, [name]: value }))
@@ -96,6 +96,14 @@ export default function FlightCheckoutPage() {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (step === 1) {
+      if (departDate < todayStr) {
+        showToast('Ngày bay không thể là ngày trong quá khứ', 'danger')
+        return
+      }
+      if (leadPassenger.dob > todayStr) {
+        showToast('Ngày sinh không thể là ngày trong tương lai', 'danger')
+        return
+      }
       setStep(2)
       return
     }
@@ -194,7 +202,7 @@ export default function FlightCheckoutPage() {
                       <div className="fco-field">
                         <label>Ngày sinh</label>
                         <input type="date" name="dob" value={leadPassenger.dob}
-                          onChange={handleLeadChange} required />
+                          onChange={handleLeadChange} max={todayStr} required />
                       </div>
                       <div className="fco-field">
                         <label>Quốc tịch</label>

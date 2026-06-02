@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -17,17 +17,6 @@ function StaysSearchResultsContent() {
   const filteredStays = useSelector(selectFilteredStays)
   const [sortBy, setSortBy] = useState('Lựa Chọn Hàng Đầu')
   const [currentPage, setCurrentPage] = useState(1)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [filteredStays.length, sortBy])
-
-  useEffect(() => {
-    setIsLoading(true)
-    const timer = setTimeout(() => setIsLoading(false), 500)
-    return () => clearTimeout(timer)
-  }, [criteria.destination, criteria.checkIn, criteria.checkOut, criteria.guests])
 
   const sortedStays = useMemo(() => {
     const sorted = [...filteredStays]
@@ -44,9 +33,10 @@ function StaysSearchResultsContent() {
   }, [filteredStays, sortBy])
 
   const totalPages = Math.ceil(sortedStays.length / ITEMS_PER_PAGE)
+  const safeCurrentPage = Math.min(currentPage, Math.max(totalPages, 1))
   const pagedStays = sortedStays.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
+    (safeCurrentPage - 1) * ITEMS_PER_PAGE,
+    safeCurrentPage * ITEMS_PER_PAGE,
   )
 
   const handlePageChange = (page) => {
@@ -114,18 +104,7 @@ function StaysSearchResultsContent() {
           </div>
 
           <div className="search-results-list">
-            {isLoading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="stay-skeleton">
-                  <div className="stay-skeleton-image" />
-                  <div className="stay-skeleton-body">
-                    <div className="stay-skeleton-line stay-skeleton-title" />
-                    <div className="stay-skeleton-line stay-skeleton-sub" />
-                    <div className="stay-skeleton-line stay-skeleton-short" />
-                  </div>
-                </div>
-              ))
-            ) : pagedStays.length > 0 ? (
+            {pagedStays.length > 0 ? (
               pagedStays.map((stay) => (
                 <StayCard key={stay.id} stay={stay} />
               ))
@@ -142,8 +121,8 @@ function StaysSearchResultsContent() {
               <button
                 type="button"
                 className="search-pagination-arrow"
-                disabled={currentPage === 1}
-                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={safeCurrentPage === 1}
+                onClick={() => handlePageChange(safeCurrentPage - 1)}
               >
                 <span className="material-symbols-outlined">chevron_left</span>
               </button>
@@ -151,7 +130,7 @@ function StaysSearchResultsContent() {
                 <button
                   key={page}
                   type="button"
-                  className={`search-pagination-page${page === currentPage ? ' is-active' : ''}`}
+                  className={`search-pagination-page${page === safeCurrentPage ? ' is-active' : ''}`}
                   onClick={() => handlePageChange(page)}
                 >
                   {page}
@@ -160,8 +139,8 @@ function StaysSearchResultsContent() {
               <button
                 type="button"
                 className="search-pagination-arrow"
-                disabled={currentPage === totalPages}
-                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={safeCurrentPage === totalPages}
+                onClick={() => handlePageChange(safeCurrentPage + 1)}
               >
                 <span className="material-symbols-outlined">chevron_right</span>
               </button>

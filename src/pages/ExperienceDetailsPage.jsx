@@ -5,10 +5,6 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { toggleSaved } from '../features/saved/savedSlice'
 import mockExperiences from '../data/mockExperiences'
 
-function formatPrice(value) {
-  return new Intl.NumberFormat('vi-VN').format(Math.round(value * 25000))
-}
-
 const detailsByType = {
   'Du Thuyền': {
     includes: [

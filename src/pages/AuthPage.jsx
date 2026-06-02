@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { readUsers, writeSession, writeUsers } from '../utils/authSession'
-import { useToast } from '../context/ToastContext'
+import { useToast } from '../context/toastState'
 
 function AuthPage() {
   const [searchParams, setSearchParams] = useSearchParams()

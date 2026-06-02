@@ -12,14 +12,14 @@ function SavedPage() {
   const stays = useSelector(selectAllStays)
   const savedIds = useSelector((state) => state.saved.savedIds)
   const dispatch = useDispatch()
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [viewMode, setViewMode] = useState('list')
+  const session = readSession()
 
-  if (!readSession()) return <Navigate to="/auth" replace />
+  if (!session) return <Navigate to="/auth" replace />
 
   const allItems = [...stays, ...mockExperiences]
   const savedItems = allItems.filter((item) => savedIds.includes(item.id))
-
-  const [activeFilter, setActiveFilter] = useState('all')
-  const [viewMode, setViewMode] = useState('list')
 
   const hotels = savedItems.filter((item) => !item.duration)
   const experiences = savedItems.filter((item) => Boolean(item.duration))

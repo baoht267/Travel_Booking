@@ -6,6 +6,9 @@ const savedSlice = createSlice({
     savedIds: [],
   },
   reducers: {
+    replaceSavedState(state, action) {
+      state.savedIds = Array.isArray(action.payload?.savedIds) ? action.payload.savedIds : []
+    },
     toggleSaved(state, action) {
       const stayId = action.payload
       const exists = state.savedIds.includes(stayId)
@@ -17,6 +20,6 @@ const savedSlice = createSlice({
   },
 })
 
-export const { toggleSaved } = savedSlice.actions
+export const { replaceSavedState, toggleSaved } = savedSlice.actions
 
 export default savedSlice.reducer

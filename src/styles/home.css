@@ -135,6 +135,8 @@
 }
 
 .tour-card {
+  display: flex;
+  flex-direction: column;
   min-width: 300px;
   width: 300px;
   flex-shrink: 0;
@@ -157,6 +159,9 @@
 }
 
 .tour-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding: 1rem;
 }
 
@@ -176,6 +181,7 @@
   font-weight: 700;
   letter-spacing: -0.01em;
   color: #1a1c1c;
+  min-height: 4rem;
 }
 
 .tour-card-meta {
@@ -204,6 +210,7 @@
   justify-content: space-between;
   align-items: flex-end;
   gap: 1rem;
+  margin-top: auto;
 }
 
 .tour-card-label {

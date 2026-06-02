@@ -1,16 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit'
-import bookingsReducer from '../features/bookings/bookingsSlice'
-import savedReducer from '../features/saved/savedSlice'
-import staysReducer from '../features/stays/staysSlice'
+import bookingsReducer, { replaceBookingsState } from '../features/bookings/bookingsSlice'
+import savedReducer, { replaceSavedState } from '../features/saved/savedSlice'
+import staysReducer, { replacePersistedStaysState } from '../features/stays/staysSlice'
+import { readSession, SESSION_EVENT_NAME } from '../utils/authSession'
 
 const STORAGE_KEY = 'travel-booking-state'
 const defaultSavedState = savedReducer(undefined, { type: '@@INIT' })
 const defaultStaysState = staysReducer(undefined, { type: '@@INIT' })
 const defaultBookingsState = bookingsReducer(undefined, { type: '@@INIT' })
 
-function loadPersistedState() {
+function getCurrentStorageKey() {
+  const session = readSession()
+  const userKey = session?.email?.trim().toLowerCase() || 'guest'
+  return `${STORAGE_KEY}:${userKey}`
+}
+
+function readPersistedState() {
   try {
-    const rawState = localStorage.getItem(STORAGE_KEY)
+    const rawState = localStorage.getItem(getCurrentStorageKey())
     if (!rawState) {
       return undefined
     }
@@ -26,10 +33,7 @@ function loadPersistedState() {
       stays: {
         ...defaultStaysState,
         ...parsedState.stays,
-        criteria: {
-          ...defaultStaysState.criteria,
-          ...parsedState.stays?.criteria,
-        },
+        criteria: defaultStaysState.criteria,
         filters: {
           ...defaultStaysState.filters,
           ...parsedState.stays?.filters,
@@ -55,17 +59,24 @@ function persistState(state) {
     const serializableState = {
       saved: state.saved,
       stays: {
-        criteria: state.stays.criteria,
         filters: state.stays.filters,
         recentSearches: state.stays.recentSearches,
       },
       bookings: state.bookings,
     }
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(serializableState))
+    localStorage.setItem(getCurrentStorageKey(), JSON.stringify(serializableState))
   } catch {
     return
   }
+}
+
+function hydrateScopedState() {
+  const scopedState = readPersistedState()
+
+  store.dispatch(replaceSavedState(scopedState?.saved ?? defaultSavedState))
+  store.dispatch(replacePersistedStaysState(scopedState?.stays ?? defaultStaysState))
+  store.dispatch(replaceBookingsState(scopedState?.bookings ?? defaultBookingsState))
 }
 
 export const store = configureStore({
@@ -74,9 +85,11 @@ export const store = configureStore({
     saved: savedReducer,
     bookings: bookingsReducer,
   },
-  preloadedState: loadPersistedState(),
+  preloadedState: readPersistedState(),
 })
 
 store.subscribe(() => {
   persistState(store.getState())
 })
+
+window.addEventListener(SESSION_EVENT_NAME, hydrateScopedState)

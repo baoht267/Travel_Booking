@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import mockTaxis from '../data/mockTaxis'
 import { readSession } from '../utils/authSession'
 import { addBooking } from '../features/bookings/bookingsSlice'
-import { useToast } from '../context/ToastContext'
+import { useToast } from '../context/toastState'
 
 function formatPrice(value) {
   return new Intl.NumberFormat('vi-VN').format(value)
@@ -29,6 +29,8 @@ export default function TaxiCheckoutPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const session = useMemo(() => readSession(), [])
+  const dispatch = useDispatch()
+  const showToast = useToast()
 
   const taxi = mockTaxis.find((t) => t.id === taxiId)
 
@@ -38,14 +40,6 @@ export default function TaxiCheckoutPage() {
   const passengers = Number(searchParams.get('passengers') || 1)
   const luggage = Number(searchParams.get('luggage') || 1)
 
-  if (!session) return <Navigate to="/auth" replace />
-  if (!taxi) return <Navigate to="/search?tab=airport-taxis" replace />
-
-  const meetFee = 50000
-  const total = taxi.price + meetFee
-
-  const dispatch = useDispatch()
-  const showToast = useToast()
   const initial = splitFullName(session?.fullName)
   const [step, setStep] = useState(1)
 
@@ -66,6 +60,12 @@ export default function TaxiCheckoutPage() {
     acceptedTerms: false,
   })
 
+  if (!session) return <Navigate to="/auth" replace />
+  if (!taxi) return <Navigate to="/search?tab=airport-taxis" replace />
+
+  const meetFee = 50000
+  const total = taxi.price + meetFee
+
   const handleContact = (e) => {
     const { name, value } = e.target
     setContact((p) => ({ ...p, [name]: value }))
@@ -83,6 +83,14 @@ export default function TaxiCheckoutPage() {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (step === 1) {
+      if (!destination.trim()) {
+        showToast('Vui lòng nhập điểm đến hoặc điểm đón', 'danger')
+        return
+      }
+      if (datetime && new Date(datetime).getTime() < Date.now()) {
+        showToast('Thời gian đón taxi không thể là thời gian trong quá khứ', 'danger')
+        return
+      }
       setStep(2)
       return
     }

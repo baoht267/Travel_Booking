@@ -1,6 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectBookingById } from '../features/bookings/bookingsSlice'
+import { formatVndCurrency } from '../utils/currency'
 
 const TYPE_CONFIG = {
   hotel: {
@@ -31,13 +32,9 @@ const TYPE_CONFIG = {
 
 function formatCurrency(value, currency) {
   if (currency === 'VND') {
-    return new Intl.NumberFormat('vi-VN').format(value) + '₫'
+    return formatVndCurrency(value)
   }
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(value)
+  return formatVndCurrency(value)
 }
 
 function formatDate(iso) {
