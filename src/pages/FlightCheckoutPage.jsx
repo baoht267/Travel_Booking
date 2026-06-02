@@ -1,7 +1,10 @@
 import { useMemo, useState } from 'react'
-import { Alert, Button } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { readSession } from '../utils/authSession'
+import { addBooking } from '../features/bookings/bookingsSlice'
+import { useToast } from '../context/ToastContext'
 import mockFlights from '../data/mockFlights'
 
 function formatPrice(value) {
@@ -27,6 +30,7 @@ export default function FlightCheckoutPage() {
   const selectedClass = searchParams.get('class') || 'economy'
   const isBusinessClass = selectedClass === 'business'
 
+  if (!session) return <Navigate to="/auth" replace />
   if (!flight) return <Navigate to="/search?tab=flights" replace />
 
   const pricePerPerson = isBusinessClass
@@ -40,8 +44,9 @@ export default function FlightCheckoutPage() {
 
   const initialName = splitFullName(session?.fullName)
 
+  const dispatch = useDispatch()
+  const showToast = useToast()
   const [step, setStep] = useState(1)
-  const [submitted, setSubmitted] = useState(false)
 
   const [leadPassenger, setLeadPassenger] = useState({
     firstName: initialName.firstName,
@@ -90,7 +95,28 @@ export default function FlightCheckoutPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setSubmitted(true)
+    if (step === 1) {
+      setStep(2)
+      return
+    }
+    const classBadgeLabel = isBusinessClass ? 'Thương Gia' : 'Phổ Thông'
+    const booking = dispatch(addBooking({
+      type: 'flight',
+      title: `${flight.from} → ${flight.to}`,
+      subtitle: `${flight.airline} · ${classBadgeLabel}`,
+      image: null,
+      total,
+      currency: 'VND',
+      details: {
+        'Hãng bay': flight.airline,
+        'Ngày bay': new Intl.DateTimeFormat('vi-VN').format(new Date(departDate)),
+        'Giờ khởi hành': `${flight.departTime} → ${flight.arriveTime}`,
+        'Hành khách': `${passengers} người · ${classBadgeLabel}`,
+      },
+    }))
+    const bookingId = booking.payload.id
+    showToast(`Đặt vé bay thành công! Mã đặt chỗ: #${bookingId.slice(-6).toUpperCase()}`, 'success', 5000)
+    navigate(`/booking-confirmation/${bookingId}`, { replace: true })
   }
 
   const formatFlightDate = (dateStr) => {
@@ -144,23 +170,7 @@ export default function FlightCheckoutPage() {
       <div className="fco-layout">
         {/* ── LEFT COLUMN ── */}
         <main className="fco-main">
-          {submitted ? (
-            <div className="fco-success-card">
-              <span className="material-symbols-outlined fco-success-icon">check_circle</span>
-              <h2>Đặt vé thành công!</h2>
-              <p>
-                Xác nhận đặt chuyến bay <strong>{flight.from} → {flight.to}</strong> đã được gửi
-                đến <strong>{leadPassenger.email}</strong>.
-              </p>
-              <div className="fco-success-ref">
-                Mã đặt vé: <strong>GC-{flightId.slice(-6).toUpperCase()}</strong>
-              </div>
-              <Link to="/search?tab=flights" className="btn btn-primary mt-4 px-5">
-                Tìm chuyến bay khác
-              </Link>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
               {/* ── STEP 1: Thông tin hành khách ── */}
               {step === 1 && (
                 <>
@@ -257,9 +267,8 @@ export default function FlightCheckoutPage() {
                   ))}
 
                   <Button
-                    type="button"
+                    type="submit"
                     className="fco-next-btn"
-                    onClick={() => setStep(2)}
                   >
                     Tiếp Theo: Thanh Toán
                     <span className="material-symbols-outlined">arrow_forward</span>
@@ -345,7 +354,6 @@ export default function FlightCheckoutPage() {
                 </>
               )}
             </form>
-          )}
         </main>
 
         {/* ── RIGHT COLUMN: Summary ── */}

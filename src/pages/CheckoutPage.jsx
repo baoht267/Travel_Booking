@@ -1,16 +1,16 @@
-import { useMemo, useState } from 'react'
-import { Alert, Button, Form } from 'react-bootstrap'
+import { useMemo, useRef, useState } from 'react'
+import { Button, Form } from 'react-bootstrap'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import VNPayQR from '../components/payment/VNPayQR'
+import { useDispatch, useSelector } from 'react-redux'
 import { selectAllStays, selectCriteria } from '../features/stays/staysSlice'
+import { addBooking, selectHotelBookingsByStay } from '../features/bookings/bookingsSlice'
 import { readSession } from '../utils/authSession'
+import { useToast } from '../context/ToastContext'
+import { convertBasePriceToVnd, formatVndCurrency } from '../utils/currency'
 
 function toCurrency(value) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(value)
+  return formatVndCurrency(value)
 }
 
 function formatDateRange(checkIn, checkOut) {
@@ -51,23 +51,26 @@ function CheckoutPage() {
   const criteria = useSelector(selectCriteria)
   const session = useMemo(() => readSession(), [])
   const navigate = useNavigate()
-  const [submitted, setSubmitted] = useState(false)
 
+  const dispatch = useDispatch()
+  const showToast = useToast()
+  const existingBookings = useSelector(selectHotelBookingsByStay(stayId))
   const stay = stays.find((item) => item.id === stayId)
 
   const initialName = splitFullName(session?.fullName)
+  const payRef = useRef(`GC${Date.now().toString(36).toUpperCase().slice(-6)}`)
   const [formValues, setFormValues] = useState({
     firstName: initialName.firstName,
     lastName: initialName.lastName,
     email: session?.email || '',
     phone: '',
     requests: '',
-    cardholderName: session?.fullName || '',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
     acceptedTerms: false,
   })
+
+  if (!session) {
+    return <Navigate to="/auth" replace />
+  }
 
   if (!stay) {
     return <Navigate to="/search" replace />
@@ -79,6 +82,11 @@ function CheckoutPage() {
   const taxes = Number((stay.taxesAndFees * nights * criteria.rooms).toFixed(2))
   const discount = nights >= 3 ? Number((basePrice * 0.06).toFixed(2)) : 0
   const total = basePrice + serviceFee + taxes - discount
+  const basePriceVnd = convertBasePriceToVnd(basePrice)
+  const serviceFeeVnd = convertBasePriceToVnd(serviceFee)
+  const taxesVnd = convertBasePriceToVnd(taxes)
+  const discountVnd = convertBasePriceToVnd(discount)
+  const totalVnd = convertBasePriceToVnd(total)
   const cardLabel = `Đặt ${stay.propertyType}`
 
   const handleFieldChange = (event) => {
@@ -91,7 +99,42 @@ function CheckoutPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    setSubmitted(true)
+    const todayStr = new Date().toISOString().slice(0, 10)
+    if (criteria.checkIn < todayStr) {
+      showToast('Ngày nhận phòng không thể là ngày trong quá khứ', 'danger')
+      return
+    }
+    if (criteria.checkOut <= criteria.checkIn) {
+      showToast('Ngày trả phòng phải sau ngày nhận phòng', 'danger')
+      return
+    }
+    const conflict = existingBookings.some(
+      (b) => criteria.checkIn < b.checkOut && criteria.checkOut > b.checkIn
+    )
+    if (conflict) {
+      showToast('Phòng đã được đặt trong khoảng thời gian này, vui lòng chọn ngày khác', 'danger')
+      return
+    }
+    const booking = dispatch(addBooking({
+      type: 'hotel',
+      stayId: stay.id,
+      checkIn: criteria.checkIn,
+      checkOut: criteria.checkOut,
+      title: stay.name,
+      subtitle: `${stay.city}, ${stay.country}`,
+      image: stay.image,
+      total: totalVnd,
+      currency: 'VND',
+      details: {
+        'Nhận phòng': new Intl.DateTimeFormat('vi-VN').format(new Date(criteria.checkIn)),
+        'Trả phòng': new Intl.DateTimeFormat('vi-VN').format(new Date(criteria.checkOut)),
+        'Số đêm': `${getNightCount(criteria.checkIn, criteria.checkOut)} đêm`,
+        'Số khách': `${criteria.guests} khách · ${criteria.rooms} phòng`,
+      },
+    }))
+    const bookingId = booking.payload.id
+    showToast(`Đặt ${stay.propertyType} thành công! Mã đặt chỗ: #${bookingId.slice(-6).toUpperCase()}`, 'success', 5000)
+    navigate(`/booking-confirmation/${bookingId}`, { replace: true })
   }
 
   return (
@@ -134,12 +177,6 @@ function CheckoutPage() {
 
         <div className="checkout-layout">
           <section className="checkout-form-column">
-            {submitted && (
-              <Alert variant="success" className="checkout-success-alert">
-                Đặt phòng đã được xác nhận cho {stay.name}. Đây là luồng thanh toán mẫu.
-              </Alert>
-            )}
-
             <Form onSubmit={handleSubmit} className="checkout-form-stack">
               <div className="checkout-panel">
                 <h2 className="checkout-panel-title">Nhập thông tin của bạn</h2>
@@ -205,82 +242,14 @@ function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="checkout-panel">
-                <div className="checkout-payment-head">
-                  <h2 className="checkout-panel-title">Thanh Toán An Toàn</h2>
-                  <div className="checkout-card-brands">
-                    <span>VISA</span>
-                    <span>MC</span>
-                  </div>
-                </div>
-
-                <div className="checkout-field">
-                  <label htmlFor="cardholderName">Tên Chủ Thẻ</label>
-                  <input
-                    id="cardholderName"
-                    name="cardholderName"
-                    value={formValues.cardholderName}
-                    onChange={handleFieldChange}
-                    placeholder="Tên như trên thẻ"
-                    required
-                  />
-                </div>
-
-                <div className="checkout-field">
-                  <label htmlFor="cardNumber">Số Thẻ</label>
-                  <div className="checkout-card-input">
-                    <input
-                      id="cardNumber"
-                      name="cardNumber"
-                      value={formValues.cardNumber}
-                      onChange={handleFieldChange}
-                      placeholder="0000 0000 0000 0000"
-                      required
-                    />
-                    <span className="material-symbols-outlined">credit_card</span>
-                  </div>
-                </div>
-
-                <div className="checkout-form-grid checkout-form-grid-tight">
-                  <div className="checkout-field">
-                    <label htmlFor="expiryDate">Ngày Hết Hạn</label>
-                    <input
-                      id="expiryDate"
-                      name="expiryDate"
-                      value={formValues.expiryDate}
-                      onChange={handleFieldChange}
-                      placeholder="MM/YY"
-                      required
-                    />
-                  </div>
-                  <div className="checkout-field">
-                    <label htmlFor="cvv">CVV</label>
-                    <input
-                      id="cvv"
-                      name="cvv"
-                      value={formValues.cvv}
-                      onChange={handleFieldChange}
-                      placeholder="123"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <label className="checkout-policy-box" htmlFor="acceptedTerms">
-                  <input
-                    id="acceptedTerms"
-                    name="acceptedTerms"
-                    type="checkbox"
-                    checked={formValues.acceptedTerms}
-                    onChange={handleFieldChange}
-                    required
-                  />
-                  <span>
-                    Tôi đã đọc và đồng ý với <Link to="/">Điều Khoản & Điều Kiện</Link> và{' '}
-                    <Link to="/">Chính Sách Bảo Mật</Link>.
-                  </span>
-                </label>
-              </div>
+              <VNPayQR
+                amount={toCurrency(totalVnd)}
+                reference={payRef.current}
+                confirmed={formValues.acceptedTerms}
+                onConfirmChange={(e) =>
+                  setFormValues((v) => ({ ...v, acceptedTerms: e.target.checked }))
+                }
+              />
 
               <Button type="submit" className="checkout-confirm-button">
                 Xác Nhận Đặt Chỗ
@@ -337,13 +306,13 @@ function CheckoutPage() {
 
                 <div className="checkout-price-summary">
                   <h4>Tóm Tắt Giá</h4>
-                  <div><span>Giá Cơ Bản</span><span>{toCurrency(basePrice)}</span></div>
-                  <div><span>Phí Dịch Vụ</span><span>{toCurrency(serviceFee)}</span></div>
-                  <div><span>Thuế & VAT</span><span>{toCurrency(taxes)}</span></div>
+                  <div><span>Giá Cơ Bản</span><span>{toCurrency(basePriceVnd)}</span></div>
+                  <div><span>Phí Dịch Vụ</span><span>{toCurrency(serviceFeeVnd)}</span></div>
+                  <div><span>Thuế & VAT</span><span>{toCurrency(taxesVnd)}</span></div>
                   {discount > 0 && (
                     <div className="checkout-discount-row">
                       <span>Giảm Giá Đặt Sớm</span>
-                      <span>-{toCurrency(discount)}</span>
+                      <span>-{toCurrency(discountVnd)}</span>
                     </div>
                   )}
                 </div>
@@ -353,7 +322,7 @@ function CheckoutPage() {
                     <strong>Tổng Cộng</strong>
                     <small>Đã bao gồm tất cả thuế</small>
                   </div>
-                  <span>{toCurrency(total)}</span>
+                  <span>{toCurrency(totalVnd)}</span>
                 </div>
 
                 <div className="checkout-info-note">

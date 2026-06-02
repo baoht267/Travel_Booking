@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Button, Container } from 'react-bootstrap'
-import { useSelector } from 'react-redux'
-import { Link, Navigate, useParams } from 'react-router-dom'
-import { selectAllStays, selectCriteria } from '../features/stays/staysSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { selectAllStays, selectCriteria, updateCriteria } from '../features/stays/staysSlice'
+import { selectHotelBookingsByStay } from '../features/bookings/bookingsSlice'
+import { convertBasePriceToVnd, formatBasePriceToVndCurrency } from '../utils/currency'
 
 const galleryByTheme = {
   sea: [
@@ -238,21 +240,32 @@ const detailsByTheme = {
   },
 }
 
-function formatPrice(value) {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
+function datesOverlap(a1, a2, b1, b2) {
+  return a1 < b2 && a2 > b1
 }
 
 function HotelDetailsPage() {
   const { stayId } = useParams()
   const stays = useSelector(selectAllStays)
   const criteria = useSelector(selectCriteria)
+  const existingBookings = useSelector(selectHotelBookingsByStay(stayId))
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const stay = stays.find((item) => item.id === stayId)
   const [activeHighlight, setActiveHighlight] = useState(0)
-  const [selectedDate, setSelectedDate] = useState(criteria.checkIn)
+  const [checkIn, setCheckIn] = useState(criteria.checkIn)
+  const [checkOut, setCheckOut] = useState(criteria.checkOut)
   const [travelerCount, setTravelerCount] = useState(criteria.guests || 2)
+
+  const todayStr = new Date().toISOString().slice(0, 10)
+
+  const dateError = (() => {
+    if (checkIn < todayStr) return 'Ngày nhận phòng không thể là ngày trong quá khứ'
+    if (checkOut <= checkIn) return 'Ngày trả phòng phải sau ngày nhận phòng'
+    if (existingBookings.some((b) => datesOverlap(checkIn, checkOut, b.checkIn, b.checkOut)))
+      return 'Phòng đã được đặt trong khoảng thời gian này, vui lòng chọn ngày khác'
+    return null
+  })()
 
   if (!stay) {
     return <Navigate to="/search" replace />
@@ -263,6 +276,9 @@ function HotelDetailsPage() {
   const baseTotal = stay.pricePerNight * travelerCount
   const bookingFee = stay.perks.includes('Thanh toán tại chỗ') ? 0 : stay.taxesAndFees
   const total = baseTotal + bookingFee
+  const baseTotalVnd = convertBasePriceToVnd(baseTotal)
+  const bookingFeeVnd = convertBasePriceToVnd(bookingFee)
+  const totalVnd = convertBasePriceToVnd(total)
 
   return (
     <Container className="page-section stay-detail-page">
@@ -398,23 +414,51 @@ function HotelDetailsPage() {
             <div className="stay-detail-booking-price">
               <div>
                 <span>Từ</span>
-                <strong>€{formatPrice(stay.pricePerNight)}</strong>
+                <strong>{formatBasePriceToVndCurrency(stay.pricePerNight)}</strong>
               </div>
               <small>mỗi người</small>
             </div>
 
             <div className="stay-detail-booking-field">
-              <label htmlFor="detail-date">Chọn Ngày</label>
+              <label htmlFor="detail-checkin">Nhận Phòng</label>
               <div className="stay-detail-booking-input">
                 <input
-                  id="detail-date"
+                  id="detail-checkin"
                   type="date"
-                  value={selectedDate}
-                  onChange={(event) => setSelectedDate(event.target.value)}
+                  value={checkIn}
+                  min={todayStr}
+                  onChange={(e) => {
+                    setCheckIn(e.target.value)
+                    dispatch(updateCriteria({ checkIn: e.target.value }))
+                  }}
                 />
                 <span className="material-symbols-outlined">calendar_today</span>
               </div>
             </div>
+
+            <div className="stay-detail-booking-field">
+              <label htmlFor="detail-checkout">Trả Phòng</label>
+              <div className="stay-detail-booking-input">
+                <input
+                  id="detail-checkout"
+                  type="date"
+                  value={checkOut}
+                  min={checkIn || todayStr}
+                  onChange={(e) => {
+                    setCheckOut(e.target.value)
+                    dispatch(updateCriteria({ checkOut: e.target.value }))
+                  }}
+                />
+                <span className="material-symbols-outlined">calendar_today</span>
+              </div>
+            </div>
+
+            {dateError && (
+              <div className="stay-detail-date-error">
+                <span className="material-symbols-outlined">error</span>
+                <span>{dateError}</span>
+              </div>
+            )}
 
             <div className="stay-detail-booking-field">
               <label>Du Khách</label>
@@ -434,20 +478,25 @@ function HotelDetailsPage() {
 
             <div className="stay-detail-price-box">
               <div>
-                <span>€{formatPrice(stay.pricePerNight)} × {travelerCount} du khách</span>
-                <strong>€{formatPrice(baseTotal)}</strong>
+                <span>{formatBasePriceToVndCurrency(stay.pricePerNight)} × {travelerCount} du khách</span>
+                <strong>{baseTotalVnd.toLocaleString('vi-VN')}₫</strong>
               </div>
               <div>
                 <span>Phí Đặt Chỗ</span>
-                <strong>{bookingFee === 0 ? 'Miễn Phí' : `€${formatPrice(bookingFee)}`}</strong>
+                <strong>{bookingFee === 0 ? 'Miễn Phí' : `${bookingFeeVnd.toLocaleString('vi-VN')}₫`}</strong>
               </div>
               <div className="stay-detail-price-total">
                 <span>Tổng Cộng</span>
-                <strong>€{formatPrice(total)}</strong>
+                <strong>{totalVnd.toLocaleString('vi-VN')}₫</strong>
               </div>
             </div>
 
-            <Button as={Link} to={`/checkout/${stay.id}`} className="stay-detail-book-now">
+            <Button
+              type="button"
+              className="stay-detail-book-now"
+              disabled={!!dateError}
+              onClick={() => !dateError && navigate(`/checkout/${stay.id}`)}
+            >
               Đặt Ngay
             </Button>
 

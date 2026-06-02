@@ -2,18 +2,22 @@ import { Button, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toggleSaved } from '../../features/saved/savedSlice'
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
+import { useToast } from '../../context/ToastContext'
+import { formatBasePriceToVndCurrency } from '../../utils/currency'
 
 function StayCard({ stay }) {
   const savedIds = useSelector((state) => state.saved.savedIds)
   const isSaved = savedIds.includes(stay.id)
   const dispatch = useDispatch()
+  const showToast = useToast()
+
+  const handleToggleSaved = () => {
+    dispatch(toggleSaved(stay.id))
+    showToast(
+      isSaved ? `Đã xóa "${stay.name}" khỏi danh sách lưu` : `Đã lưu "${stay.name}"`,
+      isSaved ? 'info' : 'success',
+    )
+  }
 
   const isExperienceCard = Boolean(stay.image && stay.area && stay.duration)
   const tagToneClass =
@@ -27,7 +31,7 @@ function StayCard({ stay }) {
           <button
             type="button"
             className={`experience-save-button ${isSaved ? 'is-saved' : ''}`}
-            onClick={() => dispatch(toggleSaved(stay.id))}
+            onClick={handleToggleSaved}
             aria-label={isSaved ? 'Xóa khỏi đã lưu' : 'Lưu trải nghiệm'}
           >
             <span className="material-symbols-outlined">
@@ -68,7 +72,7 @@ function StayCard({ stay }) {
 
               <div className="experience-card-price-block">
                 <span className="experience-price-prefix">Từ</span>
-                <span className="experience-price">EUR{formatPrice(stay.pricePerNight)}</span>
+                <span className="experience-price">{formatBasePriceToVndCurrency(stay.pricePerNight)}</span>
                 <Button as={Link} to={`/experiences/${stay.id}`} type="button" className="experience-availability-button">
                   Xem Chi Tiết
                 </Button>
@@ -81,75 +85,74 @@ function StayCard({ stay }) {
   }
 
   return (
-    <Card className="hotel-card hotel-search-card surface-card">
-      <div className="hotel-search-media">
-        <img src={stay.image} alt={stay.name} className="hotel-search-image" />
-      </div>
+    <div className="hsc-card">
+      <Link to={`/stays/${stay.id}`} className="hsc-image-wrap">
+        <img src={stay.image} alt={stay.name} className="hsc-image" />
+      </Link>
 
-      <Card.Body className="hotel-search-body">
-        <div className="hotel-search-main">
-          <div className="hotel-search-copy">
-            <div className="hotel-search-heading">
-              <div>
-                <h3 className="hotel-search-title">
-                  <Link to={`/stays/${stay.id}`}>{stay.name}</Link>
-                </h3>
-                <div className="hotel-search-location">
-                  {stay.city}, {stay.country} | {stay.distanceToCenter} km từ trung tâm
-                </div>
-              </div>
-
-              <div className="hotel-search-rating">
-                <div className="experience-card-score-copy">
-                  <span className="experience-card-score-label">{stay.reviewLabel}</span>
-                  <span className="experience-card-score-reviews">
-                    {stay.reviewsCount.toLocaleString()} đánh giá
-                  </span>
-                </div>
-                <div className="experience-card-score-box">{stay.reviewScore}</div>
-              </div>
-            </div>
-
-            <p className="hotel-search-description">{stay.description}</p>
-
-            <div className="hotel-search-tags">
-              {stay.perks.map((perk) => (
-                <span key={perk} className="experience-tag experience-tag-success">
-                  {perk}
-                </span>
-              ))}
+      <div className="hsc-body">
+        {/* Top: title + rating */}
+        <div className="hsc-header">
+          <div className="hsc-title-block">
+            <h3 className="hsc-title">
+              <Link to={`/stays/${stay.id}`}>{stay.name}</Link>
+            </h3>
+            <div className="hsc-location">
+              <span className="material-symbols-outlined">location_on</span>
+              {stay.city}, {stay.country}
+              <span className="hsc-distance">{stay.distanceToCenter} km từ trung tâm</span>
             </div>
           </div>
 
-          <div className="hotel-search-footer">
-            <div className="experience-card-meta">
-              <span className="experience-duration">{stay.propertyType}</span>
+          <div className="hsc-rating">
+            <div className="hsc-rating-text">
+              <span className="hsc-rating-label">{stay.reviewLabel}</span>
+              <span className="hsc-rating-count">{stay.reviewsCount.toLocaleString()} đánh giá</span>
             </div>
-            <div className="experience-card-price-block">
-              <span className="experience-price-prefix">Từ</span>
-              <span className="experience-price">EUR{formatPrice(stay.pricePerNight)}</span>
-              <div className="hotel-search-actions">
-                <Button
-                  variant={isSaved ? 'warning' : 'outline-secondary'}
-                  className="save-toggle"
-                  onClick={() => dispatch(toggleSaved(stay.id))}
-                >
-                  {isSaved ? 'Đã Lưu' : 'Lưu'}
-                </Button>
-                <Button
-                  as={Link}
-                  to={`/stays/${stay.id}`}
-                  variant="primary"
-                  className="experience-availability-button"
-                >
-                  Xem Lịch Trống
-                </Button>
-              </div>
+            <div className="hsc-score">{stay.reviewScore}</div>
+          </div>
+        </div>
+
+        {/* Description */}
+        <p className="hsc-description">{stay.description}</p>
+
+        {/* Perks */}
+        <div className="hsc-perks">
+          {stay.perks.map((perk) => (
+            <span key={perk} className="hsc-perk">{perk}</span>
+          ))}
+        </div>
+
+        {/* Footer: type + price + actions */}
+        <div className="hsc-footer">
+          <span className="hsc-type">{stay.propertyType}</span>
+
+          <div className="hsc-price-block">
+            <div className="hsc-price-info">
+              <span className="hsc-price-from">Từ</span>
+              <span className="hsc-price">{formatBasePriceToVndCurrency(stay.pricePerNight)}</span>
+              <span className="hsc-price-note">mỗi đêm</span>
+            </div>
+            <div className="hsc-actions">
+              <button
+                type="button"
+                className={`hsc-save-btn${isSaved ? ' is-saved' : ''}`}
+                onClick={handleToggleSaved}
+                aria-label={isSaved ? 'Bỏ lưu' : 'Lưu'}
+              >
+                <span className="material-symbols-outlined">
+                  {isSaved ? 'favorite' : 'favorite_border'}
+                </span>
+                {isSaved ? 'Đã lưu' : 'Lưu'}
+              </button>
+              <Link to={`/stays/${stay.id}`} className="hsc-book-btn">
+                Xem lịch trống
+              </Link>
             </div>
           </div>
         </div>
-      </Card.Body>
-    </Card>
+      </div>
+    </div>
   )
 }
 

@@ -241,7 +241,7 @@ function HomePage() {
                     </div>
                     <Button
                       as={Link}
-                      to="/search"
+                      to={`/experiences/${tour.id}`}
                       variant="outline-primary"
                       className="tour-card-button"
                     >

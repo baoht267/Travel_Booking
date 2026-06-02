@@ -1,0 +1,240 @@
+.taxi-page { min-height: 100vh; background: #f4f6fb; }
+
+.taxi-hero {
+  position: relative;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 48px 20px 56px;
+  overflow: hidden;
+}
+
+.taxi-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('https://images.unsplash.com/photo-1596003906949-67221c37965c?auto=format&fit=crop&w=1400&q=50') center/cover no-repeat;
+  opacity: 0.12;
+}
+
+.taxi-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15, 52, 96, .7), rgba(26, 26, 46, .8)); }
+.taxi-hero-content { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; text-align: center; }
+.taxi-hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 193, 7, .15); border: 1px solid rgba(255, 193, 7, .4); color: #ffc107; border-radius: 50px; padding: 5px 16px; font-size: .82rem; font-weight: 700; margin-bottom: 16px; }
+.taxi-hero-title { font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.taxi-hero-sub { font-size: 1rem; color: rgba(255, 255, 255, .75); margin-bottom: 28px; }
+
+.taxi-search-card { background: rgba(255, 255, 255, .1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, .15); border-radius: 18px; padding: 24px; }
+.taxi-direction-row { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+.taxi-dir-btn { display: flex; align-items: center; gap: 7px; padding: 9px 22px; border-radius: 50px; border: 1.5px solid rgba(255, 255, 255, .35); background: transparent; color: rgba(255, 255, 255, .8); font-size: .875rem; font-weight: 500; cursor: pointer; transition: all .15s; }
+.taxi-dir-btn .material-symbols-outlined { font-size: 18px; }
+.taxi-dir-btn.is-active { background: #ffc107; border-color: #ffc107; color: #1a1a2e; font-weight: 700; }
+
+.taxi-search-fields { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.taxi-field { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
+.taxi-field-lg { flex: 2; }
+.taxi-field-sm { max-width: 130px; }
+.taxi-field label { display: flex; align-items: center; gap: 5px; font-size: .75rem; font-weight: 600; color: rgba(255, 255, 255, .8); text-transform: uppercase; letter-spacing: .05em; }
+.taxi-field label .material-symbols-outlined { font-size: 16px; }
+.taxi-field input, .taxi-field select { background: #fff; border: none; border-radius: 10px; padding: 11px 14px; font-size: .9rem; color: #1a1a2e; outline: none; }
+
+.taxi-search-btn { background: #ffc107 !important; color: #1a1a2e !important; border: none !important; border-radius: 10px !important; font-weight: 700 !important; font-size: .95rem !important; padding: 11px 24px !important; display: flex !important; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0; }
+.taxi-search-btn:hover { background: #e0a800 !important; }
+
+.taxi-body { max-width: 1140px; margin: 0 auto; padding: 36px 20px 64px; }
+.taxi-section-title { font-size: 1.25rem; font-weight: 700; color: #1a1a2e; margin-bottom: 18px; }
+
+.taxi-routes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.taxi-route-card { background: #fff; border: 1.5px solid #dce4f0; border-radius: 14px; padding: 18px 16px; text-align: left; cursor: pointer; transition: all .15s; }
+.taxi-route-card:hover { border-color: #ffc107; box-shadow: 0 4px 16px rgba(255, 193, 7, .15); transform: translateY(-2px); }
+.taxi-route-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.taxi-route-icon { width: 36px; height: 36px; border-radius: 10px; background: #fff8e1; display: flex; align-items: center; justify-content: center; }
+.taxi-route-icon .material-symbols-outlined { font-size: 20px; color: #f9a825; }
+.taxi-route-code { font-size: 1.1rem; font-weight: 800; color: #1a1a2e; }
+.taxi-route-airports { font-size: .78rem; color: #6c757d; margin: 0 0 6px; }
+.taxi-route-dest { display: flex; align-items: center; gap: 4px; font-size: .82rem; font-weight: 600; color: #0f3460; margin: 0 0 10px; }
+.taxi-route-dest .material-symbols-outlined { font-size: 14px; }
+.taxi-route-meta { display: flex; gap: 10px; margin-bottom: 10px; }
+.taxi-route-meta span { display: flex; align-items: center; gap: 3px; font-size: .72rem; color: #6c757d; }
+.taxi-route-meta .material-symbols-outlined { font-size: 13px; }
+.taxi-route-price { font-size: .82rem; color: #6c757d; }
+.taxi-route-price strong { color: #0f3460; font-size: .95rem; }
+
+.taxi-trust-band { display: flex; flex-wrap: wrap; gap: 24px; background: #fff; border-radius: 14px; padding: 20px 28px; box-shadow: 0 1px 6px rgba(0, 0, 0, .06); margin-bottom: 16px; justify-content: center; }
+.taxi-trust-item { display: flex; align-items: center; gap: 8px; font-size: .85rem; font-weight: 600; color: #1a1a2e; }
+.taxi-trust-item .material-symbols-outlined { font-size: 22px; color: #ffc107; }
+
+.taxi-results-wrap { display: grid; grid-template-columns: 220px 1fr; gap: 24px; }
+.taxi-filter-panel { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 1px 6px rgba(0, 0, 0, .05); align-self: start; position: sticky; top: 80px; }
+.taxi-filter-title { font-size: .95rem; font-weight: 700; color: #1a1a2e; margin-bottom: 16px; }
+.taxi-filter-block { margin-bottom: 20px; }
+.taxi-filter-label { font-size: .78rem; font-weight: 700; color: #6c757d; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+.taxi-filter-check { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: #495057; cursor: pointer; padding: 4px 0; }
+.taxi-filter-check input { cursor: pointer; accent-color: #ffc107; }
+
+.taxi-results-header { margin-bottom: 20px; }
+.taxi-results-title { font-size: 1.05rem; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+.taxi-results-arrow { margin: 0 8px; color: #6c757d; }
+.taxi-results-count { font-size: .875rem; color: #6c757d; margin: 0; }
+
+.taxi-cards { display: flex; flex-direction: column; gap: 20px; }
+.taxi-card { background: #fff; border-radius: 16px; overflow: hidden; position: relative; box-shadow: 0 2px 12px rgba(0, 0, 0, .07); display: flex; flex-direction: row; transition: box-shadow .2s, transform .2s; }
+.taxi-card:hover { box-shadow: 0 6px 24px rgba(15, 52, 96, .12); transform: translateY(-2px); }
+.taxi-highlight-badge { position: absolute; top: 14px; left: 14px; z-index: 2; background: #ffc107; color: #1a1a2e; font-size: .72rem; font-weight: 800; padding: 3px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: .04em; }
+.taxi-card-media { width: 200px; flex-shrink: 0; overflow: hidden; }
+.taxi-card-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.taxi-card-body { flex: 1; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px; }
+.taxi-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.taxi-type-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.taxi-type-icon { font-size: 18px !important; color: #ffc107; }
+.taxi-type-label { font-size: .78rem; font-weight: 700; color: #f9a825; text-transform: uppercase; letter-spacing: .04em; }
+.taxi-car-model { font-size: .95rem; font-weight: 700; color: #1a1a2e; margin: 0 0 2px; }
+.taxi-provider { font-size: .78rem; color: #6c757d; margin: 0; }
+.taxi-rating { display: flex; align-items: center; gap: 8px; }
+.taxi-score { background: #0f3460; color: #fff; border-radius: 8px; padding: 4px 10px; font-size: .9rem; font-weight: 700; }
+.taxi-score-label { font-size: .8rem; font-weight: 600; color: #1a1a2e; margin: 0; }
+.taxi-score-reviews { font-size: .72rem; color: #6c757d; margin: 0; }
+.taxi-capacity { display: flex; flex-wrap: wrap; gap: 14px; }
+.taxi-capacity span { display: flex; align-items: center; gap: 4px; font-size: .8rem; color: #495057; }
+.taxi-capacity .material-symbols-outlined { font-size: 16px; color: #0f3460; }
+.taxi-features { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.taxi-features li { display: flex; align-items: center; gap: 4px; font-size: .78rem; color: #495057; background: #f4f6fb; border-radius: 50px; padding: 3px 10px; }
+.taxi-features .material-symbols-outlined { font-size: 14px; color: #28a745; }
+.taxi-meeting { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: #6c757d; background: #fff8e1; border-radius: 8px; padding: 8px 12px; }
+.taxi-meeting .material-symbols-outlined { font-size: 16px; color: #f9a825; flex-shrink: 0; }
+.taxi-card-footer { display: flex; align-items: flex-end; justify-content: space-between; margin-top: auto; padding-top: 8px; border-top: 1px solid #f0f2f5; }
+.taxi-cancel { font-size: .72rem; color: #28a745; font-weight: 600; margin: 0 0 4px; }
+.taxi-price { display: flex; align-items: baseline; gap: 4px; }
+.taxi-price-from { font-size: .75rem; color: #6c757d; }
+.taxi-price strong { font-size: 1.25rem; font-weight: 800; color: #0f3460; }
+.taxi-price-note { font-size: .75rem; color: #6c757d; }
+.taxi-book-btn { background: #ffc107 !important; border: none !important; color: #1a1a2e !important; border-radius: 10px !important; font-weight: 700 !important; padding: 10px 24px !important; }
+.taxi-book-btn:hover { background: #e0a800 !important; }
+.taxi-empty { text-align: center; padding: 60px 20px; color: #6c757d; }
+.taxi-empty .material-symbols-outlined { font-size: 52px; color: #c8d6e9; display: block; margin-bottom: 12px; }
+
+/* ── Taxi Checkout (tco) ── */
+.tco-page { min-height: 100vh; background: #f4f6fb; display: flex; flex-direction: column; }
+.tco-header { background: #1a1a2e; padding: 14px 24px; position: sticky; top: 0; z-index: 100; }
+.tco-header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+
+.tco-back-btn-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.tco-back-btn-header:hover { background: rgba(255, 255, 255, 0.22); }
+.tco-back-btn-header .material-symbols-outlined { font-size: 18px; }
+.tco-brand { font-size: 1.4rem; font-weight: 800; color: #fff; text-decoration: none; }
+.tco-header-secure { display: flex; align-items: center; gap: 6px; color: rgba(255, 255, 255, .8); font-size: .875rem; }
+.tco-stepper-wrap { background: #fff; border-bottom: 1px solid #e0e6ef; padding: 14px 24px; }
+.tco-stepper { max-width: 480px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+.tco-step-group { display: flex; align-items: center; }
+.tco-step { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tco-step-badge { width: 30px; height: 30px; border-radius: 50%; background: #e0e6ef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .875rem; }
+.tco-step.is-done .tco-step-badge { background: #28a745; color: #fff; }
+.tco-step.is-current .tco-step-badge { background: #0f3460; color: #fff; }
+.tco-step-label { font-size: .72rem; color: #6c757d; white-space: nowrap; }
+.tco-step.is-current .tco-step-label { color: #0f3460; font-weight: 600; }
+.tco-step-line { height: 2px; width: 56px; background: #e0e6ef; margin: 0 8px 16px; }
+.tco-layout { max-width: 1100px; margin: 28px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; flex: 1; }
+.tco-panel { background: #fff; border-radius: 14px; padding: 22px 26px; margin-bottom: 18px; box-shadow: 0 1px 6px rgba(0, 0, 0, .06); }
+.tco-panel-title { font-size: 1rem; font-weight: 700; color: #0f3460; display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+.tco-panel-title .material-symbols-outlined { font-size: 20px; color: #ffc107; }
+.tco-panel-hint { font-size: .82rem; color: #6c757d; margin: -10px 0 16px; }
+.tco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.tco-field { display: flex; flex-direction: column; gap: 5px; }
+.tco-field label { font-size: .8rem; font-weight: 600; color: #495057; }
+.tco-optional { font-weight: 400; color: #6c757d; }
+.tco-field input, .tco-field select { border: 1.5px solid #d0d8e8; border-radius: 8px; padding: 10px 12px; font-size: .9rem; outline: none; transition: border-color .15s; }
+.tco-field input:focus, .tco-field select:focus { border-color: #ffc107; }
+.tco-field small { font-size: .72rem; color: #6c757d; }
+.tco-input-icon-wrap { position: relative; display: flex; align-items: center; }
+.tco-input-icon-wrap .material-symbols-outlined { position: absolute; left: 10px; font-size: 18px; color: #6c757d; pointer-events: none; }
+.tco-input-icon-wrap input { width: 100%; border: 1.5px solid #d0d8e8; border-radius: 8px; padding: 10px 12px 10px 36px; font-size: .9rem; outline: none; }
+.tco-input-icon-wrap input:focus { border-color: #ffc107; }
+.tco-payment-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.tco-payment-head .tco-panel-title { margin-bottom: 0; }
+.tco-card-brands { display: flex; gap: 6px; }
+.tco-card-brands span { background: #f4f6fb; border: 1px solid #d0d8e8; border-radius: 4px; padding: 2px 7px; font-size: .7rem; font-weight: 700; color: #495057; }
+.tco-card-input { position: relative; display: flex; align-items: center; }
+.tco-card-input input { width: 100%; border: 1.5px solid #d0d8e8; border-radius: 8px; padding: 10px 40px 10px 12px; font-size: .9rem; outline: none; }
+.tco-card-input input:focus { border-color: #ffc107; }
+.tco-card-input .material-symbols-outlined { position: absolute; right: 12px; color: #6c757d; font-size: 18px; }
+.tco-policy-box { display: flex; align-items: flex-start; gap: 10px; padding: 11px 14px; background: #f4f6fb; border-radius: 8px; cursor: pointer; font-size: .82rem; color: #495057; margin-top: 14px; }
+.tco-policy-box a { color: #0f3460; text-decoration: underline; }
+.tco-next-btn { width: 100%; background: #0f3460 !important; border: none !important; border-radius: 10px !important; padding: 13px !important; font-size: .95rem !important; font-weight: 700 !important; display: flex !important; align-items: center; justify-content: center; gap: 8px; }
+.tco-step-nav { display: flex; gap: 12px; margin-bottom: 14px; }
+.tco-back-btn { background: #fff; border: 1.5px solid #d0d8e8; border-radius: 10px; padding: 11px 18px; display: flex; align-items: center; gap: 6px; font-weight: 600; color: #495057; cursor: pointer; }
+.tco-confirm-btn { flex: 1; background: #ffc107 !important; color: #1a1a2e !important; border: none !important; border-radius: 10px !important; padding: 13px !important; font-size: .95rem !important; font-weight: 700 !important; display: flex !important; align-items: center; justify-content: center; gap: 8px; }
+.tco-trust-row { display: flex; justify-content: center; gap: 20px; padding: 14px 0; }
+.tco-trust-row div { display: flex; align-items: center; gap: 5px; font-size: .78rem; color: #6c757d; }
+.tco-trust-row .material-symbols-outlined { font-size: 17px; color: #28a745; }
+.tco-success { background: #fff; border-radius: 14px; padding: 48px 32px; text-align: center; box-shadow: 0 1px 6px rgba(0, 0, 0, .06); }
+.tco-success-icon { font-size: 64px; color: #28a745; display: block; margin-bottom: 14px; font-variation-settings: 'FILL' 1; }
+.tco-ref { background: #f4f6fb; border-radius: 8px; padding: 10px 20px; display: inline-block; font-size: .9rem; color: #495057; margin-top: 12px; }
+.tco-success-info { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; text-align: left; max-width: 380px; margin-left: auto; margin-right: auto; }
+.tco-success-info > div { display: flex; align-items: center; gap: 8px; font-size: .875rem; color: #495057; background: #f4f6fb; border-radius: 8px; padding: 10px 14px; }
+.tco-success-info .material-symbols-outlined { font-size: 18px; color: #ffc107; }
+.tco-summary-card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 1px 6px rgba(0, 0, 0, .06); margin-bottom: 14px; }
+.tco-summary-media { position: relative; height: 160px; }
+.tco-summary-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tco-summary-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 52, 96, .85) 0%, transparent 60%); }
+.tco-summary-type { position: absolute; bottom: 14px; left: 16px; display: flex; align-items: center; gap: 6px; color: #fff; font-weight: 700; font-size: .9rem; }
+.tco-summary-type .material-symbols-outlined { font-size: 20px; color: #ffc107; }
+.tco-summary-body { padding: 16px 18px; }
+.tco-summary-car { font-size: .95rem; font-weight: 700; color: #1a1a2e; margin: 0 0 2px; }
+.tco-summary-provider { font-size: .78rem; color: #6c757d; margin: 0 0 14px; }
+.tco-route { padding: 12px 0; }
+.tco-route-point { display: flex; align-items: flex-start; gap: 10px; }
+.tco-route-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.tco-dot-green { background: #28a745; }
+.tco-dot-red { background: #dc3545; }
+.tco-route-line-v { width: 2px; background: #c8d6e9; height: 20px; margin: 4px 0 4px 5px; }
+.tco-route-label { font-size: .72rem; color: #6c757d; margin: 0; }
+.tco-route-place { font-size: .82rem; font-weight: 600; color: #1a1a2e; margin: 0; }
+.tco-meta-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.tco-meta-list > div { display: flex; align-items: center; gap: 7px; font-size: .8rem; color: #495057; }
+.tco-meta-list .material-symbols-outlined { font-size: 16px; color: #ffc107; flex-shrink: 0; }
+.tco-included { display: flex; flex-wrap: wrap; gap: 5px; }
+.tco-included-tag { display: flex; align-items: center; gap: 3px; font-size: .72rem; background: #f4f6fb; border-radius: 50px; padding: 3px 9px; color: #495057; }
+.tco-included-tag .material-symbols-outlined { font-size: 13px; color: #28a745; }
+.tco-price-card { background: #fff; border-radius: 14px; padding: 18px; box-shadow: 0 1px 6px rgba(0, 0, 0, .06); margin-bottom: 10px; }
+.tco-price-card h4 { font-size: .9rem; font-weight: 700; color: #1a1a2e; margin-bottom: 12px; }
+.tco-price-row { display: flex; justify-content: space-between; font-size: .82rem; color: #495057; padding: 5px 0; border-bottom: 1px solid #f0f2f5; }
+.tco-price-total { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; }
+.tco-price-total div { display: flex; flex-direction: column; }
+.tco-price-total strong { font-size: .9rem; color: #1a1a2e; }
+.tco-price-total small { font-size: .7rem; color: #6c757d; }
+.tco-total-amount { font-size: 1.3rem; font-weight: 800; color: #0f3460; }
+.tco-cancel-note { display: flex; gap: 7px; align-items: flex-start; font-size: .78rem; color: #6c757d; background: #fff; border-radius: 10px; padding: 11px 14px; box-shadow: 0 1px 4px rgba(0, 0, 0, .05); }
+.tco-cancel-note .material-symbols-outlined { font-size: 16px; color: #28a745; flex-shrink: 0; margin-top: 1px; }
+.tco-cancel-note p { margin: 0; }
+.tco-footer { background: #1a1a2e; color: rgba(255, 255, 255, .7); padding: 18px 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: auto; }
+.tco-footer-brand { font-size: .95rem; font-weight: 800; color: #fff; }
+.tco-footer p { margin: 0; font-size: .75rem; flex: 1; }
+.tco-footer-links { display: flex; gap: 14px; }
+.tco-footer-links a { color: rgba(255, 255, 255, .6); text-decoration: none; font-size: .75rem; }
+
+@media (max-width: 900px) {
+  .taxi-results-wrap { grid-template-columns: 1fr; }
+  .taxi-filter-panel { position: static; }
+  .taxi-card { flex-direction: column; }
+  .taxi-card-media { width: 100%; height: 200px; }
+  .tco-layout { grid-template-columns: 1fr; }
+  .tco-sidebar { order: -1; }
+  .tco-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .taxi-hero-title { font-size: 1.6rem; }
+  .taxi-search-fields { flex-direction: column; }
+  .taxi-field-sm { max-width: 100%; }
+}

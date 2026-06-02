@@ -1,0 +1,251 @@
+.vnpay-panel {
+  border: 2px solid #ee0033;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.vnpay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: #ee0033;
+  color: #ffffff;
+}
+
+.vnpay-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vnpay-brand .material-symbols-outlined {
+  font-size: 2rem;
+}
+
+.vnpay-brand-name {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.vnpay-brand-sub {
+  display: block;
+  font-size: 0.72rem;
+  opacity: 0.88;
+  margin-top: 1px;
+}
+
+.vnpay-bank-chips {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.vnpay-bank-chips span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.vnpay-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.vnpay-qr-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.vnpay-qr-frame {
+  padding: 8px;
+  border: 2px solid #ee0033;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.vnpay-qr-img {
+  width: 200px;
+  height: 200px;
+  display: block;
+}
+
+.vnpay-qr-note {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #747782;
+  font-size: 0.75rem;
+}
+
+.vnpay-qr-note .material-symbols-outlined {
+  font-size: 0.95rem;
+}
+
+.vnpay-amount-box {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #fff5f7;
+  border: 1px solid #fecdd6;
+  text-align: center;
+}
+
+.vnpay-amount-label {
+  display: block;
+  font-size: 0.82rem;
+  color: #747782;
+  margin-bottom: 4px;
+}
+
+.vnpay-amount-value {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ee0033;
+  letter-spacing: -0.01em;
+}
+
+.vnpay-ref {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: #434651;
+}
+
+.vnpay-divider {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  color: #747782;
+  font-size: 0.78rem;
+}
+
+.vnpay-divider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid #e7e7e7;
+}
+
+.vnpay-divider span {
+  position: relative;
+  background: #ffffff;
+  padding: 0 10px;
+}
+
+.vnpay-bank-info {
+  width: 100%;
+  border: 1px solid #e7e7e7;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.vnpay-bank-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 8px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.875rem;
+}
+
+.vnpay-bank-row:last-child {
+  border-bottom: 0;
+}
+
+.vnpay-bank-row span:first-child {
+  color: #747782;
+  white-space: nowrap;
+}
+
+.vnpay-bank-row strong {
+  color: #1a1c1c;
+  font-weight: 600;
+  text-align: right;
+}
+
+.vnpay-steps {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vnpay-steps-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1a1c1c;
+  margin-bottom: 4px;
+}
+
+.vnpay-step-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: #434651;
+}
+
+.vnpay-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #ee0033;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.vnpay-confirm-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #1a1c1c;
+  line-height: 1.45;
+  transition: background 0.15s;
+}
+
+.vnpay-confirm-label:has(input:checked) {
+  background: #dcfce7;
+  border-color: #4ade80;
+}
+
+.vnpay-confirm-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  accent-color: #16a34a;
+  flex-shrink: 0;
+  cursor: pointer;
+}

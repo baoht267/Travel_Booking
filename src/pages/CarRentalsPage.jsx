@@ -2,13 +2,7 @@ import { useMemo, useState } from 'react'
 import { Button, Card, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import mockCars from '../data/mockCars'
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('en-GB', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
+import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 function getRentalDays(pickupAt, dropoffAt) {
   const pickup = new Date(pickupAt)
@@ -212,8 +206,8 @@ function CarRentalsPage() {
                   }
                 />
                 <div className="cars-filter-range">
-                  <span>£20</span>
-                  <span>£{filters.maxDailyPrice}+</span>
+                  <span>{formatBasePriceToVndCurrency(20)}</span>
+                  <span>{formatBasePriceToVndCurrency(filters.maxDailyPrice)}+</span>
                 </div>
               </div>
 
@@ -311,8 +305,8 @@ function CarRentalsPage() {
 
                     <div className="car-rental-price">
                       <span>Giá cho {rentalDays} ngày:</span>
-                      <strong>£{formatPrice(car.totalPrice)}</strong>
-                      <small>£{formatPrice(car.dailyPrice)} mỗi ngày</small>
+                      <strong>{formatBasePriceToVndCurrency(car.totalPrice)}</strong>
+                      <small>{formatBasePriceToVndCurrency(car.dailyPrice)} mỗi ngày</small>
                       <Button
                         as={Link}
                         to={`/cars/${car.id}/checkout?tab=car-rentals&location=${encodeURIComponent(activeSearch.location)}&pickupAt=${encodeURIComponent(activeSearch.pickupAt)}&dropoffAt=${encodeURIComponent(activeSearch.dropoffAt)}`}

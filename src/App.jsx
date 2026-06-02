@@ -4,10 +4,12 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import AuthPage from './pages/AuthPage'
 import AppFooter from './components/layout/AppFooter'
 import AppHeader from './components/layout/AppHeader'
+import BookingConfirmationPage from './pages/BookingConfirmationPage'
 import CarRentalCheckoutPage from './pages/CarRentalCheckoutPage'
 import CheckoutPage from './pages/CheckoutPage'
 import AttractionsPage from './pages/AttractionsPage'
 import FlightCheckoutPage from './pages/FlightCheckoutPage'
+import MyBookingsPage from './pages/MyBookingsPage'
 import TaxiCheckoutPage from './pages/TaxiCheckoutPage'
 import ExperienceDetailsPage from './pages/ExperienceDetailsPage'
 import HotelDetailsPage from './pages/HotelDetailsPage'
@@ -20,7 +22,8 @@ function App() {
   const isAuthRoute = location.pathname === '/auth'
   const isCheckoutRoute =
     location.pathname.startsWith('/checkout') ||
-    location.pathname.includes('/checkout')
+    location.pathname.includes('/checkout') ||
+    location.pathname.startsWith('/booking-confirmation')
 
   return (
     <div className="app-shell">
@@ -38,6 +41,8 @@ function App() {
           <Route path="/taxis/:taxiId/checkout" element={<TaxiCheckoutPage />} />
           <Route path="/stays/:stayId" element={<HotelDetailsPage />} />
           <Route path="/experiences/:experienceId" element={<ExperienceDetailsPage />} />
+          <Route path="/my-bookings" element={<MyBookingsPage />} />
+          <Route path="/booking-confirmation/:bookingId" element={<BookingConfirmationPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

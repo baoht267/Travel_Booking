@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { readUsers, writeSession, writeUsers } from '../utils/authSession'
+import { useToast } from '../context/ToastContext'
 
 function AuthPage() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -20,6 +21,7 @@ function AuthPage() {
   })
   const [message, setMessage] = useState({ type: '', text: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const showToast = useToast()
 
   const logoLetters = useMemo(() => 'GE', [])
 
@@ -72,6 +74,7 @@ function AuthPage() {
         type: 'success',
         text: `Chào mừng trở lại, ${matchedUser.fullName}. Đang chuyển hướng về trang chủ...`,
       })
+      showToast(`Chào mừng trở lại, ${matchedUser.fullName}!`, 'success')
       setIsSubmitting(false)
       window.setTimeout(() => navigate('/'), 700)
     }, 500)

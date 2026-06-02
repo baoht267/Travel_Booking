@@ -1,0 +1,152 @@
+.booking-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background: #003580;
+  color: #ffffff;
+}
+
+.booking-header .container,
+.page-section.container,
+.footer-shell .container {
+  max-width: 1140px;
+}
+
+.home-navbar {
+  min-height: 64px;
+  padding: 0;
+}
+
+.booking-header .navbar-brand,
+.booking-header .nav-link,
+.booking-header .dropdown-toggle {
+  color: #ffffff !important;
+}
+
+.home-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.home-navbar-toggle {
+  border: 0;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: none !important;
+}
+
+.booking-header .nav-pill {
+  position: relative;
+  padding: 1.35rem 0.1rem 1rem !important;
+  margin-right: 1.45rem;
+  border-radius: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82) !important;
+  transition: color 0.2s ease;
+}
+
+.booking-header .nav-pill:hover,
+.booking-header .nav-pill-active {
+  color: #ffffff !important;
+}
+
+.booking-header .nav-pill-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.55rem;
+  height: 2px;
+  border-radius: 999px;
+  background: #febb02;
+}
+
+.home-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  margin-right: 0.95rem;
+}
+
+.home-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+}
+
+.home-icon-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.booking-header .nav-utility-link {
+  font-weight: 600;
+}
+
+.home-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.home-header-session {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.home-session-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 38px;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.home-session-chip .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
+.home-header-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #006ce4;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.home-header-action:hover {
+  background: #f3f3f3;
+  color: #006ce4;
+}
+
+.home-header-action-secondary {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: transparent;
+  color: #ffffff;
+}
+
+.home-header-action-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}

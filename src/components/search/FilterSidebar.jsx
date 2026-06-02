@@ -8,6 +8,7 @@ import {
   updateCriteria,
   updateFilters,
 } from '../../features/stays/staysSlice'
+import { formatBasePriceToVndCurrency } from '../../utils/currency'
 
 function FilterSidebar() {
   const criteria = useSelector(selectCriteria)
@@ -55,8 +56,8 @@ function FilterSidebar() {
             }
           />
           <div className="search-filter-range-labels">
-            <span>0 EUR</span>
-            <span>1.000 EUR+</span>
+            <span>{formatBasePriceToVndCurrency(0)}</span>
+            <span>{formatBasePriceToVndCurrency(1000)}+</span>
           </div>
         </div>
 

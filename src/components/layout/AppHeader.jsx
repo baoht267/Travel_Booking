@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Container, Nav, Navbar } from 'react-bootstrap'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { clearSession, readSession, SESSION_EVENT_NAME } from '../../utils/authSession'
 
 function AppHeader() {
   const [session, setSession] = useState(() => readSession())
   const location = useLocation()
+  const navigate = useNavigate()
   const activeTab = new URLSearchParams(location.search).get('tab')
 
   const getNavPillClass = (tabName) => {
@@ -53,6 +54,7 @@ function AppHeader() {
 
   const handleSignOut = () => {
     clearSession()
+    navigate('/')
   }
 
   return (
@@ -112,6 +114,12 @@ function AppHeader() {
                   <span className="material-symbols-outlined">person</span>
                   <span>{session.fullName || session.email}</span>
                 </div>
+                <NavLink
+                  to="/my-bookings"
+                  className="home-header-action home-header-action-secondary"
+                >
+                  Đơn Đặt
+                </NavLink>
                 <button
                   type="button"
                   className="home-header-action home-header-action-secondary"

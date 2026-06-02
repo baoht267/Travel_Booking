@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
+import bookingsReducer from '../features/bookings/bookingsSlice'
 import savedReducer from '../features/saved/savedSlice'
 import staysReducer from '../features/stays/staysSlice'
 
 const STORAGE_KEY = 'travel-booking-state'
 const defaultSavedState = savedReducer(undefined, { type: '@@INIT' })
 const defaultStaysState = staysReducer(undefined, { type: '@@INIT' })
+const defaultBookingsState = bookingsReducer(undefined, { type: '@@INIT' })
 
 function loadPersistedState() {
   try {
@@ -36,6 +38,12 @@ function loadPersistedState() {
           ? parsedState.stays.recentSearches
           : defaultStaysState.recentSearches,
       },
+      bookings: {
+        ...defaultBookingsState,
+        bookings: Array.isArray(parsedState.bookings?.bookings)
+          ? parsedState.bookings.bookings
+          : defaultBookingsState.bookings,
+      },
     }
   } catch {
     return undefined
@@ -51,6 +59,7 @@ function persistState(state) {
         filters: state.stays.filters,
         recentSearches: state.stays.recentSearches,
       },
+      bookings: state.bookings,
     }
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(serializableState))
@@ -63,6 +72,7 @@ export const store = configureStore({
   reducer: {
     stays: staysReducer,
     saved: savedReducer,
+    bookings: bookingsReducer,
   },
   preloadedState: loadPersistedState(),
 })

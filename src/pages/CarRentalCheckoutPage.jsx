@@ -1,8 +1,11 @@
-import { useMemo, useState } from 'react'
-import { Alert, Button, Container, Form } from 'react-bootstrap'
+import { useMemo, useRef, useState } from 'react'
+import { Button, Container, Form } from 'react-bootstrap'
 import { useSearchParams, Navigate, useParams, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import mockCars from '../data/mockCars'
 import { readSession } from '../utils/authSession'
+import { addBooking } from '../features/bookings/bookingsSlice'
+import { useToast } from '../context/ToastContext'
 
 function formatMoney(value) {
   return new Intl.NumberFormat('en-US', {
@@ -83,6 +86,8 @@ function CarRentalCheckoutPage() {
   const rentalDays = getRentalDays(pickupAt, dropoffAt)
   const initialName = splitFullName(session?.fullName)
 
+  const dispatch = useDispatch()
+  const showToast = useToast()
   const [formValues, setFormValues] = useState({
     firstName: initialName.firstName,
     lastName: initialName.lastName,
@@ -94,7 +99,10 @@ function CarRentalCheckoutPage() {
     cvv: '',
   })
   const [selectedExtras, setSelectedExtras] = useState([])
-  const [submitted, setSubmitted] = useState(false)
+
+  if (!session) {
+    return <Navigate to="/auth" replace />
+  }
 
   if (!car) {
     return <Navigate to="/search?tab=car-rentals" replace />
@@ -123,7 +131,23 @@ function CarRentalCheckoutPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    setSubmitted(true)
+    const booking = dispatch(addBooking({
+      type: 'car',
+      title: car.name,
+      subtitle: `${car.subtitle} · ${location}`,
+      image: car.image,
+      total: totalPrice,
+      currency: 'USD',
+      details: {
+        'Địa điểm': location,
+        'Nhận xe': formatDateTimeLabel(pickupAt),
+        'Trả xe': formatDateTimeLabel(dropoffAt),
+        'Số ngày': `${rentalDays} ngày`,
+      },
+    }))
+    const bookingId = booking.payload.id
+    showToast(`Đặt xe thành công! Mã đặt chỗ: #${bookingId.slice(-6).toUpperCase()}`, 'success', 5000)
+    navigate(`/booking-confirmation/${bookingId}`, { replace: true })
   }
 
   return (
@@ -155,11 +179,7 @@ function CarRentalCheckoutPage() {
 
       <div className="car-checkout-layout">
         <section className="car-checkout-main">
-          {submitted && (
-            <Alert variant="success" className="mb-4">
-              Đặt xe đã được xác nhận cho {car.name}. Đây là luồng thanh toán mẫu.
-            </Alert>
-          )}
+
 
           <Form id="car-rental-checkout-form" onSubmit={handleSubmit} className="car-checkout-form">
             <div className="car-checkout-panel">

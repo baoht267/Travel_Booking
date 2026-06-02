@@ -1,22 +1,19 @@
 import { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { toggleSaved } from '../features/saved/savedSlice'
 import { selectAllStays } from '../features/stays/staysSlice'
 import mockExperiences from '../data/mockExperiences'
-
-function formatPrice(value) {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
+import { readSession } from '../utils/authSession'
+import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 function SavedPage() {
   const stays = useSelector(selectAllStays)
   const savedIds = useSelector((state) => state.saved.savedIds)
   const dispatch = useDispatch()
+
+  if (!readSession()) return <Navigate to="/auth" replace />
 
   const allItems = [...stays, ...mockExperiences]
   const savedItems = allItems.filter((item) => savedIds.includes(item.id))
@@ -209,7 +206,7 @@ function SavedHotelCard({ item, viewMode, onRemove }) {
           <div className="saved-card-footer">
             <div className="saved-card-price-block">
               <span className="saved-price-from">Từ</span>
-              <span className="saved-price">EUR{formatPrice(item.pricePerNight)}</span>
+              <span className="saved-price">{formatBasePriceToVndCurrency(item.pricePerNight)}</span>
               <span className="saved-price-note">mỗi đêm, đã gồm thuế</span>
             </div>
             <div className="saved-card-actions">
@@ -282,7 +279,7 @@ function SavedExperienceCard({ item, viewMode, onRemove }) {
           <div className="saved-card-footer">
             <div className="saved-card-price-block">
               <span className="saved-price-from">Từ</span>
-              <span className="saved-price">EUR{formatPrice(item.pricePerNight)}</span>
+              <span className="saved-price">{formatBasePriceToVndCurrency(item.pricePerNight)}</span>
             </div>
             <div className="saved-card-actions">
               <button className="saved-remove-btn" onClick={onRemove}>

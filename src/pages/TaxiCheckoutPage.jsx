@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import mockTaxis from '../data/mockTaxis'
 import { readSession } from '../utils/authSession'
+import { addBooking } from '../features/bookings/bookingsSlice'
+import { useToast } from '../context/ToastContext'
 
 function formatPrice(value) {
   return new Intl.NumberFormat('vi-VN').format(value)
@@ -35,14 +38,16 @@ export default function TaxiCheckoutPage() {
   const passengers = Number(searchParams.get('passengers') || 1)
   const luggage = Number(searchParams.get('luggage') || 1)
 
+  if (!session) return <Navigate to="/auth" replace />
   if (!taxi) return <Navigate to="/search?tab=airport-taxis" replace />
 
   const meetFee = 50000
   const total = taxi.price + meetFee
 
+  const dispatch = useDispatch()
+  const showToast = useToast()
   const initial = splitFullName(session?.fullName)
   const [step, setStep] = useState(1)
-  const [submitted, setSubmitted] = useState(false)
 
   const [contact, setContact] = useState({
     firstName: initial.firstName,
@@ -71,14 +76,34 @@ export default function TaxiCheckoutPage() {
     setPayment((p) => ({ ...p, [name]: type === 'checkbox' ? checked : value }))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setSubmitted(true)
-  }
-
   const dirLabel = direction === 'arrival' ? 'Từ sân bay' : 'Đến sân bay'
   const pickupLabel = direction === 'arrival' ? taxi.airportName : destination
   const dropLabel = direction === 'arrival' ? destination : taxi.airportName
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (step === 1) {
+      setStep(2)
+      return
+    }
+    const booking = dispatch(addBooking({
+      type: 'taxi',
+      title: taxi.carModel,
+      subtitle: `${taxi.provider} · ${dirLabel}`,
+      image: taxi.image,
+      total,
+      currency: 'VND',
+      details: {
+        'Lộ trình': `${pickupLabel} → ${dropLabel || '—'}`,
+        'Thời gian': datetime ? formatDatetime(datetime) : '—',
+        'Hành khách': `${passengers} khách · ${luggage} kiện`,
+        'Xe': taxi.type,
+      },
+    }))
+    const bookingId = booking.payload.id
+    showToast(`Đặt taxi thành công! Mã đặt chỗ: #${bookingId.slice(-6).toUpperCase()}`, 'success', 5000)
+    navigate(`/booking-confirmation/${bookingId}`, { replace: true })
+  }
 
   return (
     <div className="tco-page">
@@ -123,34 +148,7 @@ export default function TaxiCheckoutPage() {
       <div className="tco-layout">
         {/* ── MAIN ── */}
         <main className="tco-main">
-          {submitted ? (
-            <div className="tco-success">
-              <span className="material-symbols-outlined tco-success-icon">check_circle</span>
-              <h2>Đặt xe thành công!</h2>
-              <p>
-                Xác nhận đặt <strong>{taxi.type}</strong> từ{' '}
-                <strong>{taxi.airportName}</strong> đã được gửi đến{' '}
-                <strong>{contact.email}</strong>.
-              </p>
-              <div className="tco-ref">
-                Mã đặt xe: <strong>TC-{taxiId.slice(-6).toUpperCase()}</strong>
-              </div>
-              <div className="tco-success-info">
-                <div>
-                  <span className="material-symbols-outlined">schedule</span>
-                  Lái xe sẽ liên hệ trước <strong>2 giờ</strong>
-                </div>
-                <div>
-                  <span className="material-symbols-outlined">where_to_vote</span>
-                  Điểm đón: <strong>{taxi.meetingPoint}</strong>
-                </div>
-              </div>
-              <Link to="/search?tab=airport-taxis" className="btn btn-primary mt-4 px-5">
-                Đặt xe khác
-              </Link>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
               {step === 1 && (
                 <>
                   {/* Contact info */}
@@ -211,7 +209,7 @@ export default function TaxiCheckoutPage() {
                     </div>
                   </div>
 
-                  <Button type="button" className="tco-next-btn" onClick={() => setStep(2)}>
+                  <Button type="submit" className="tco-next-btn">
                     Tiếp Theo: Thanh Toán
                     <span className="material-symbols-outlined">arrow_forward</span>
                   </Button>
@@ -288,7 +286,6 @@ export default function TaxiCheckoutPage() {
                 </>
               )}
             </form>
-          )}
         </main>
 
         {/* ── SIDEBAR ── */}

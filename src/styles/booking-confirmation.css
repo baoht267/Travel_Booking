@@ -1,0 +1,165 @@
+.bconf-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: var(--surface-alt);
+}
+
+.bconf-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  max-width: 600px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.bconf-success-banner {
+  background: linear-gradient(135deg, #003b95, #006ce4);
+  color: #fff;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+}
+
+.bconf-check-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.bconf-success-banner h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.bconf-success-banner p {
+  font-size: 0.95rem;
+  opacity: 0.88;
+  margin: 0;
+}
+
+.bconf-body {
+  padding: 1.75rem 2rem;
+}
+
+.bconf-ref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--brand-100);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.bconf-ref-label { font-size: 0.85rem; color: var(--ink-500); }
+.bconf-ref-code {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--brand-700);
+  letter-spacing: 0.05em;
+}
+
+.bconf-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface-alt);
+  border-radius: 20px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.82rem;
+  color: var(--ink-700);
+  margin-bottom: 1rem;
+}
+
+.bconf-image-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  height: 160px;
+}
+
+.bconf-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bconf-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.bconf-subtitle {
+  color: var(--ink-500);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.bconf-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--surface-alt);
+  border-radius: 10px;
+}
+
+.bconf-detail-item { display: flex; flex-direction: column; gap: 0.15rem; }
+.bconf-detail-label { font-size: 0.75rem; color: var(--ink-500); }
+.bconf-detail-value { font-size: 0.9rem; font-weight: 600; }
+
+.bconf-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 0.75rem;
+}
+
+.bconf-total-row span { color: var(--ink-700); }
+.bconf-total-row strong { font-size: 1.2rem; color: var(--brand-700); }
+
+.bconf-booked-at {
+  font-size: 0.8rem;
+  color: var(--ink-500);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.bconf-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.bconf-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+
+.bconf-btn:hover { opacity: 0.88; }
+.bconf-btn-primary { background: var(--brand-600); color: #fff; }
+.bconf-btn-secondary { background: var(--surface-alt); color: var(--ink-700); border: 1px solid var(--line); }
+.bconf-btn-ghost { background: transparent; color: var(--ink-500); font-size: 0.85rem; }
+
+@media (max-width: 640px) {
+  .bconf-details-grid { grid-template-columns: 1fr; }
+}
