@@ -1,0 +1,34 @@
+{
+  "destinations": [
+    {
+      "id": "des-1",
+      "name": "Ha Long Bay Escape",
+      "description": "A coastal destination with limestone islands, boat tours, local seafood, and calm overnight cruises.",
+      "image": "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1000&q=80",
+      "country": "Vietnam",
+      "city": "Quang Ninh",
+      "originalPrice": 320,
+      "currentPrice": 249
+    },
+    {
+      "id": "des-2",
+      "name": "Da Nang Beach Break",
+      "description": "A city and beach trip with modern hotels, mountain views, night markets, and easy access to Hoi An.",
+      "image": "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=1000&q=80",
+      "country": "Vietnam",
+      "city": "Da Nang",
+      "originalPrice": 280,
+      "currentPrice": 199
+    },
+    {
+      "id": "des-3",
+      "name": "Sa Pa Mountain Stay",
+      "description": "A northern highland destination with terraced fields, cool weather, homestays, and guided trekking routes.",
+      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80",
+      "country": "Vietnam",
+      "city": "Lao Cai",
+      "originalPrice": 240,
+      "currentPrice": 179
+    }
+  ]
+}

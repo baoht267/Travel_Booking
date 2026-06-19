@@ -7,6 +7,9 @@ import AppHeader from './components/layout/AppHeader'
 import BookingConfirmationPage from './pages/BookingConfirmationPage'
 import CarRentalCheckoutPage from './pages/CarRentalCheckoutPage'
 import CheckoutPage from './pages/CheckoutPage'
+import DestinationDetailPage from './pages/DestinationDetailPage'
+import DestinationFormPage from './pages/DestinationFormPage'
+import DestinationListPage from './pages/DestinationListPage'
 import AttractionsPage from './pages/AttractionsPage'
 import FlightCheckoutPage from './pages/FlightCheckoutPage'
 import MyBookingsPage from './pages/MyBookingsPage'
@@ -36,6 +39,10 @@ function App() {
           <Route path="/cars/:carId/checkout" element={<CarRentalCheckoutPage />} />
           <Route path="/checkout/:stayId" element={<CheckoutPage />} />
           <Route path="/search" element={<SearchResultsPage />} />
+          <Route path="/manage-destinations" element={<DestinationListPage />} />
+          <Route path="/manage-destinations/new" element={<DestinationFormPage />} />
+          <Route path="/manage-destinations/:destinationId" element={<DestinationDetailPage />} />
+          <Route path="/manage-destinations/:destinationId/edit" element={<DestinationFormPage />} />
           <Route path="/attractions" element={<AttractionsPage />} />
           <Route path="/saved" element={<SavedPage />} />
           <Route path="/flights/:flightId/checkout" element={<FlightCheckoutPage />} />

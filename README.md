@@ -1,16 +1,38 @@
-# React + Vite
+# GOCHIP Travel Booking
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ReactJS assignment project built with Vite, React Router, Redux Toolkit, and a local REST API.
 
-Currently, two official plugins are available:
+## Run
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Open two terminals in the project folder.
 
-## React Compiler
+```bash
+npm run api
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm run dev
+```
 
-## Expanding the ESLint configuration
+Frontend: `http://127.0.0.1:5173/`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+REST API: `http://localhost:4000/destinations`
+
+## Assignment CRUD Module
+
+The assignment CRUD requirements are implemented in the Travel Destination Management module:
+
+- List page: `http://127.0.0.1:5173/manage-destinations`
+- Add page: `http://127.0.0.1:5173/manage-destinations/new`
+- Detail page: `http://127.0.0.1:5173/manage-destinations/:destinationId`
+- Edit page: `http://127.0.0.1:5173/manage-destinations/:destinationId/edit`
+
+Supported REST methods:
+
+- `GET /destinations`
+- `GET /destinations/:id`
+- `POST /destinations`
+- `PUT /destinations/:id`
+- `DELETE /destinations/:id`
+
+The module includes loading states, error handling, controlled forms, validation, React Router navigation, `useParams`, `useNavigate`, and Redux Toolkit async thunks.
