@@ -118,7 +118,7 @@ function DestinationEditor({ destinationId, initialValues, isEdit }) {
       <Form className="destination-form" onSubmit={handleSubmit} noValidate>
         <div className="destination-form-grid">
           <Form.Group controlId="destination-name">
-            <Form.Label>Product name</Form.Label>
+            <Form.Label>Destination name</Form.Label>
             <Form.Control
               name="name"
               value={values.name}
@@ -131,7 +131,7 @@ function DestinationEditor({ destinationId, initialValues, isEdit }) {
           </Form.Group>
 
           <Form.Group controlId="destination-image">
-            <Form.Label>Product image URL</Form.Label>
+            <Form.Label>Destination image URL</Form.Label>
             <Form.Control
               name="image"
               value={values.image}
