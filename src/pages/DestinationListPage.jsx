@@ -56,19 +56,19 @@ function DestinationListPage() {
   const isLoading = status === 'loading'
 
   return (
-    <Container className="page-section destination-page">
+    <Container className="page-section text-dark">
       <div className="destination-toolbar">
         <div>
-          <span className="destination-eyebrow">Travel Destination Management</span>
-          <h1>Destination List</h1>
-          <p>Manage destination records with a REST API, Redux Toolkit, and full CRUD actions.</p>
+          <span className="small fw-bold text-primary text-uppercase">Travel Destination Management</span>
+          <h1 className="my-2 fw-bold">Destination List</h1>
+          <p className="mb-0 text-secondary">Manage destination records with a REST API, Redux Toolkit, and full CRUD actions.</p>
         </div>
-        <Button as={Link} to="/manage-destinations/new" className="destination-primary-btn">
+        <Button as={Link} to="/manage-destinations/new" className="fw-bold">
           Add Destination
         </Button>
       </div>
 
-      <div className="destination-control-row">
+      <div className="d-flex gap-2 mb-4">
         <Form.Control
           type="search"
           value={query}
@@ -87,7 +87,7 @@ function DestinationListPage() {
       </div>
 
       {error && (
-        <Alert variant="danger" className="destination-alert">
+        <Alert variant="danger">
           {error}. Make sure the API is running with <code>npm run api</code>.
         </Alert>
       )}
@@ -104,22 +104,22 @@ function DestinationListPage() {
               <Link to={`/manage-destinations/${destination.id}`} className="destination-card-image">
                 <img src={destination.image} alt={destination.name} />
               </Link>
-              <div className="destination-card-body">
-                <div className="destination-card-meta">
+              <div className="d-flex flex-column flex-grow-1 p-3">
+                <div className="d-flex flex-wrap gap-2 small fw-bold text-secondary text-uppercase">
                   <span>{destination.city}</span>
                   <span>{destination.country}</span>
                 </div>
-                <h2>
+                <h2 className="h5 my-2 fw-bold">
                   <Link to={`/manage-destinations/${destination.id}`}>{destination.name}</Link>
                 </h2>
-                <p>{destination.description}</p>
-                <div className="destination-price-row">
-                  <span className="destination-original-price">
+                <p className="flex-grow-1 text-secondary">{destination.description}</p>
+                <div className="d-flex align-items-baseline gap-2 my-3">
+                  <span className="text-secondary text-decoration-line-through">
                     {formatPrice(destination.originalPrice)}
                   </span>
-                  <strong>{formatPrice(destination.currentPrice)}</strong>
+                  <strong className="fs-5 text-success">{formatPrice(destination.currentPrice)}</strong>
                 </div>
-                <div className="destination-actions">
+                <div className="d-flex flex-wrap gap-2">
                   <Button
                     as={Link}
                     to={`/manage-destinations/${destination.id}`}
@@ -153,7 +153,7 @@ function DestinationListPage() {
       )}
 
       {!isLoading && filteredDestinations.length === 0 && (
-        <div className="destination-empty">
+        <div className="destination-state">
           <h2>No destinations found</h2>
           <p>Add a new destination or change the search keyword.</p>
         </div>

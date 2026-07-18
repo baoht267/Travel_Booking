@@ -115,7 +115,7 @@ function DestinationEditor({ destinationId, initialValues, isEdit }) {
     <>
       {error && <Alert variant="danger">{error}</Alert>}
 
-      <Form className="destination-form" onSubmit={handleSubmit} noValidate>
+      <Form className="destination-form d-grid gap-3 p-4 bg-white" onSubmit={handleSubmit} noValidate>
         <div className="destination-form-grid">
           <Form.Group controlId="destination-name">
             <Form.Label>Destination name</Form.Label>
@@ -215,7 +215,7 @@ function DestinationEditor({ destinationId, initialValues, isEdit }) {
           <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
         </Form.Group>
 
-        <div className="destination-form-actions">
+        <div className="d-flex flex-wrap gap-2">
           <Button type="submit" disabled={isSaving}>
             {isSaving ? 'Saving' : isEdit ? 'Update Destination' : 'Add Destination'}
           </Button>
@@ -248,7 +248,7 @@ function DestinationFormPage() {
 
   if (isEdit && (selectedStatus === 'loading' || selectedDestination?.id !== destinationId)) {
     return (
-      <Container className="page-section destination-page">
+      <Container className="page-section text-dark">
         <div className="destination-state">
           <Spinner animation="border" role="status" />
           <span>Loading edit form...</span>
@@ -261,14 +261,14 @@ function DestinationFormPage() {
   const formKey = isEdit ? destinationId : 'new-destination'
 
   return (
-    <Container className="page-section destination-page destination-form-page">
-      <div className="destination-form-heading">
-        <Link to="/manage-destinations" className="destination-back-link">
+    <Container className="page-section destination-form-page text-dark">
+      <div className="mb-4">
+        <Link to="/manage-destinations" className="d-inline-flex mb-3 fw-bold text-decoration-none">
           Back to list
         </Link>
-        <span className="destination-eyebrow">{isEdit ? 'Update record' : 'Create record'}</span>
-        <h1>{isEdit ? 'Edit Destination' : 'Add Destination'}</h1>
-        <p>
+        <span className="d-block small fw-bold text-primary text-uppercase">{isEdit ? 'Update record' : 'Create record'}</span>
+        <h1 className="my-2 fw-bold">{isEdit ? 'Edit Destination' : 'Add Destination'}</h1>
+        <p className="mb-0 text-secondary">
           {isEdit
             ? 'The form is pre-populated with existing destination information.'
             : 'Create a new destination record and submit it to the REST API.'}
