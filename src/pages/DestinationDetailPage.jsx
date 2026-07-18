@@ -10,10 +10,7 @@ import {
   selectSelectedDestination,
   selectSelectedDestinationStatus,
 } from '../features/destinations/destinationsSlice'
-
-function formatPrice(value) {
-  return `$${Number(value || 0).toLocaleString('en-US')}`
-}
+import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 function DestinationDetailPage() {
   const { destinationId } = useParams()
@@ -73,11 +70,11 @@ function DestinationDetailPage() {
           <dl className="destination-detail-list">
             <div>
               <dt>Original price</dt>
-              <dd>{formatPrice(destination.originalPrice)}</dd>
+              <dd>{formatBasePriceToVndCurrency(destination.originalPrice)}</dd>
             </div>
             <div>
               <dt>Current price</dt>
-              <dd>{formatPrice(destination.currentPrice)}</dd>
+              <dd>{formatBasePriceToVndCurrency(destination.currentPrice)}</dd>
             </div>
             <div>
               <dt>Discount</dt>

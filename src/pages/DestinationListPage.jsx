@@ -10,10 +10,7 @@ import {
   selectDestinations,
   selectDestinationsStatus,
 } from '../features/destinations/destinationsSlice'
-
-function formatPrice(value) {
-  return `$${Number(value || 0).toLocaleString('en-US')}`
-}
+import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 function DestinationListPage() {
   const dispatch = useDispatch()
@@ -115,9 +112,9 @@ function DestinationListPage() {
                 <p>{destination.description}</p>
                 <div className="destination-price">
                   <span>
-                    {formatPrice(destination.originalPrice)}
+                    {formatBasePriceToVndCurrency(destination.originalPrice)}
                   </span>
-                  <strong>{formatPrice(destination.currentPrice)}</strong>
+                  <strong>{formatBasePriceToVndCurrency(destination.currentPrice)}</strong>
                 </div>
                 <div className="destination-actions">
                   <Button

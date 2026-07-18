@@ -4,6 +4,10 @@ export function convertBasePriceToVnd(value) {
   return Math.round(Number(value || 0) * BASE_TO_VND_RATE)
 }
 
+export function convertVndToBasePrice(value) {
+  return Number(value || 0) / BASE_TO_VND_RATE
+}
+
 export function formatVnd(value) {
   return new Intl.NumberFormat('vi-VN').format(Math.round(Number(value || 0)))
 }

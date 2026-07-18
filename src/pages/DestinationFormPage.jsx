@@ -12,6 +12,7 @@ import {
   selectSelectedDestinationStatus,
   updateDestination,
 } from '../features/destinations/destinationsSlice'
+import { convertBasePriceToVnd, convertVndToBasePrice } from '../utils/currency'
 
 const emptyForm = {
   name: '',
@@ -32,8 +33,8 @@ function toFormValues(destination) {
     image: destination.image || '',
     country: destination.country || '',
     city: destination.city || '',
-    originalPrice: String(destination.originalPrice || ''),
-    currentPrice: String(destination.currentPrice || ''),
+    originalPrice: String(convertBasePriceToVnd(destination.originalPrice) || ''),
+    currentPrice: String(convertBasePriceToVnd(destination.currentPrice) || ''),
   }
 }
 
@@ -97,8 +98,8 @@ function DestinationEditor({ destinationId, initialValues, isEdit }) {
       image: values.image.trim(),
       country: values.country.trim(),
       city: values.city.trim(),
-      originalPrice: Number(values.originalPrice),
-      currentPrice: Number(values.currentPrice),
+      originalPrice: convertVndToBasePrice(values.originalPrice),
+      currentPrice: convertVndToBasePrice(values.currentPrice),
     }
 
     if (isEdit) {
@@ -170,7 +171,7 @@ function DestinationEditor({ destinationId, initialValues, isEdit }) {
           </Form.Group>
 
           <Form.Group controlId="destination-original-price">
-            <Form.Label>Original price</Form.Label>
+            <Form.Label>Original price (VNĐ)</Form.Label>
             <Form.Control
               type="number"
               min="1"
@@ -185,7 +186,7 @@ function DestinationEditor({ destinationId, initialValues, isEdit }) {
           </Form.Group>
 
           <Form.Group controlId="destination-current-price">
-            <Form.Label>Current price</Form.Label>
+            <Form.Label>Current price (VNĐ)</Form.Label>
             <Form.Control
               type="number"
               min="1"
