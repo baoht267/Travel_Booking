@@ -3,6 +3,8 @@ import { Button, Card, Form } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import mockCars from '../data/mockCars'
 import { formatBasePriceToVndCurrency } from '../utils/currency'
+import { getDefaultPickupDatetime, getMinimumPickupDatetime } from '../utils/pickupDatetime'
+import { useToast } from '../context/toastState'
 
 function getRentalDays(pickupAt, dropoffAt) {
   const pickup = new Date(pickupAt)
@@ -17,15 +19,23 @@ function normalizeSearchLabel(value) {
 }
 
 function CarRentalsPage() {
+  const defaultPickupAt = useMemo(() => getDefaultPickupDatetime(), [])
+  const defaultDropoffAt = useMemo(() => {
+    const date = new Date(defaultPickupAt)
+    date.setDate(date.getDate() + 3)
+    const offset = date.getTimezoneOffset() * 60000
+    return new Date(date.getTime() - offset).toISOString().slice(0, 16)
+  }, [defaultPickupAt])
+  const showToast = useToast()
   const [draftSearch, setDraftSearch] = useState({
     location: 'London, United Kingdom',
-    pickupAt: '2026-05-22T10:00',
-    dropoffAt: '2026-05-25T10:00',
+    pickupAt: defaultPickupAt,
+    dropoffAt: defaultDropoffAt,
   })
   const [activeSearch, setActiveSearch] = useState({
     location: 'London, United Kingdom',
-    pickupAt: '2026-05-22T10:00',
-    dropoffAt: '2026-05-25T10:00',
+    pickupAt: defaultPickupAt,
+    dropoffAt: defaultDropoffAt,
   })
   const [filters, setFilters] = useState({
     carTypes: [],
@@ -101,6 +111,14 @@ function CarRentalsPage() {
 
   const handleSearchSubmit = (event) => {
     event.preventDefault()
+    if (new Date(draftSearch.pickupAt).getTime() <= Date.now()) {
+      showToast('Thời gian nhận xe phải ở trong tương lai', 'danger')
+      return
+    }
+    if (new Date(draftSearch.dropoffAt) <= new Date(draftSearch.pickupAt)) {
+      showToast('Thời gian trả xe phải sau thời gian nhận xe', 'danger')
+      return
+    }
     setActiveSearch(draftSearch)
   }
 
@@ -125,9 +143,11 @@ function CarRentalsPage() {
             <input
               type="datetime-local"
               value={draftSearch.pickupAt}
+              min={getMinimumPickupDatetime()}
               onChange={(event) =>
                 setDraftSearch((current) => ({ ...current, pickupAt: event.target.value }))
               }
+              required
             />
           </div>
           <div className="cars-search-field">
@@ -135,9 +155,11 @@ function CarRentalsPage() {
             <input
               type="datetime-local"
               value={draftSearch.dropoffAt}
+              min={draftSearch.pickupAt || getMinimumPickupDatetime()}
               onChange={(event) =>
                 setDraftSearch((current) => ({ ...current, dropoffAt: event.target.value }))
               }
+              required
             />
           </div>
           <Button type="submit" className="cars-search-button">

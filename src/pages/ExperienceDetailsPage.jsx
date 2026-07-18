@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { toggleSaved } from '../features/saved/savedSlice'
 import mockExperiences from '../data/mockExperiences'
+import { getTomorrowDate } from '../utils/travelDates'
 
 const detailsByType = {
   'Du Thuyền': {
@@ -419,7 +420,9 @@ function BookingWidget({ experience }) {
           <input
             type="date"
             className="exp-booking-input"
-            defaultValue={new Date().toISOString().split('T')[0]}
+            defaultValue={getTomorrowDate()}
+            min={getTomorrowDate()}
+            required
           />
         </div>
       </div>

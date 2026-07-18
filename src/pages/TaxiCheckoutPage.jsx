@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -6,6 +6,7 @@ import mockTaxis from '../data/mockTaxis'
 import { readSession } from '../utils/authSession'
 import { addBooking } from '../features/bookings/bookingsSlice'
 import { useToast } from '../context/toastState'
+import { ensureFuturePickupDatetime } from '../utils/pickupDatetime'
 
 function formatPrice(value) {
   return new Intl.NumberFormat('vi-VN').format(value)
@@ -26,7 +27,7 @@ function splitFullName(fullName) {
 
 export default function TaxiCheckoutPage() {
   const { taxiId } = useParams()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const session = useMemo(() => readSession(), [])
   const dispatch = useDispatch()
@@ -36,7 +37,8 @@ export default function TaxiCheckoutPage() {
 
   const direction = searchParams.get('direction') || 'arrival'
   const destination = searchParams.get('destination') || taxi?.destination || ''
-  const datetime = searchParams.get('datetime') || ''
+  const requestedDatetime = searchParams.get('datetime') || ''
+  const datetime = ensureFuturePickupDatetime(requestedDatetime)
   const passengers = Number(searchParams.get('passengers') || 1)
   const luggage = Number(searchParams.get('luggage') || 1)
 
@@ -59,6 +61,14 @@ export default function TaxiCheckoutPage() {
     cvv: '',
     acceptedTerms: false,
   })
+
+  useEffect(() => {
+    if (requestedDatetime === datetime) return
+
+    const nextParams = new URLSearchParams(searchParams)
+    nextParams.set('datetime', datetime)
+    setSearchParams(nextParams, { replace: true })
+  }, [datetime, requestedDatetime, searchParams, setSearchParams])
 
   if (!session) return <Navigate to="/auth" replace />
   if (!taxi) return <Navigate to="/search?tab=airport-taxis" replace />
@@ -87,7 +97,7 @@ export default function TaxiCheckoutPage() {
         showToast('Vui lòng nhập điểm đến hoặc điểm đón', 'danger')
         return
       }
-      if (datetime && new Date(datetime).getTime() < Date.now()) {
+      if (datetime && new Date(datetime).getTime() <= Date.now()) {
         showToast('Thời gian đón taxi không thể là thời gian trong quá khứ', 'danger')
         return
       }

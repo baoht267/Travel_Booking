@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Button, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import mockFlights from '../data/mockFlights'
+import { addDays, getTomorrowDate } from '../utils/travelDates'
 
 function formatPrice(value) {
   return new Intl.NumberFormat('vi-VN').format(value)
@@ -15,13 +16,13 @@ const popularRoutes = [
 ]
 
 function FlightsPage() {
-  const today = new Date().toISOString().split('T')[0]
+  const minimumDate = getTomorrowDate()
   const navigate = useNavigate()
 
   const [search, setSearch] = useState({
     from: '',
     to: '',
-    departDate: today,
+    departDate: minimumDate,
     returnDate: '',
     passengers: 1,
     tripType: 'one-way',
@@ -146,7 +147,9 @@ function FlightsPage() {
                     type="date"
                     name="departDate"
                     value={search.departDate}
+                    min={minimumDate}
                     onChange={handleFieldChange}
+                    required
                   />
                 </div>
               </div>
@@ -160,7 +163,9 @@ function FlightsPage() {
                       type="date"
                       name="returnDate"
                       value={search.returnDate}
+                      min={addDays(search.departDate || minimumDate, 1)}
                       onChange={handleFieldChange}
+                      required
                     />
                   </div>
                 </div>

@@ -3,6 +3,7 @@ import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { addRecentSearch, selectCriteria, updateCriteria } from '../../features/stays/staysSlice'
+import { addDays, getTomorrowDate } from '../../utils/travelDates'
 
 function formatDate(offsetDays) {
   const date = new Date()
@@ -21,6 +22,7 @@ function getDefaultHomeCriteria() {
 }
 
 function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
+  const minimumDate = getTomorrowDate()
   const criteria = useSelector(selectCriteria)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -89,7 +91,9 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                       type="date"
                       className="search-home-control"
                       value={homeCriteria.checkIn}
+                      min={minimumDate}
                       onChange={handleHomeFieldChange}
+                      required
                     />
                     <span className="search-home-separator">-</span>
                     <Form.Control
@@ -98,7 +102,9 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                       type="date"
                       className="search-home-control"
                       value={homeCriteria.checkOut}
+                      min={addDays(homeCriteria.checkIn || minimumDate, 1)}
                       onChange={handleHomeFieldChange}
+                      required
                     />
                   </div>
                 </div>
@@ -194,7 +200,9 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                   type="date"
                   className="search-input-control"
                   value={criteria.checkIn}
+                  min={minimumDate}
                   onChange={handleFieldChange}
+                  required
                 />
               </div>
             </Col>
@@ -209,7 +217,9 @@ function SearchForm({ compact = false, home = false, showWorkToggle = false }) {
                   type="date"
                   className="search-input-control"
                   value={criteria.checkOut}
+                  min={addDays(criteria.checkIn || minimumDate, 1)}
                   onChange={handleFieldChange}
+                  required
                 />
               </div>
             </Col>

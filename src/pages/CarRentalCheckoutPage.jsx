@@ -11,6 +11,7 @@ import {
   formatBasePriceToVndCurrency,
   formatVndCurrency,
 } from '../utils/currency'
+import { addDaysToPickupDatetime, ensureFuturePickupDatetime } from '../utils/pickupDatetime'
 
 function getRentalDays(pickupAt, dropoffAt) {
   const pickup = new Date(pickupAt)
@@ -78,8 +79,12 @@ function CarRentalCheckoutPage() {
 
   const car = mockCars.find((item) => item.id === carId)
 
-  const pickupAt = searchParams.get('pickupAt') || '2026-05-22T10:00'
-  const dropoffAt = searchParams.get('dropoffAt') || '2026-05-25T10:00'
+  const pickupAt = ensureFuturePickupDatetime(searchParams.get('pickupAt'))
+  const requestedDropoffAt = searchParams.get('dropoffAt')
+  const dropoffAt =
+    requestedDropoffAt && new Date(requestedDropoffAt) > new Date(pickupAt)
+      ? requestedDropoffAt
+      : addDaysToPickupDatetime(pickupAt, 3)
   const location = searchParams.get('location') || `${car?.city || 'London'}, ${car?.country || 'United Kingdom'}`
   const rentalDays = getRentalDays(pickupAt, dropoffAt)
   const initialName = splitFullName(session?.fullName)
@@ -134,8 +139,8 @@ function CarRentalCheckoutPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (new Date(pickupAt).getTime() < Date.now()) {
-      showToast('Ngày nhận xe không thể là thời gian trong quá khứ', 'danger')
+    if (new Date(pickupAt).getTime() <= Date.now()) {
+      showToast('Ngày nhận xe phải là thời gian trong tương lai', 'danger')
       return
     }
     if (new Date(dropoffAt).getTime() <= new Date(pickupAt).getTime()) {

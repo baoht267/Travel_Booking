@@ -6,6 +6,7 @@ import { readSession } from '../utils/authSession'
 import { addBooking } from '../features/bookings/bookingsSlice'
 import { useToast } from '../context/toastState'
 import mockFlights from '../data/mockFlights'
+import { formatLocalDate, getTomorrowDate, isFutureDate } from '../utils/travelDates'
 
 function formatPrice(value) {
   return new Intl.NumberFormat('vi-VN').format(value)
@@ -28,10 +29,10 @@ export default function FlightCheckoutPage() {
 
   const flight = mockFlights.find((f) => f.id === flightId)
   const passengers = Math.max(1, Number(searchParams.get('passengers') || 1))
-  const departDate = searchParams.get('departDate') || new Date().toISOString().split('T')[0]
+  const departDate = searchParams.get('departDate') || getTomorrowDate()
   const selectedClass = searchParams.get('class') || 'economy'
   const isBusinessClass = selectedClass === 'business'
-  const todayStr = new Date().toISOString().split('T')[0]
+  const todayStr = formatLocalDate()
 
   const initialName = splitFullName(session?.fullName)
   const [step, setStep] = useState(1)
@@ -96,8 +97,8 @@ export default function FlightCheckoutPage() {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (step === 1) {
-      if (departDate < todayStr) {
-        showToast('Ngày bay không thể là ngày trong quá khứ', 'danger')
+      if (!isFutureDate(departDate)) {
+        showToast('Ngày bay phải là ngày trong tương lai', 'danger')
         return
       }
       if (leadPassenger.dob > todayStr) {

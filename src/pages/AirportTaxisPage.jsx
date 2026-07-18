@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import mockTaxis, { airports, popularRoutes } from '../data/mockTaxis'
+import { getDefaultPickupDatetime, getMinimumPickupDatetime } from '../utils/pickupDatetime'
 
 function formatPrice(value) {
   return new Intl.NumberFormat('vi-VN').format(value)
@@ -11,13 +12,13 @@ const typeOrder = ['Sedan', 'Minivan 7 chỗ', 'VIP Sedan', 'Minibus 16 chỗ']
 
 export default function AirportTaxisPage() {
   const navigate = useNavigate()
-  const today = new Date().toISOString().slice(0, 16)
+  const minimumPickupDatetime = getMinimumPickupDatetime()
 
   const [form, setForm] = useState({
     direction: 'arrival',   // arrival | departure
     airportCode: 'HAN',
     destination: '',
-    datetime: today,
+    datetime: getDefaultPickupDatetime(),
     passengers: 2,
     luggage: 2,
   })
@@ -148,7 +149,9 @@ export default function AirportTaxisPage() {
                   type="datetime-local"
                   name="datetime"
                   value={form.datetime}
+                  min={minimumPickupDatetime}
                   onChange={handleChange}
+                  required
                 />
               </div>
 

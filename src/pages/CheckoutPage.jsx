@@ -9,6 +9,7 @@ import { addBooking, selectHotelBookingsByStay } from '../features/bookings/book
 import { readSession } from '../utils/authSession'
 import { useToast } from '../context/toastState'
 import { convertBasePriceToVnd, formatVndCurrency } from '../utils/currency'
+import { isFutureDate } from '../utils/travelDates'
 
 function toCurrency(value) {
   return formatVndCurrency(value)
@@ -105,9 +106,8 @@ function CheckoutPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const todayStr = new Date().toISOString().slice(0, 10)
-    if (criteria.checkIn < todayStr) {
-      showToast('Ngày nhận phòng không thể là ngày trong quá khứ', 'danger')
+    if (!isFutureDate(criteria.checkIn)) {
+      showToast('Ngày nhận phòng phải là ngày trong tương lai', 'danger')
       return
     }
     if (criteria.checkOut <= criteria.checkIn) {

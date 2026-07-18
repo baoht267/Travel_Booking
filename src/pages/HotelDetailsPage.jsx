@@ -5,6 +5,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { selectAllStays, selectCriteria, updateCriteria } from '../features/stays/staysSlice'
 import { selectHotelBookingsByStay } from '../features/bookings/bookingsSlice'
 import { convertBasePriceToVnd, formatBasePriceToVndCurrency } from '../utils/currency'
+import { addDays, getTomorrowDate, isFutureDate } from '../utils/travelDates'
 
 const galleryByTheme = {
   sea: [
@@ -257,10 +258,10 @@ function HotelDetailsPage() {
   const [checkOut, setCheckOut] = useState(criteria.checkOut)
   const [travelerCount, setTravelerCount] = useState(criteria.guests || 2)
 
-  const todayStr = new Date().toISOString().slice(0, 10)
+  const minimumBookingDate = getTomorrowDate()
 
   const dateError = (() => {
-    if (checkIn < todayStr) return 'Ngày nhận phòng không thể là ngày trong quá khứ'
+    if (!isFutureDate(checkIn)) return 'Ngày nhận phòng phải là ngày trong tương lai'
     if (checkOut <= checkIn) return 'Ngày trả phòng phải sau ngày nhận phòng'
     if (existingBookings.some((b) => datesOverlap(checkIn, checkOut, b.checkIn, b.checkOut)))
       return 'Phòng đã được đặt trong khoảng thời gian này, vui lòng chọn ngày khác'
@@ -426,7 +427,8 @@ function HotelDetailsPage() {
                   id="detail-checkin"
                   type="date"
                   value={checkIn}
-                  min={todayStr}
+                  min={minimumBookingDate}
+                  required
                   onChange={(e) => {
                     setCheckIn(e.target.value)
                     dispatch(updateCriteria({ checkIn: e.target.value }))
@@ -443,7 +445,8 @@ function HotelDetailsPage() {
                   id="detail-checkout"
                   type="date"
                   value={checkOut}
-                  min={checkIn || todayStr}
+                  min={addDays(checkIn || minimumBookingDate, 1)}
+                  required
                   onChange={(e) => {
                     setCheckOut(e.target.value)
                     dispatch(updateCriteria({ checkOut: e.target.value }))
