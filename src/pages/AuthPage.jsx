@@ -53,7 +53,9 @@ function AuthPage() {
 
     window.setTimeout(() => {
       const users = readUsers()
-      const matchedUser = users.find((user) => user.email === loginForm.email.trim())
+      const matchedUser = users.find(
+        (user) => user.email === loginForm.email.trim().toLowerCase(),
+      )
 
       if (!matchedUser || matchedUser.password !== loginForm.password) {
         setMessage({
@@ -67,6 +69,7 @@ function AuthPage() {
       writeSession({
           email: matchedUser.email,
           fullName: matchedUser.fullName,
+          role: matchedUser.role,
           remember: loginForm.remember,
         })
 
@@ -105,6 +108,7 @@ function AuthPage() {
           fullName: registerForm.fullName.trim(),
           email: normalizedEmail,
           password: registerForm.password,
+          role: 'user',
         },
       ]
 

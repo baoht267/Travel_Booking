@@ -87,13 +87,15 @@ function AppHeader() {
               <Nav.Link as={NavLink} to="/attractions" className={getNavPillClass('attractions')}>
                 Địa Điểm
               </Nav.Link>
-              <Nav.Link
-                as={NavLink}
-                to="/manage-destinations"
-                className={getNavPillClass('management')}
-              >
-                Manage
-              </Nav.Link>
+              {session?.role === 'admin' && (
+                <Nav.Link
+                  as={NavLink}
+                  to="/manage-destinations"
+                  className={getNavPillClass('management')}
+                >
+                  Manage
+                </Nav.Link>
+              )}
               <Nav.Link
                 as={NavLink}
                 to="/search?tab=airport-taxis"

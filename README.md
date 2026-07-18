@@ -18,6 +18,13 @@ Frontend: `http://127.0.0.1:5173/`
 
 REST API: `http://localhost:4000/destinations`
 
+## Demo Admin Account
+
+- Email: `admin@gochip.vn`
+- Password: `Admin@123`
+
+Only this admin account can see and access the destination management routes. Newly registered accounts receive the `user` role.
+
 ## Assignment CRUD Module
 
 The assignment CRUD requirements are implemented in the Travel Destination Management module:

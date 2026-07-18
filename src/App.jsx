@@ -20,6 +20,17 @@ import HotelDetailsPage from './pages/HotelDetailsPage'
 import HomePage from './pages/HomePage'
 import SavedPage from './pages/SavedPage'
 import SearchResultsPage from './pages/SearchResultsPage'
+import { readSession } from './utils/authSession'
+
+function AdminRoute({ children }) {
+  const session = readSession()
+
+  if (!session) {
+    return <Navigate to="/auth" replace />
+  }
+
+  return session.role === 'admin' ? children : <Navigate to="/" replace />
+}
 
 function App() {
   const location = useLocation()
@@ -39,10 +50,10 @@ function App() {
           <Route path="/cars/:carId/checkout" element={<CarRentalCheckoutPage />} />
           <Route path="/checkout/:stayId" element={<CheckoutPage />} />
           <Route path="/search" element={<SearchResultsPage />} />
-          <Route path="/manage-destinations" element={<DestinationListPage />} />
-          <Route path="/manage-destinations/new" element={<DestinationFormPage />} />
-          <Route path="/manage-destinations/:destinationId" element={<DestinationDetailPage />} />
-          <Route path="/manage-destinations/:destinationId/edit" element={<DestinationFormPage />} />
+          <Route path="/manage-destinations" element={<AdminRoute><DestinationListPage /></AdminRoute>} />
+          <Route path="/manage-destinations/new" element={<AdminRoute><DestinationFormPage /></AdminRoute>} />
+          <Route path="/manage-destinations/:destinationId" element={<AdminRoute><DestinationDetailPage /></AdminRoute>} />
+          <Route path="/manage-destinations/:destinationId/edit" element={<AdminRoute><DestinationFormPage /></AdminRoute>} />
           <Route path="/attractions" element={<AttractionsPage />} />
           <Route path="/saved" element={<SavedPage />} />
           <Route path="/flights/:flightId/checkout" element={<FlightCheckoutPage />} />
