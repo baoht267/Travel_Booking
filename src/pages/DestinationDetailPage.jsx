@@ -43,7 +43,7 @@ function DestinationDetailPage() {
 
   if (status === 'loading' || !destination || destination.id !== destinationId) {
     return (
-      <Container className="page-section text-dark">
+      <Container className="page-section destination-page">
         <div className="destination-state">
           <Spinner animation="border" role="status" />
           <span>Loading destination detail...</span>
@@ -53,22 +53,22 @@ function DestinationDetailPage() {
   }
 
   return (
-    <Container className="page-section text-dark">
+    <Container className="page-section destination-page">
       {error && <Alert variant="danger">{error}</Alert>}
 
       <div className="destination-detail">
         <div className="destination-detail-image">
           <img src={destination.image} alt={destination.name} />
         </div>
-        <div>
-          <Link to="/manage-destinations" className="d-inline-flex mb-3 fw-bold text-decoration-none">
+        <div className="destination-content">
+          <Link to="/manage-destinations">
             Back to list
           </Link>
-          <span className="d-block small fw-bold text-primary text-uppercase">
+          <span>
             {destination.city}, {destination.country}
           </span>
-          <h1 className="my-2 fw-bold">{destination.name}</h1>
-          <p className="mb-0 text-secondary lh-lg">{destination.description}</p>
+          <h1>{destination.name}</h1>
+          <p>{destination.description}</p>
 
           <dl className="destination-detail-list">
             <div>
@@ -95,7 +95,7 @@ function DestinationDetailPage() {
             </div>
           </dl>
 
-          <div className="d-flex flex-wrap gap-2 mt-3">
+          <div className="destination-actions">
             <Button as={Link} to={`/manage-destinations/${destination.id}/edit`}>
               Edit Destination
             </Button>

@@ -56,19 +56,19 @@ function DestinationListPage() {
   const isLoading = status === 'loading'
 
   return (
-    <Container className="page-section text-dark">
+    <Container className="page-section destination-page">
       <div className="destination-toolbar">
         <div>
-          <span className="small fw-bold text-primary text-uppercase">Travel Destination Management</span>
-          <h1 className="my-2 fw-bold">Destination List</h1>
-          <p className="mb-0 text-secondary">Manage destination records with a REST API, Redux Toolkit, and full CRUD actions.</p>
+          <span>Travel Destination Management</span>
+          <h1>Destination List</h1>
+          <p>Manage destination records with a REST API, Redux Toolkit, and full CRUD actions.</p>
         </div>
-        <Button as={Link} to="/manage-destinations/new" className="fw-bold">
+        <Button as={Link} to="/manage-destinations/new">
           Add Destination
         </Button>
       </div>
 
-      <div className="d-flex gap-2 mb-4">
+      <div className="destination-search">
         <Form.Control
           type="search"
           value={query}
@@ -104,22 +104,22 @@ function DestinationListPage() {
               <Link to={`/manage-destinations/${destination.id}`} className="destination-card-image">
                 <img src={destination.image} alt={destination.name} />
               </Link>
-              <div className="d-flex flex-column flex-grow-1 p-3">
-                <div className="d-flex flex-wrap gap-2 small fw-bold text-secondary text-uppercase">
+              <div className="destination-card-body">
+                <div className="destination-card-meta">
                   <span>{destination.city}</span>
                   <span>{destination.country}</span>
                 </div>
-                <h2 className="h5 my-2 fw-bold">
+                <h2>
                   <Link to={`/manage-destinations/${destination.id}`}>{destination.name}</Link>
                 </h2>
-                <p className="flex-grow-1 text-secondary">{destination.description}</p>
-                <div className="d-flex align-items-baseline gap-2 my-3">
-                  <span className="text-secondary text-decoration-line-through">
+                <p>{destination.description}</p>
+                <div className="destination-price">
+                  <span>
                     {formatPrice(destination.originalPrice)}
                   </span>
-                  <strong className="fs-5 text-success">{formatPrice(destination.currentPrice)}</strong>
+                  <strong>{formatPrice(destination.currentPrice)}</strong>
                 </div>
-                <div className="d-flex flex-wrap gap-2">
+                <div className="destination-actions">
                   <Button
                     as={Link}
                     to={`/manage-destinations/${destination.id}`}
