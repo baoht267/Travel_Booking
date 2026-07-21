@@ -11,6 +11,15 @@ const TYPE_ICON = {
   flight: 'flight',
   taxi: 'local_taxi',
   car: 'directions_car',
+  souvenir: 'shopping_bag',
+}
+
+const TYPE_LABEL = {
+  hotel: 'Khách sạn',
+  flight: 'Chuyến bay',
+  taxi: 'Taxi',
+  car: 'Thuê xe',
+  souvenir: 'Đồ lưu niệm',
 }
 
 const STATUS_CONFIG = {
@@ -59,7 +68,7 @@ function BookingCard({ booking, onCancel }) {
         <div className="mybk-card-head">
           <div className="mybk-card-type">
             <span className="material-symbols-outlined">{icon}</span>
-            <span>{booking.type === 'hotel' ? 'Khách sạn' : booking.type === 'flight' ? 'Chuyến bay' : booking.type === 'taxi' ? 'Taxi' : 'Thuê xe'}</span>
+            <span>{TYPE_LABEL[booking.type] || 'Đơn hàng'}</span>
           </div>
           <span className={`mybk-status ${statusCfg.className}`}>{statusCfg.label}</span>
         </div>

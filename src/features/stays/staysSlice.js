@@ -8,27 +8,6 @@ function formatDate(offsetDays) {
   return date.toISOString().slice(0, 10)
 }
 
-// Chuyển một "destination" (do admin quản lý qua API) sang shape "stay"
-// để nó chạy chung luồng tìm kiếm/hiển thị với mockStays.
-export function destinationToStay(destination) {
-  const currentPrice = Number(destination.currentPrice) || 0
-
-  return {
-    ...destination,
-    theme: 'city',
-    propertyType: 'Khách Sạn',
-    reviewScore: 9.0,
-    reviewLabel: 'Mới',
-    reviewsCount: 0,
-    pricePerNight: currentPrice,
-    taxesAndFees: Math.round(currentPrice * 0.1),
-    distanceToCenter: 1,
-    perks: [],
-    amenities: [],
-    source: 'destination',
-  }
-}
-
 const initialState = {
   list: mockStays,
   criteria: {
@@ -111,7 +90,6 @@ export const {
 } = staysSlice.actions
 
 const selectStaysState = (state) => state.stays
-const selectDestinationItems = (state) => state.destinations.items
 
 export const selectCriteria = createSelector(
   [selectStaysState],
@@ -129,11 +107,8 @@ export const selectRecentSearches = createSelector(
 )
 
 export const selectAllStays = createSelector(
-  [selectStaysState, selectDestinationItems],
-  (staysState, destinationItems) => [
-    ...destinationItems.map(destinationToStay),
-    ...staysState.list,
-  ],
+  [selectStaysState],
+  (staysState) => staysState.list,
 )
 
 export const selectFilteredStays = createSelector(

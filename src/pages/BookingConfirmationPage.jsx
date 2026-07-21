@@ -28,6 +28,12 @@ const TYPE_CONFIG = {
     backLabel: 'Tìm xe khác',
     backPath: '/search?tab=car-rentals',
   },
+  souvenir: {
+    icon: 'shopping_bag',
+    label: 'Đơn Đồ Lưu Niệm',
+    backLabel: 'Mua thêm lưu niệm',
+    backPath: '/souvenirs',
+  },
 }
 
 function formatCurrency(value, currency) {

@@ -40,32 +40,35 @@ function readBody(request) {
   })
 }
 
-function normalizeDestination(data) {
+function normalizeSouvenir(data) {
   return {
     name: String(data.name || '').trim(),
     description: String(data.description || '').trim(),
     image: String(data.image || '').trim(),
-    country: String(data.country || '').trim(),
-    city: String(data.city || '').trim(),
+    category: String(data.category || '').trim(),
+    origin: String(data.origin || '').trim(),
     originalPrice: Number(data.originalPrice),
     currentPrice: Number(data.currentPrice),
+    stock: Number(data.stock),
   }
 }
 
-function validateDestination(destination) {
-  if (!destination.name) return 'Destination name is required'
-  if (!destination.description) return 'Description is required'
-  if (!destination.image) return 'Image URL is required'
-  if (!destination.country) return 'Country is required'
-  if (!destination.city) return 'City is required'
-  if (!Number.isFinite(destination.originalPrice) || destination.originalPrice <= 0) {
+function validateSouvenir(souvenir) {
+  if (!souvenir.name) return 'Souvenir name is required'
+  if (!souvenir.description) return 'Description is required'
+  if (!souvenir.image) return 'Image URL is required'
+  if (!souvenir.category) return 'Category is required'
+  if (!Number.isFinite(souvenir.originalPrice) || souvenir.originalPrice <= 0) {
     return 'Original price must be greater than 0'
   }
-  if (!Number.isFinite(destination.currentPrice) || destination.currentPrice <= 0) {
+  if (!Number.isFinite(souvenir.currentPrice) || souvenir.currentPrice <= 0) {
     return 'Current price must be greater than 0'
   }
-  if (destination.currentPrice > destination.originalPrice) {
+  if (souvenir.currentPrice > souvenir.originalPrice) {
     return 'Current price cannot be greater than original price'
+  }
+  if (!Number.isInteger(souvenir.stock) || souvenir.stock < 0) {
+    return 'Stock must be an integer of 0 or more'
   }
   return null
 }
@@ -79,74 +82,74 @@ createServer(async (request, response) => {
   const url = new URL(request.url, `http://localhost:${PORT}`)
   const parts = url.pathname.split('/').filter(Boolean)
 
-  if (parts[0] !== 'destinations' || parts.length > 2) {
+  if (parts[0] !== 'souvenirs' || parts.length > 2) {
     sendJson(response, 404, { message: 'Endpoint not found' })
     return
   }
 
   try {
     const db = await readDb()
-    const destinations = Array.isArray(db.destinations) ? db.destinations : []
+    const souvenirs = Array.isArray(db.souvenirs) ? db.souvenirs : []
     const id = parts[1]
 
     if (request.method === 'GET' && !id) {
-      sendJson(response, 200, destinations)
+      sendJson(response, 200, souvenirs)
       return
     }
 
     if (request.method === 'GET' && id) {
-      const destination = destinations.find((item) => item.id === id)
-      sendJson(response, destination ? 200 : 404, destination || { message: 'Destination not found' })
+      const souvenir = souvenirs.find((item) => item.id === id)
+      sendJson(response, souvenir ? 200 : 404, souvenir || { message: 'Souvenir not found' })
       return
     }
 
     if (request.method === 'POST' && !id) {
-      const payload = normalizeDestination(await readBody(request))
-      const error = validateDestination(payload)
+      const payload = normalizeSouvenir(await readBody(request))
+      const error = validateSouvenir(payload)
       if (error) {
         sendJson(response, 400, { message: error })
         return
       }
 
-      const destination = {
-        id: `des-${Date.now().toString(36)}`,
+      const souvenir = {
+        id: `sou-${Date.now().toString(36)}`,
         ...payload,
       }
-      db.destinations = [destination, ...destinations]
+      db.souvenirs = [souvenir, ...souvenirs]
       await writeDb(db)
-      sendJson(response, 201, destination)
+      sendJson(response, 201, souvenir)
       return
     }
 
     if (request.method === 'PUT' && id) {
-      const index = destinations.findIndex((item) => item.id === id)
+      const index = souvenirs.findIndex((item) => item.id === id)
       if (index === -1) {
-        sendJson(response, 404, { message: 'Destination not found' })
+        sendJson(response, 404, { message: 'Souvenir not found' })
         return
       }
 
-      const payload = normalizeDestination(await readBody(request))
-      const error = validateDestination(payload)
+      const payload = normalizeSouvenir(await readBody(request))
+      const error = validateSouvenir(payload)
       if (error) {
         sendJson(response, 400, { message: error })
         return
       }
 
-      const destination = { id, ...payload }
-      db.destinations = destinations.map((item) => (item.id === id ? destination : item))
+      const souvenir = { id, ...payload }
+      db.souvenirs = souvenirs.map((item) => (item.id === id ? souvenir : item))
       await writeDb(db)
-      sendJson(response, 200, destination)
+      sendJson(response, 200, souvenir)
       return
     }
 
     if (request.method === 'DELETE' && id) {
-      const exists = destinations.some((item) => item.id === id)
+      const exists = souvenirs.some((item) => item.id === id)
       if (!exists) {
-        sendJson(response, 404, { message: 'Destination not found' })
+        sendJson(response, 404, { message: 'Souvenir not found' })
         return
       }
 
-      db.destinations = destinations.filter((item) => item.id !== id)
+      db.souvenirs = souvenirs.filter((item) => item.id !== id)
       await writeDb(db)
       sendJson(response, 200, { id })
       return
@@ -157,5 +160,5 @@ createServer(async (request, response) => {
     sendJson(response, 500, { message: error.message || 'Server error' })
   }
 }).listen(PORT, () => {
-  console.log(`Travel destination API running at http://localhost:${PORT}`)
+  console.log(`Travel souvenir API running at http://localhost:${PORT}`)
 })

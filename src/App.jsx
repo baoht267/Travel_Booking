@@ -9,9 +9,11 @@ import AppHeader from './components/layout/AppHeader'
 import BookingConfirmationPage from './pages/BookingConfirmationPage'
 import CarRentalCheckoutPage from './pages/CarRentalCheckoutPage'
 import CheckoutPage from './pages/CheckoutPage'
-import DestinationDetailPage from './pages/DestinationDetailPage'
-import DestinationFormPage from './pages/DestinationFormPage'
-import DestinationListPage from './pages/DestinationListPage'
+import SouvenirManageDetailPage from './pages/SouvenirManageDetailPage'
+import SouvenirFormPage from './pages/SouvenirFormPage'
+import SouvenirListPage from './pages/SouvenirListPage'
+import SouvenirShopPage from './pages/SouvenirShopPage'
+import SouvenirDetailPage from './pages/SouvenirDetailPage'
 import AttractionsPage from './pages/AttractionsPage'
 import FlightCheckoutPage from './pages/FlightCheckoutPage'
 import MyBookingsPage from './pages/MyBookingsPage'
@@ -22,7 +24,7 @@ import HotelDetailsPage from './pages/HotelDetailsPage'
 import HomePage from './pages/HomePage'
 import SavedPage from './pages/SavedPage'
 import SearchResultsPage from './pages/SearchResultsPage'
-import { fetchDestinations } from './features/destinations/destinationsSlice'
+import { fetchSouvenirs } from './features/souvenirs/souvenirsSlice'
 import { readSession } from './utils/authSession'
 
 function AdminRoute({ children }) {
@@ -40,10 +42,10 @@ function App() {
   const location = useLocation()
   const isAuthRoute = location.pathname === '/auth'
 
-  // Tải danh sách điểm đến (do admin quản lý) một lần cho toàn app,
-  // để trang chủ và tìm kiếm đều thấy dữ liệu mới nhất.
+  // Tải danh sách đồ lưu niệm (do admin quản lý) một lần cho toàn app,
+  // để trang chủ và trang shop đều thấy dữ liệu mới nhất.
   useEffect(() => {
-    dispatch(fetchDestinations())
+    dispatch(fetchSouvenirs())
   }, [dispatch])
   const isCheckoutRoute =
     location.pathname.startsWith('/checkout') ||
@@ -60,10 +62,12 @@ function App() {
           <Route path="/cars/:carId/checkout" element={<CarRentalCheckoutPage />} />
           <Route path="/checkout/:stayId" element={<CheckoutPage />} />
           <Route path="/search" element={<SearchResultsPage />} />
-          <Route path="/manage-destinations" element={<AdminRoute><DestinationListPage /></AdminRoute>} />
-          <Route path="/manage-destinations/new" element={<AdminRoute><DestinationFormPage /></AdminRoute>} />
-          <Route path="/manage-destinations/:destinationId" element={<AdminRoute><DestinationDetailPage /></AdminRoute>} />
-          <Route path="/manage-destinations/:destinationId/edit" element={<AdminRoute><DestinationFormPage /></AdminRoute>} />
+          <Route path="/souvenirs" element={<SouvenirShopPage />} />
+          <Route path="/souvenirs/:souvenirId" element={<SouvenirDetailPage />} />
+          <Route path="/manage-souvenirs" element={<AdminRoute><SouvenirListPage /></AdminRoute>} />
+          <Route path="/manage-souvenirs/new" element={<AdminRoute><SouvenirFormPage /></AdminRoute>} />
+          <Route path="/manage-souvenirs/:souvenirId" element={<AdminRoute><SouvenirManageDetailPage /></AdminRoute>} />
+          <Route path="/manage-souvenirs/:souvenirId/edit" element={<AdminRoute><SouvenirFormPage /></AdminRoute>} />
           <Route path="/attractions" element={<AttractionsPage />} />
           <Route path="/saved" element={<SavedPage />} />
           <Route path="/flights/:flightId/checkout" element={<FlightCheckoutPage />} />

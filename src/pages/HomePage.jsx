@@ -8,7 +8,7 @@ import {
   selectRecentSearches,
   updateCriteria,
 } from '../features/stays/staysSlice'
-import { selectDestinations } from '../features/destinations/destinationsSlice'
+import { selectSouvenirs } from '../features/souvenirs/souvenirsSlice'
 import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 const heroImage =
@@ -121,7 +121,7 @@ function HomePage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const recentSearches = useSelector(selectRecentSearches)
-  const destinations = useSelector(selectDestinations)
+  const souvenirs = useSelector(selectSouvenirs)
   const tourRailRef = useRef(null)
 
   useEffect(() => {
@@ -203,37 +203,44 @@ function HomePage() {
         </div>
       </Container>
 
-      {destinations.length > 0 && (
-        <Container className="page-section home-section" id="managed-destinations">
-          <div className="home-section-head">
-            <h2 className="home-section-title">Điểm đến mới từ GOCHIP</h2>
-            
+      {souvenirs.length > 0 && (
+        <Container className="page-section home-section" id="travel-souvenirs">
+          <div className="home-section-head home-section-head-row">
+            <div>
+              <h2 className="home-section-title">Đồ lưu niệm du lịch</h2>
+              <p className="home-section-text">
+                Mang một chút Việt Nam về nhà — quà thủ công, đặc sản và nhiều hơn nữa
+              </p>
+            </div>
+            <div className="home-section-actions">
+              <Button as={Link} to="/souvenirs" variant="outline-primary">
+                Xem tất cả
+              </Button>
+            </div>
           </div>
 
           <Row className="g-4">
-            {destinations.slice(0, 8).map((destination) => (
-              <Col key={destination.id} md={6} xl={3}>
+            {souvenirs.slice(0, 8).map((souvenir) => (
+              <Col key={souvenir.id} md={6} xl={3}>
                 <Card className="tour-card h-100">
                   <img
-                    src={destination.image}
-                    alt={destination.name}
+                    src={souvenir.image}
+                    alt={souvenir.name}
                     className="tour-card-image"
                   />
                   <Card.Body className="tour-card-body">
-                    <div className="tour-card-country">
-                      {destination.city}, {destination.country}
-                    </div>
-                    <h3 className="tour-card-title">{destination.name}</h3>
+                    <div className="tour-card-country">{souvenir.category}</div>
+                    <h3 className="tour-card-title">{souvenir.name}</h3>
                     <div className="tour-card-footer">
                       <div>
                         <div className="tour-card-label">Chỉ từ</div>
                         <div className="tour-card-price">
-                          {formatBasePriceToVndCurrency(destination.currentPrice)}
+                          {formatBasePriceToVndCurrency(souvenir.currentPrice)}
                         </div>
                       </div>
                       <Button
                         as={Link}
-                        to={`/stays/${destination.id}`}
+                        to={`/souvenirs/${souvenir.id}`}
                         variant="outline-primary"
                         className="tour-card-button"
                       >

@@ -1,44 +1,70 @@
 {
-  "destinations": [
+  "souvenirs": [
     {
-      "id": "des-mruumky7",
-      "name": "Hoàng Tân Bảo",
-      "description": "là 1 nơi đẹp",
-      "image": "https://th.bing.com/th/id/R.8f1b475aca22c5b0e5e97f441ccfea1a?rik=2FhWUouaj67s1Q&pid=ImgRaw&r=0",
-      "country": "Vietnam",
-      "city": "Hà Nội",
-      "originalPrice": 120,
-      "currentPrice": 8
+      "id": "sou-keychain-onepillar",
+      "name": "Móc khóa Chùa Một Cột",
+      "description": "Móc khóa kim loại khắc hình Chùa Một Cột, quà lưu niệm nhỏ gọn đặc trưng Hà Nội.",
+      "image": "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1000&q=80",
+      "category": "Móc khóa",
+      "origin": "Hà Nội, Việt Nam",
+      "originalPrice": 3,
+      "currentPrice": 2,
+      "stock": 120
     },
     {
-      "id": "des-1",
-      "name": "Ha Long Bay Escape",
-      "description": "A coastal destination with limestone islands, boat tours, local seafood, and calm overnight cruises.",
-      "image": "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1000&q=80",
-      "country": "Vietnam",
-      "city": "Quang Ninh",
-      "originalPrice": 320,
-      "currentPrice": 249
+      "id": "sou-tshirt-vietnam",
+      "name": "Áo thun \"I Love Vietnam\"",
+      "description": "Áo thun cotton in hình bản đồ Việt Nam, nhiều size, phù hợp làm quà cho bạn bè quốc tế.",
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&q=80",
+      "category": "Áo thun",
+      "origin": "TP. Hồ Chí Minh, Việt Nam",
+      "originalPrice": 12,
+      "currentPrice": 9,
+      "stock": 80
     },
     {
-      "id": "des-2",
-      "name": "Da Nang Beach Break",
-      "description": "A city and beach trip with modern hotels, mountain views, night markets, and easy access to Hoi An.",
-      "image": "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?auto=format&fit=crop&w=1000&q=80",
-      "country": "Vietnam",
-      "city": "Da Nang",
-      "originalPrice": 280,
-      "currentPrice": 199
+      "id": "sou-nonla-hue",
+      "name": "Nón lá truyền thống",
+      "description": "Nón lá thủ công chằm tay xứ Huế, có thể dùng đội hoặc trang trí.",
+      "image": "https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1000&q=80",
+      "category": "Đồ thủ công",
+      "origin": "Huế, Việt Nam",
+      "originalPrice": 6,
+      "currentPrice": 5,
+      "stock": 60
     },
     {
-      "id": "des-3",
-      "name": "Sa Pa Mountain Stay",
-      "description": "A northern highland destination with terraced fields, cool weather, homestays, and guided trekking routes.",
-      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80",
-      "country": "Vietnam",
-      "city": "Lao Cai",
-      "originalPrice": 240,
-      "currentPrice": 179
+      "id": "sou-coffee-trungnguyen",
+      "name": "Cà phê rang xay đặc sản",
+      "description": "Cà phê Robusta - Arabica rang mộc, đóng gói 500g, hương vị đậm đà đặc trưng Tây Nguyên.",
+      "image": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1000&q=80",
+      "category": "Đặc sản",
+      "origin": "Buôn Ma Thuột, Việt Nam",
+      "originalPrice": 8,
+      "currentPrice": 7,
+      "stock": 200
+    },
+    {
+      "id": "sou-woodstatue-hoian",
+      "name": "Tượng gỗ thủ công Hội An",
+      "description": "Tượng gỗ điêu khắc thủ công bởi nghệ nhân làng mộc Kim Bồng, mỗi sản phẩm là duy nhất.",
+      "image": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=1000&q=80",
+      "category": "Đồ thủ công",
+      "origin": "Hội An, Việt Nam",
+      "originalPrice": 20,
+      "currentPrice": 16,
+      "stock": 35
+    },
+    {
+      "id": "sou-lotustea-westlake",
+      "name": "Trà sen Tây Hồ",
+      "description": "Trà sen ướp thủ công theo phương pháp truyền thống Tây Hồ, hộp quà 100g sang trọng.",
+      "image": "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=1000&q=80",
+      "category": "Đặc sản",
+      "origin": "Hà Nội, Việt Nam",
+      "originalPrice": 10,
+      "currentPrice": 8,
+      "stock": 90
     }
   ],
   "stays": [

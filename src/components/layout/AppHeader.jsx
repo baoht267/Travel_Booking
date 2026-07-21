@@ -27,7 +27,11 @@ function AppHeader() {
     }
 
     if (tabName === 'management') {
-      return `nav-pill${location.pathname.startsWith('/manage-destinations') ? ' nav-pill-active' : ''}`
+      return `nav-pill${location.pathname.startsWith('/manage-souvenirs') ? ' nav-pill-active' : ''}`
+    }
+
+    if (tabName === 'souvenirs') {
+      return `nav-pill${location.pathname.startsWith('/souvenirs') ? ' nav-pill-active' : ''}`
     }
 
     if (tabName === 'car-rentals') {
@@ -87,10 +91,13 @@ function AppHeader() {
               <Nav.Link as={NavLink} to="/attractions" className={getNavPillClass('attractions')}>
                 Địa Điểm
               </Nav.Link>
+              <Nav.Link as={NavLink} to="/souvenirs" className={getNavPillClass('souvenirs')}>
+                Lưu Niệm
+              </Nav.Link>
               {session?.role === 'admin' && (
                 <Nav.Link
                   as={NavLink}
-                  to="/manage-destinations"
+                  to="/manage-souvenirs"
                   className={getNavPillClass('management')}
                 >
                   Manage
