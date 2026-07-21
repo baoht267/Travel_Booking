@@ -1,4 +1,6 @@
 import './App.css'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AuthPage from './pages/AuthPage'
@@ -20,6 +22,7 @@ import HotelDetailsPage from './pages/HotelDetailsPage'
 import HomePage from './pages/HomePage'
 import SavedPage from './pages/SavedPage'
 import SearchResultsPage from './pages/SearchResultsPage'
+import { fetchDestinations } from './features/destinations/destinationsSlice'
 import { readSession } from './utils/authSession'
 
 function AdminRoute({ children }) {
@@ -33,8 +36,15 @@ function AdminRoute({ children }) {
 }
 
 function App() {
+  const dispatch = useDispatch()
   const location = useLocation()
   const isAuthRoute = location.pathname === '/auth'
+
+  // Tải danh sách điểm đến (do admin quản lý) một lần cho toàn app,
+  // để trang chủ và tìm kiếm đều thấy dữ liệu mới nhất.
+  useEffect(() => {
+    dispatch(fetchDestinations())
+  }, [dispatch])
   const isCheckoutRoute =
     location.pathname.startsWith('/checkout') ||
     location.pathname.includes('/checkout') ||

@@ -8,6 +8,7 @@ import {
   selectRecentSearches,
   updateCriteria,
 } from '../features/stays/staysSlice'
+import { selectDestinations } from '../features/destinations/destinationsSlice'
 import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 const heroImage =
@@ -120,6 +121,7 @@ function HomePage() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const recentSearches = useSelector(selectRecentSearches)
+  const destinations = useSelector(selectDestinations)
   const tourRailRef = useRef(null)
 
   useEffect(() => {
@@ -200,6 +202,51 @@ function HomePage() {
           ))}
         </div>
       </Container>
+
+      {destinations.length > 0 && (
+        <Container className="page-section home-section" id="managed-destinations">
+          <div className="home-section-head">
+            <h2 className="home-section-title">Điểm đến mới từ GOCHIP</h2>
+            
+          </div>
+
+          <Row className="g-4">
+            {destinations.slice(0, 8).map((destination) => (
+              <Col key={destination.id} md={6} xl={3}>
+                <Card className="tour-card h-100">
+                  <img
+                    src={destination.image}
+                    alt={destination.name}
+                    className="tour-card-image"
+                  />
+                  <Card.Body className="tour-card-body">
+                    <div className="tour-card-country">
+                      {destination.city}, {destination.country}
+                    </div>
+                    <h3 className="tour-card-title">{destination.name}</h3>
+                    <div className="tour-card-footer">
+                      <div>
+                        <div className="tour-card-label">Chỉ từ</div>
+                        <div className="tour-card-price">
+                          {formatBasePriceToVndCurrency(destination.currentPrice)}
+                        </div>
+                      </div>
+                      <Button
+                        as={Link}
+                        to={`/stays/${destination.id}`}
+                        variant="outline-primary"
+                        className="tour-card-button"
+                      >
+                        Xem Chi Tiết
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Container>
+      )}
 
       <section className="home-tours-band" id="top-experiences">
         <Container className="page-section home-section home-tours-section">
