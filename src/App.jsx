@@ -12,8 +12,6 @@ import CheckoutPage from './pages/CheckoutPage'
 import SouvenirManageDetailPage from './pages/SouvenirManageDetailPage'
 import SouvenirFormPage from './pages/SouvenirFormPage'
 import SouvenirListPage from './pages/SouvenirListPage'
-import SouvenirShopPage from './pages/SouvenirShopPage'
-import SouvenirDetailPage from './pages/SouvenirDetailPage'
 import AttractionsPage from './pages/AttractionsPage'
 import FlightCheckoutPage from './pages/FlightCheckoutPage'
 import MyBookingsPage from './pages/MyBookingsPage'
@@ -62,8 +60,6 @@ function App() {
           <Route path="/cars/:carId/checkout" element={<CarRentalCheckoutPage />} />
           <Route path="/checkout/:stayId" element={<CheckoutPage />} />
           <Route path="/search" element={<SearchResultsPage />} />
-          <Route path="/souvenirs" element={<SouvenirShopPage />} />
-          <Route path="/souvenirs/:souvenirId" element={<SouvenirDetailPage />} />
           <Route path="/manage-souvenirs" element={<AdminRoute><SouvenirListPage /></AdminRoute>} />
           <Route path="/manage-souvenirs/new" element={<AdminRoute><SouvenirFormPage /></AdminRoute>} />
           <Route path="/manage-souvenirs/:souvenirId" element={<AdminRoute><SouvenirManageDetailPage /></AdminRoute>} />

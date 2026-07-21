@@ -1,8 +1,14 @@
 import { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { toggleSaved } from '../features/saved/savedSlice'
+import { addBooking } from '../features/bookings/bookingsSlice'
+import { selectSouvenirs } from '../features/souvenirs/souvenirsSlice'
+import { buildSouvenirSelection, deductSouvenirStock } from '../features/souvenirs/souvenirCart'
+import SouvenirAddOns from '../components/souvenir/SouvenirAddOns'
+import { useToast } from '../context/toastState'
+import { readSession } from '../utils/authSession'
 import mockExperiences from '../data/mockExperiences'
 import { getTomorrowDate } from '../utils/travelDates'
 
@@ -384,16 +390,66 @@ export default function ExperienceDetailsPage() {
 }
 
 function BookingWidget({ experience }) {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const showToast = useToast()
+  const souvenirs = useSelector(selectSouvenirs)
   const [adults, setAdults] = useState(2)
   const [children, setChildren] = useState(0)
+  const [visitDate, setVisitDate] = useState(getTomorrowDate())
+  const [souvenirQty, setSouvenirQty] = useState({})
   const [booked, setBooked] = useState(false)
 
   const price = experience.pricePerNight * 25000
-  const total = Math.round(price * adults + price * 0.5 * children)
+  const ticketTotal = Math.round(price * adults + price * 0.5 * children)
+  const souvenirSelection = buildSouvenirSelection(souvenirs, souvenirQty)
+  const total = ticketTotal + souvenirSelection.totalVnd
 
-  function handleBook() {
+  const handleSouvenirChange = (id, quantity) => {
+    setSouvenirQty((current) => ({ ...current, [id]: quantity }))
+  }
+
+  async function handleBook() {
+    if (booked) return
+
+    if (!readSession()) {
+      showToast('Vui lòng đăng nhập để đặt vé.', 'info')
+      navigate('/auth')
+      return
+    }
+
     setBooked(true)
-    setTimeout(() => setBooked(false), 2000)
+    try {
+      // Trừ tồn kho đồ lưu niệm mua kèm (nếu có).
+      await deductSouvenirStock(dispatch, souvenirSelection.items)
+
+      const details = {
+        'Ngày tham quan': new Intl.DateTimeFormat('vi-VN').format(new Date(visitDate)),
+        'Số khách': `${adults} người lớn${children > 0 ? ` · ${children} trẻ em` : ''}`,
+        'Thời lượng': experience.duration,
+      }
+      if (souvenirSelection.items.length > 0) {
+        details['Đồ lưu niệm'] = souvenirSelection.summaryText
+      }
+
+      const booking = dispatch(
+        addBooking({
+          type: 'experience',
+          title: experience.name,
+          subtitle: `${experience.area}, ${experience.city}`,
+          image: experience.image,
+          total,
+          currency: 'VND',
+          details,
+        }),
+      )
+
+      showToast('Đặt vé tham quan thành công!', 'success', 5000)
+      navigate(`/booking-confirmation/${booking.payload.id}`)
+    } catch (bookError) {
+      setBooked(false)
+      showToast(bookError.message || 'Đặt vé thất bại, vui lòng thử lại.', 'danger')
+    }
   }
 
   return (
@@ -420,7 +476,8 @@ function BookingWidget({ experience }) {
           <input
             type="date"
             className="exp-booking-input"
-            defaultValue={getTomorrowDate()}
+            value={visitDate}
+            onChange={(event) => setVisitDate(event.target.value)}
             min={getTomorrowDate()}
             required
           />
@@ -470,6 +527,15 @@ function BookingWidget({ experience }) {
         </div>
       </div>
 
+      {/* Souvenir add-ons */}
+      <div className="exp-booking-field">
+        <SouvenirAddOns
+          selections={souvenirQty}
+          onChange={handleSouvenirChange}
+          title="Mua kèm đồ lưu niệm (tuỳ chọn)"
+        />
+      </div>
+
       {/* Price Summary */}
       <div className="exp-booking-summary">
         <div className="exp-booking-summary-row">
@@ -484,6 +550,12 @@ function BookingWidget({ experience }) {
               {children} trẻ em × {Math.round(price * 0.5).toLocaleString('vi-VN')}₫
             </span>
             <span>{Math.round(price * 0.5 * children).toLocaleString('vi-VN')}₫</span>
+          </div>
+        )}
+        {souvenirSelection.totalVnd > 0 && (
+          <div className="exp-booking-summary-row">
+            <span>Đồ lưu niệm ({souvenirSelection.summaryText})</span>
+            <span>{souvenirSelection.totalVnd.toLocaleString('vi-VN')}₫</span>
           </div>
         )}
         <div className="exp-booking-summary-total">

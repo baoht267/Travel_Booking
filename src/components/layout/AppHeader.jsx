@@ -30,10 +30,6 @@ function AppHeader() {
       return `nav-pill${location.pathname.startsWith('/manage-souvenirs') ? ' nav-pill-active' : ''}`
     }
 
-    if (tabName === 'souvenirs') {
-      return `nav-pill${location.pathname.startsWith('/souvenirs') ? ' nav-pill-active' : ''}`
-    }
-
     if (tabName === 'car-rentals') {
       return `nav-pill${
         (location.pathname === '/search' && activeTab === 'car-rentals') ||
@@ -90,9 +86,6 @@ function AppHeader() {
               </Nav.Link>
               <Nav.Link as={NavLink} to="/attractions" className={getNavPillClass('attractions')}>
                 Địa Điểm
-              </Nav.Link>
-              <Nav.Link as={NavLink} to="/souvenirs" className={getNavPillClass('souvenirs')}>
-                Lưu Niệm
               </Nav.Link>
               {session?.role === 'admin' && (
                 <Nav.Link

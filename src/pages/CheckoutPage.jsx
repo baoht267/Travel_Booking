@@ -6,6 +6,9 @@ import CardPaymentForm from '../components/payment/CardPaymentForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAllStays, selectCriteria } from '../features/stays/staysSlice'
 import { addBooking, selectHotelBookingsByStay } from '../features/bookings/bookingsSlice'
+import { selectSouvenirs } from '../features/souvenirs/souvenirsSlice'
+import { buildSouvenirSelection, deductSouvenirStock } from '../features/souvenirs/souvenirCart'
+import SouvenirAddOns from '../components/souvenir/SouvenirAddOns'
 import { readSession } from '../utils/authSession'
 import { useToast } from '../context/toastState'
 import { convertBasePriceToVnd, formatVndCurrency } from '../utils/currency'
@@ -57,6 +60,8 @@ function CheckoutPage() {
   const dispatch = useDispatch()
   const showToast = useToast()
   const existingBookings = useSelector(selectHotelBookingsByStay(stayId))
+  const souvenirs = useSelector(selectSouvenirs)
+  const [souvenirQty, setSouvenirQty] = useState({})
   const stay = stays.find((item) => item.id === stayId)
 
   const initialName = splitFullName(session?.fullName)
@@ -94,7 +99,13 @@ function CheckoutPage() {
   const taxesVnd = convertBasePriceToVnd(taxes)
   const discountVnd = convertBasePriceToVnd(discount)
   const totalVnd = convertBasePriceToVnd(total)
+  const souvenirSelection = buildSouvenirSelection(souvenirs, souvenirQty)
+  const grandTotalVnd = totalVnd + souvenirSelection.totalVnd
   const cardLabel = `Đặt ${stay.propertyType}`
+
+  const handleSouvenirChange = (id, quantity) => {
+    setSouvenirQty((current) => ({ ...current, [id]: quantity }))
+  }
 
   const handleFieldChange = (event) => {
     const { name, value, type, checked } = event.target
@@ -104,7 +115,7 @@ function CheckoutPage() {
     }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     if (!isFutureDate(criteria.checkIn)) {
       showToast('Ngày nhận phòng phải là ngày trong tương lai', 'danger')
@@ -127,6 +138,25 @@ function CheckoutPage() {
         return
       }
     }
+
+    // Trừ tồn kho cho đồ lưu niệm mua kèm (nếu có).
+    try {
+      await deductSouvenirStock(dispatch, souvenirSelection.items)
+    } catch (stockError) {
+      showToast(stockError.message || 'Không thể cập nhật kho đồ lưu niệm, vui lòng thử lại.', 'danger')
+      return
+    }
+
+    const details = {
+      'Nhận phòng': new Intl.DateTimeFormat('vi-VN').format(new Date(criteria.checkIn)),
+      'Trả phòng': new Intl.DateTimeFormat('vi-VN').format(new Date(criteria.checkOut)),
+      'Số đêm': `${getNightCount(criteria.checkIn, criteria.checkOut)} đêm`,
+      'Số khách': `${criteria.guests} khách · ${criteria.rooms} phòng`,
+    }
+    if (souvenirSelection.items.length > 0) {
+      details['Đồ lưu niệm'] = souvenirSelection.summaryText
+    }
+
     const booking = dispatch(addBooking({
       type: 'hotel',
       stayId: stay.id,
@@ -135,14 +165,9 @@ function CheckoutPage() {
       title: stay.name,
       subtitle: `${stay.city}, ${stay.country}`,
       image: stay.image,
-      total: totalVnd,
+      total: grandTotalVnd,
       currency: 'VND',
-      details: {
-        'Nhận phòng': new Intl.DateTimeFormat('vi-VN').format(new Date(criteria.checkIn)),
-        'Trả phòng': new Intl.DateTimeFormat('vi-VN').format(new Date(criteria.checkOut)),
-        'Số đêm': `${getNightCount(criteria.checkIn, criteria.checkOut)} đêm`,
-        'Số khách': `${criteria.guests} khách · ${criteria.rooms} phòng`,
-      },
+      details,
     }))
     const bookingId = booking.payload.id
     showToast(`Đặt ${stay.propertyType} thành công! Mã đặt chỗ: #${bookingId.slice(-6).toUpperCase()}`, 'success', 5000)
@@ -254,6 +279,8 @@ function CheckoutPage() {
                 </div>
               </div>
 
+              <SouvenirAddOns selections={souvenirQty} onChange={handleSouvenirChange} />
+
               <div className="checkout-payment-tabs">
                 <button
                   type="button"
@@ -275,7 +302,7 @@ function CheckoutPage() {
 
               {paymentMethod === 'vnpay' ? (
                 <VNPayQR
-                  amount={toCurrency(totalVnd)}
+                  amount={toCurrency(grandTotalVnd)}
                   reference={payReference}
                   confirmed={formValues.acceptedTerms}
                   onConfirmChange={(e) =>
@@ -358,6 +385,12 @@ function CheckoutPage() {
                       <span>-{toCurrency(discountVnd)}</span>
                     </div>
                   )}
+                  {souvenirSelection.totalVnd > 0 && (
+                    <div>
+                      <span>Đồ Lưu Niệm ({souvenirSelection.summaryText})</span>
+                      <span>{toCurrency(souvenirSelection.totalVnd)}</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="checkout-total-row">
@@ -365,7 +398,7 @@ function CheckoutPage() {
                     <strong>Tổng Cộng</strong>
                     <small>Đã bao gồm tất cả thuế</small>
                   </div>
-                  <span>{toCurrency(totalVnd)}</span>
+                  <span>{toCurrency(grandTotalVnd)}</span>
                 </div>
 
                 <div className="checkout-info-note">

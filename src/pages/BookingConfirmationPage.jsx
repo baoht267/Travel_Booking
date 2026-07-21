@@ -28,11 +28,11 @@ const TYPE_CONFIG = {
     backLabel: 'Tìm xe khác',
     backPath: '/search?tab=car-rentals',
   },
-  souvenir: {
-    icon: 'shopping_bag',
-    label: 'Đơn Đồ Lưu Niệm',
-    backLabel: 'Mua thêm lưu niệm',
-    backPath: '/souvenirs',
+  experience: {
+    icon: 'confirmation_number',
+    label: 'Vé Tham Quan',
+    backLabel: 'Khám phá thêm trải nghiệm',
+    backPath: '/attractions',
   },
 }
 

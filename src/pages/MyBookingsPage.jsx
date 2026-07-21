@@ -11,7 +11,7 @@ const TYPE_ICON = {
   flight: 'flight',
   taxi: 'local_taxi',
   car: 'directions_car',
-  souvenir: 'shopping_bag',
+  experience: 'confirmation_number',
 }
 
 const TYPE_LABEL = {
@@ -19,7 +19,7 @@ const TYPE_LABEL = {
   flight: 'Chuyến bay',
   taxi: 'Taxi',
   car: 'Thuê xe',
-  souvenir: 'Đồ lưu niệm',
+  experience: 'Vé tham quan',
 }
 
 const STATUS_CONFIG = {
