@@ -7,41 +7,25 @@ function AppHeader() {
   const [session, setSession] = useState(() => readSession())
   const location = useLocation()
   const navigate = useNavigate()
-  const activeTab = new URLSearchParams(location.search).get('tab')
 
   const getNavPillClass = (tabName) => {
     if (tabName === 'stays') {
       const isStaysActive =
-        (location.pathname === '/search' && !activeTab) ||
+        location.pathname === '/search' ||
         location.pathname.startsWith('/stays') ||
         location.pathname === '/'
       return `nav-pill${isStaysActive ? ' nav-pill-active' : ''}`
     }
 
-    if (tabName === 'attractions') {
-      return `nav-pill${
-        location.pathname === '/attractions' || location.pathname.startsWith('/experiences')
-          ? ' nav-pill-active'
-          : ''
-      }`
+    if (tabName === 'saved') {
+      return `nav-pill${location.pathname === '/saved' ? ' nav-pill-active' : ''}`
     }
 
-    if (tabName === 'management') {
-      return `nav-pill${location.pathname.startsWith('/manage-souvenirs') ? ' nav-pill-active' : ''}`
+    if (tabName === 'rooms') {
+      return `nav-pill${location.pathname.startsWith('/rooms') ? ' nav-pill-active' : ''}`
     }
 
-    if (tabName === 'car-rentals') {
-      return `nav-pill${
-        (location.pathname === '/search' && activeTab === 'car-rentals') ||
-        location.pathname.startsWith('/cars/')
-          ? ' nav-pill-active'
-          : ''
-      }`
-    }
-
-    return `nav-pill${
-      location.pathname === '/search' && activeTab === tabName ? ' nav-pill-active' : ''
-    }`
+    return 'nav-pill'
   }
 
   useEffect(() => {
@@ -74,35 +58,14 @@ function AppHeader() {
               <Nav.Link as={NavLink} to="/search" className={getNavPillClass('stays')}>
                 Chỗ Ở
               </Nav.Link>
-              <Nav.Link as={NavLink} to="/search?tab=flights" className={getNavPillClass('flights')}>
-                Chuyến Bay
+              <Nav.Link as={NavLink} to="/rooms" className={getNavPillClass('rooms')}>
+                Quản Lý Phòng
               </Nav.Link>
-              <Nav.Link
-                as={NavLink}
-                to="/search?tab=car-rentals"
-                className={getNavPillClass('car-rentals')}
-              >
-                Thuê Xe
-              </Nav.Link>
-              <Nav.Link as={NavLink} to="/attractions" className={getNavPillClass('attractions')}>
-                Địa Điểm
-              </Nav.Link>
-              {session?.role === 'admin' && (
-                <Nav.Link
-                  as={NavLink}
-                  to="/manage-souvenirs"
-                  className={getNavPillClass('management')}
-                >
-                  Manage
+              {session && (
+                <Nav.Link as={NavLink} to="/saved" className={getNavPillClass('saved')}>
+                  Đã Lưu
                 </Nav.Link>
               )}
-              <Nav.Link
-                as={NavLink}
-                to="/search?tab=airport-taxis"
-                className={getNavPillClass('airport-taxis')}
-              >
-                Taxi Sân Bay
-              </Nav.Link>
             </Nav>
 
             <div className="home-header-tools d-none d-md-flex">

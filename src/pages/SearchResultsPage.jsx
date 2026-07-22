@@ -1,174 +1,156 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Container } from 'react-bootstrap'
-import { useSelector } from 'react-redux'
-import { Link, useSearchParams } from 'react-router-dom'
-import FilterSidebar from '../components/search/FilterSidebar'
-import StayCard from '../components/stay/StayCard'
-import { selectCriteria, selectFilteredStays } from '../features/stays/staysSlice'
-import { formatDestinationLabel, parseDestinationQuery } from '../utils/locationSearch'
-import AirportTaxisPage from './AirportTaxisPage'
-import CarRentalsPage from './CarRentalsPage'
-import FlightsPage from './FlightsPage'
-
-const ITEMS_PER_PAGE = 8
-
-function StaysSearchResultsContent() {
-  const criteria = useSelector(selectCriteria)
-  const filteredStays = useSelector(selectFilteredStays)
-  const [sortBy, setSortBy] = useState('Lựa Chọn Hàng Đầu')
-  const [currentPage, setCurrentPage] = useState(1)
-
-  const sortedStays = useMemo(() => {
-    const sorted = [...filteredStays]
-
-    if (sortBy === 'Giá (Thấp đến Cao)') {
-      sorted.sort((first, second) => first.pricePerNight - second.pricePerNight)
-    } else if (sortBy === 'Giá (Cao đến Thấp)') {
-      sorted.sort((first, second) => second.pricePerNight - first.pricePerNight)
-    } else if (sortBy === 'Đánh Giá Cao Nhất') {
-      sorted.sort((first, second) => second.reviewScore - first.reviewScore)
-    }
-
-    return sorted
-  }, [filteredStays, sortBy])
-
-  const totalPages = Math.ceil(sortedStays.length / ITEMS_PER_PAGE)
-  const safeCurrentPage = Math.min(currentPage, Math.max(totalPages, 1))
-  const pagedStays = sortedStays.slice(
-    (safeCurrentPage - 1) * ITEMS_PER_PAGE,
-    safeCurrentPage * ITEMS_PER_PAGE,
-  )
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const parsedDestination = parseDestinationQuery(criteria.destination)
-  const hasCountry = Boolean(parsedDestination.country)
-  const hasCity = Boolean(parsedDestination.city)
-  const hasDestination = hasCountry || hasCity
-  const resultsLabel = formatDestinationLabel(parsedDestination) || 'Tất cả điểm đến'
-  const pageTitle = hasCity ? `Kết quả tìm kiếm cho ${parsedDestination.city}` : 'Kết quả tìm kiếm'
-  const pageSubtitle = hasDestination
-    ? 'Khám phá những chỗ ở tốt nhất cho điểm đến bạn chọn.'
-    : 'Duyệt qua các chỗ ở có sẵn trên tất cả điểm đến.'
-  const resultsCountLabel = `${sortedStays.length} chỗ ở được tìm thấy`
-
-  return (
-    <Container className="page-section search-results-page">
-      <nav className="search-breadcrumb">
-        <Link to="/">Trang Chủ</Link>
-        {hasCountry && (
-          <>
-            <span className="material-symbols-outlined">chevron_right</span>
-            <span>{parsedDestination.country}</span>
-          </>
-        )}
-        {hasCity && (
-          <>
-            <span className="material-symbols-outlined">chevron_right</span>
-            <strong>{parsedDestination.city}</strong>
-          </>
-        )}
-      </nav>
-
-      <div className="search-results-heading">
-        <h1>{pageTitle}</h1>
-        <p>{pageSubtitle}</p>
-      </div>
-
-      <div className="search-results-layout">
-        <aside className="search-results-sidebar">
-          <FilterSidebar />
-        </aside>
-
-        <section className="search-results-content">
-          <div className="search-results-toolbar">
-            <span className="search-results-count">
-              {resultsLabel}: {resultsCountLabel}
-            </span>
-            <div className="search-results-sort">
-              <label htmlFor="search-sort">Sắp xếp theo:</label>
-              <select
-                id="search-sort"
-                value={sortBy}
-                onChange={(event) => { setSortBy(event.target.value); setCurrentPage(1) }}
-              >
-                <option>Lựa Chọn Hàng Đầu</option>
-                <option>Giá (Thấp đến Cao)</option>
-                <option>Giá (Cao đến Thấp)</option>
-                <option>Đánh Giá Cao Nhất</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="search-results-list">
-            {pagedStays.length > 0 ? (
-              pagedStays.map((stay) => (
-                <StayCard key={stay.id} stay={stay} />
-              ))
-            ) : (
-              <div className="search-results-empty">
-                <h3>Không có chỗ ở nào phù hợp với bộ lọc này</h3>
-                <p>Hãy thử điểm đến rộng hơn, đánh giá thấp hơn, hoặc ngân sách đêm cao hơn.</p>
-              </div>
-            )}
-          </div>
-
-          {totalPages > 1 && (
-            <nav className="search-pagination">
-              <button
-                type="button"
-                className="search-pagination-arrow"
-                disabled={safeCurrentPage === 1}
-                onClick={() => handlePageChange(safeCurrentPage - 1)}
-              >
-                <span className="material-symbols-outlined">chevron_left</span>
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  type="button"
-                  className={`search-pagination-page${page === safeCurrentPage ? ' is-active' : ''}`}
-                  onClick={() => handlePageChange(page)}
-                >
-                  {page}
-                </button>
-              ))}
-              <button
-                type="button"
-                className="search-pagination-arrow"
-                disabled={safeCurrentPage === totalPages}
-                onClick={() => handlePageChange(safeCurrentPage + 1)}
-              >
-                <span className="material-symbols-outlined">chevron_right</span>
-              </button>
-            </nav>
-          )}
-        </section>
-      </div>
-    </Container>
-  )
-}
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import {
+  fetchRooms,
+  selectRoomError,
+  selectRooms,
+  selectRoomsStatus,
+} from '../features/rooms/roomsSlice'
+import { selectCriteria } from '../features/stays/staysSlice'
+import { toggleSaved } from '../features/saved/savedSlice'
+import { useToast } from '../context/toastState'
+import { toBookableStay } from '../utils/bookableRoom'
+import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 function SearchResultsPage() {
-  const [searchParams] = useSearchParams()
-  const activeTab = searchParams.get('tab')
+  const dispatch = useDispatch()
+  const showToast = useToast()
+  const rooms = useSelector(selectRooms)
+  const status = useSelector(selectRoomsStatus)
+  const error = useSelector(selectRoomError)
+  const criteria = useSelector(selectCriteria)
+  const savedIds = useSelector((state) => state.saved.savedIds)
 
-  if (activeTab === 'flights') {
-    return <FlightsPage />
+  // Booking dùng chung dữ liệu phòng với trang Quản Lý Phòng (từ REST API),
+  // nên phòng do admin thêm/sửa/xóa sẽ tự phản ánh ở đây.
+  useEffect(() => {
+    dispatch(fetchRooms())
+  }, [dispatch])
+
+  const keyword = (criteria.destination || '').trim().toLowerCase()
+
+  const visibleRooms = useMemo(() => {
+    const bookable = rooms.map(toBookableStay)
+    if (!keyword) {
+      return bookable
+    }
+    return bookable.filter((room) =>
+      `${room.name} ${room.description} ${room.location}`
+        .toLowerCase()
+        .includes(keyword),
+    )
+  }, [rooms, keyword])
+
+  const handleToggleSaved = (room) => {
+    const isSaved = savedIds.includes(room.id)
+    dispatch(toggleSaved(room.id))
+    showToast(
+      isSaved ? `Đã bỏ lưu "${room.name}"` : `Đã lưu "${room.name}"`,
+      isSaved ? 'info' : 'success',
+    )
   }
 
-  if (activeTab === 'airport-taxis') {
-    return <AirportTaxisPage />
-  }
+  return (
+    <Container className="page-section room-page">
+      <div className="room-page-head">
+        <div>
+          <h1 className="room-page-title">Tìm phòng để đặt</h1>
+          <p className="room-page-subtitle">
+            {keyword
+              ? `Kết quả cho "${criteria.destination}" — ${visibleRooms.length} phòng`
+              : `Có ${visibleRooms.length} phòng đang mở đặt.`}
+          </p>
+        </div>
+      </div>
 
-  if (activeTab === 'car-rentals') {
-    return <CarRentalsPage />
-  }
+      {status === 'loading' && (
+        <div className="room-state room-state-loading">
+          <span className="room-spinner" aria-hidden="true" />
+          <p>Đang tải danh sách phòng...</p>
+        </div>
+      )}
 
-  return <StaysSearchResultsContent />
+      {status === 'failed' && (
+        <div className="room-state room-state-error">
+          <span className="material-symbols-outlined">error</span>
+          <p>{error || 'Đã xảy ra lỗi khi tải dữ liệu.'}</p>
+          <button
+            type="button"
+            className="room-btn room-btn-outline"
+            onClick={() => dispatch(fetchRooms())}
+          >
+            Thử lại
+          </button>
+        </div>
+      )}
+
+      {status === 'succeeded' && visibleRooms.length === 0 && (
+        <div className="room-state">
+          <p>Không tìm thấy phòng phù hợp.</p>
+        </div>
+      )}
+
+      {status === 'succeeded' && visibleRooms.length > 0 && (
+        <div className="room-grid">
+          {visibleRooms.map((room) => {
+            const isSaved = savedIds.includes(room.id)
+            return (
+              <article key={room.id} className="room-card">
+                <div className="room-card-media">
+                  <Link to={`/stays/${room.id}`}>
+                    <img src={room.image} alt={room.name} loading="lazy" />
+                  </Link>
+                  <button
+                    type="button"
+                    className={`room-save-btn${isSaved ? ' is-saved' : ''}`}
+                    onClick={() => handleToggleSaved(room)}
+                    aria-label={isSaved ? 'Bỏ lưu' : 'Lưu'}
+                  >
+                    <span className="material-symbols-outlined">
+                      {isSaved ? 'favorite' : 'favorite_border'}
+                    </span>
+                  </button>
+                </div>
+                <div className="room-card-body">
+                  <h3 className="room-card-name">
+                    <Link to={`/stays/${room.id}`}>{room.name}</Link>
+                  </h3>
+                  {room.location && (
+                    <p className="room-card-location">
+                      <span className="material-symbols-outlined">location_on</span>
+                      {room.location}
+                    </p>
+                  )}
+                  <p className="room-card-desc">{room.description}</p>
+                  <div className="room-card-price">
+                    {room.originalPrice > room.currentPrice && (
+                      <span className="room-price-original">
+                        {formatBasePriceToVndCurrency(room.originalPrice)}
+                      </span>
+                    )}
+                    <span className="room-price-current">
+                      {formatBasePriceToVndCurrency(room.currentPrice)}
+                    </span>
+                    <span className="room-price-unit">/ đêm</span>
+                  </div>
+                  <div className="room-card-actions">
+                    <Link to={`/stays/${room.id}`} className="room-btn room-btn-outline">
+                      Chi tiết
+                    </Link>
+                    <Link to={`/stays/${room.id}`} className="room-btn room-btn-primary">
+                      Đặt ngay
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            )
+          })}
+        </div>
+      )}
+    </Container>
+  )
 }
 
 export default SearchResultsPage

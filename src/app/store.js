@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import bookingsReducer, { replaceBookingsState } from '../features/bookings/bookingsSlice'
-import souvenirsReducer from '../features/souvenirs/souvenirsSlice'
+import roomsReducer from '../features/rooms/roomsSlice'
 import savedReducer, { replaceSavedState } from '../features/saved/savedSlice'
 import staysReducer, { replacePersistedStaysState } from '../features/stays/staysSlice'
 import { readSession, SESSION_EVENT_NAME } from '../utils/authSession'
@@ -83,7 +83,7 @@ function hydrateScopedState() {
 export const store = configureStore({
   reducer: {
     stays: staysReducer,
-    souvenirs: souvenirsReducer,
+    rooms: roomsReducer,
     saved: savedReducer,
     bookings: bookingsReducer,
   },

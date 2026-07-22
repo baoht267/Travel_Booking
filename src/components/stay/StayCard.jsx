@@ -1,4 +1,3 @@
-import { Button, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toggleSaved } from '../../features/saved/savedSlice'
@@ -16,71 +15,6 @@ function StayCard({ stay }) {
     showToast(
       isSaved ? `Đã xóa "${stay.name}" khỏi danh sách lưu` : `Đã lưu "${stay.name}"`,
       isSaved ? 'info' : 'success',
-    )
-  }
-
-  const isExperienceCard = Boolean(stay.image && stay.area && stay.duration)
-  const tagToneClass =
-    stay.tagTone === 'warning' ? 'experience-tag-warning' : 'experience-tag-success'
-
-  if (isExperienceCard) {
-    return (
-      <Card className="experience-card">
-        <div className="experience-card-media">
-          <img src={stay.image} alt={stay.name} className="experience-card-image" />
-          <button
-            type="button"
-            className={`experience-save-button ${isSaved ? 'is-saved' : ''}`}
-            onClick={handleToggleSaved}
-            aria-label={isSaved ? 'Xóa khỏi đã lưu' : 'Lưu trải nghiệm'}
-          >
-            <span className="material-symbols-outlined">
-              {isSaved ? 'favorite' : 'favorite_outline'}
-            </span>
-          </button>
-        </div>
-
-        <Card.Body className="experience-card-body">
-          <div className="experience-card-main">
-            <div>
-              <div className="experience-card-header">
-                <h3 className="experience-card-title">{stay.name}</h3>
-                <div className="experience-card-score-wrap">
-                  <div className="experience-card-score-copy">
-                    <span className="experience-card-score-label">{stay.reviewLabel}</span>
-                    <span className="experience-card-score-reviews">
-                      {stay.reviewsCount.toLocaleString()} đánh giá
-                    </span>
-                  </div>
-                  <span className="experience-card-score-box">{stay.reviewScore}</span>
-                </div>
-              </div>
-
-              <div className="experience-card-location">
-                <span className="material-symbols-outlined">location_on</span>
-                <span>{stay.area}</span>
-              </div>
-
-              <p className="experience-card-description">{stay.description}</p>
-            </div>
-
-            <div className="experience-card-footer">
-              <div className="experience-card-meta">
-                <span className={`experience-tag ${tagToneClass}`}>{stay.tagLabel}</span>
-                <span className="experience-duration">Thời lượng: {stay.duration}</span>
-              </div>
-
-              <div className="experience-card-price-block">
-                <span className="experience-price-prefix">Từ</span>
-                <span className="experience-price">{formatBasePriceToVndCurrency(stay.pricePerNight)}</span>
-                <Button as={Link} to={`/experiences/${stay.id}`} type="button" className="experience-availability-button">
-                  Xem Chi Tiết
-                </Button>
-              </div>
-            </div>
-          </div>
-        </Card.Body>
-      </Card>
     )
   }
 

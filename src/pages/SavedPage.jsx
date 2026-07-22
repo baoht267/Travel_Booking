@@ -1,35 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Container } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate } from 'react-router-dom'
 import { toggleSaved } from '../features/saved/savedSlice'
-import { selectAllStays } from '../features/stays/staysSlice'
-import mockExperiences from '../data/mockExperiences'
+import { fetchRooms, selectRooms } from '../features/rooms/roomsSlice'
 import { readSession } from '../utils/authSession'
+import { toBookableStay } from '../utils/bookableRoom'
 import { formatBasePriceToVndCurrency } from '../utils/currency'
 
 function SavedPage() {
-  const stays = useSelector(selectAllStays)
+  const rooms = useSelector(selectRooms)
   const savedIds = useSelector((state) => state.saved.savedIds)
   const dispatch = useDispatch()
-  const [activeFilter, setActiveFilter] = useState('all')
   const [viewMode, setViewMode] = useState('list')
   const session = readSession()
 
+  // Dữ liệu phòng đã lưu lấy từ REST API (nguồn chung với booking).
+  useEffect(() => {
+    dispatch(fetchRooms())
+  }, [dispatch])
+
   if (!session) return <Navigate to="/auth" replace />
 
-  const allItems = [...stays, ...mockExperiences]
-  const savedItems = allItems.filter((item) => savedIds.includes(item.id))
-
-  const hotels = savedItems.filter((item) => !item.duration)
-  const experiences = savedItems.filter((item) => Boolean(item.duration))
-
-  const displayed =
-    activeFilter === 'hotels'
-      ? hotels
-      : activeFilter === 'experiences'
-        ? experiences
-        : savedItems
+  const savedItems = rooms
+    .filter((item) => savedIds.includes(item.id))
+    .map(toBookableStay)
+  const displayed = savedItems
 
   return (
     <div className="saved-page">
@@ -60,33 +56,11 @@ function SavedPage() {
             {/* Toolbar */}
             <div className="saved-toolbar">
               <div className="saved-filter-tabs">
-                <button
-                  className={`saved-filter-tab${activeFilter === 'all' ? ' is-active' : ''}`}
-                  onClick={() => setActiveFilter('all')}
-                >
-                  Tất cả
+                <button className="saved-filter-tab is-active">
+                  <span className="material-symbols-outlined">hotel</span>
+                  Chỗ ở
                   <span className="saved-tab-count">{savedItems.length}</span>
                 </button>
-                {hotels.length > 0 && (
-                  <button
-                    className={`saved-filter-tab${activeFilter === 'hotels' ? ' is-active' : ''}`}
-                    onClick={() => setActiveFilter('hotels')}
-                  >
-                    <span className="material-symbols-outlined">hotel</span>
-                    Chỗ ở
-                    <span className="saved-tab-count">{hotels.length}</span>
-                  </button>
-                )}
-                {experiences.length > 0 && (
-                  <button
-                    className={`saved-filter-tab${activeFilter === 'experiences' ? ' is-active' : ''}`}
-                    onClick={() => setActiveFilter('experiences')}
-                  >
-                    <span className="material-symbols-outlined">explore</span>
-                    Trải nghiệm
-                    <span className="saved-tab-count">{experiences.length}</span>
-                  </button>
-                )}
               </div>
 
               <div className="saved-view-toggle">
@@ -114,24 +88,14 @@ function SavedPage() {
 
             {/* Cards */}
             <div className={viewMode === 'grid' ? 'saved-grid' : 'saved-list'}>
-              {displayed.map((item) => {
-                const isExp = Boolean(item.duration)
-                return isExp ? (
-                  <SavedExperienceCard
-                    key={item.id}
-                    item={item}
-                    viewMode={viewMode}
-                    onRemove={() => dispatch(toggleSaved(item.id))}
-                  />
-                ) : (
-                  <SavedHotelCard
-                    key={item.id}
-                    item={item}
-                    viewMode={viewMode}
-                    onRemove={() => dispatch(toggleSaved(item.id))}
-                  />
-                )
-              })}
+              {displayed.map((item) => (
+                <SavedHotelCard
+                  key={item.id}
+                  item={item}
+                  viewMode={viewMode}
+                  onRemove={() => dispatch(toggleSaved(item.id))}
+                />
+              ))}
             </div>
 
             {/* Bottom CTA */}
@@ -184,9 +148,13 @@ function SavedHotelCard({ item, viewMode, onRemove }) {
 
             <p className="saved-card-location">
               <span className="material-symbols-outlined">location_on</span>
-              {item.city}, {item.country}
-              <span className="saved-location-sep">·</span>
-              {item.distanceToCenter} km từ trung tâm
+              {item.location}
+              {item.distanceToCenter > 0 && (
+                <>
+                  <span className="saved-location-sep">·</span>
+                  {item.distanceToCenter} km từ trung tâm
+                </>
+              )}
             </p>
 
             {!isGrid && (
@@ -215,78 +183,6 @@ function SavedHotelCard({ item, viewMode, onRemove }) {
                 {!isGrid && 'Xóa'}
               </button>
               <Link to={`/stays/${item.id}`} className="saved-view-btn-link">
-                Xem chi tiết
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function SavedExperienceCard({ item, viewMode, onRemove }) {
-  const isGrid = viewMode === 'grid'
-  const tagToneClass = item.tagTone === 'warning' ? 'experience-tag-warning' : 'experience-tag-success'
-  return (
-    <div className={`saved-card${isGrid ? ' saved-card-grid' : ''}`}>
-      <div className="saved-card-media">
-        <img src={item.image} alt={item.name} className="saved-card-image" />
-        <button className="saved-card-remove" onClick={onRemove} aria-label="Xóa khỏi đã lưu">
-          <span className="material-symbols-outlined">favorite</span>
-        </button>
-        <span className="saved-card-type-badge saved-card-type-exp">
-          <span className="material-symbols-outlined">explore</span>
-          Trải nghiệm
-        </span>
-      </div>
-
-      <div className="saved-card-body">
-        <div className="saved-card-main">
-          <div className="saved-card-info">
-            <div className="saved-card-title-row">
-              <h3 className="saved-card-title">{item.name}</h3>
-              <div className="saved-card-score">
-                <span className="saved-score-box">{item.reviewScore}</span>
-                <div className="saved-score-copy">
-                  <span className="saved-score-label">{item.reviewLabel}</span>
-                  <span className="saved-score-reviews">{item.reviewsCount.toLocaleString()} đánh giá</span>
-                </div>
-              </div>
-            </div>
-
-            <p className="saved-card-location">
-              <span className="material-symbols-outlined">location_on</span>
-              {item.area}
-              {item.duration && (
-                <>
-                  <span className="saved-location-sep">·</span>
-                  <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span>
-                  {item.duration}
-                </>
-              )}
-            </p>
-
-            {!isGrid && (
-              <p className="saved-card-description">{item.description}</p>
-            )}
-
-            <div className="saved-card-perks">
-              <span className={`experience-tag ${tagToneClass}`}>{item.tagLabel}</span>
-            </div>
-          </div>
-
-          <div className="saved-card-footer">
-            <div className="saved-card-price-block">
-              <span className="saved-price-from">Từ</span>
-              <span className="saved-price">{formatBasePriceToVndCurrency(item.pricePerNight)}</span>
-            </div>
-            <div className="saved-card-actions">
-              <button className="saved-remove-btn" onClick={onRemove}>
-                <span className="material-symbols-outlined">delete_outline</span>
-                {!isGrid && 'Xóa'}
-              </button>
-              <Link to={`/experiences/${item.id}`} className="saved-view-btn-link">
                 Xem chi tiết
               </Link>
             </div>

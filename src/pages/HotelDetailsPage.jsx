@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Container } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { selectAllStays, selectCriteria, updateCriteria } from '../features/stays/staysSlice'
+import { selectCriteria, updateCriteria } from '../features/stays/staysSlice'
+import { fetchRooms, selectRooms, selectRoomsStatus } from '../features/rooms/roomsSlice'
 import { selectHotelBookingsByStay } from '../features/bookings/bookingsSlice'
+import { toBookableStay } from '../utils/bookableRoom'
 import { convertBasePriceToVnd, formatBasePriceToVndCurrency } from '../utils/currency'
 import { addDays, getTomorrowDate, isFutureDate } from '../utils/travelDates'
 
@@ -247,16 +249,22 @@ function datesOverlap(a1, a2, b1, b2) {
 
 function HotelDetailsPage() {
   const { stayId } = useParams()
-  const stays = useSelector(selectAllStays)
+  const rooms = useSelector(selectRooms)
+  const roomsStatus = useSelector(selectRoomsStatus)
   const criteria = useSelector(selectCriteria)
   const existingBookings = useSelector(selectHotelBookingsByStay(stayId))
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const stay = stays.find((item) => item.id === stayId)
   const [activeHighlight, setActiveHighlight] = useState(0)
   const [checkIn, setCheckIn] = useState(criteria.checkIn)
   const [checkOut, setCheckOut] = useState(criteria.checkOut)
-  const [travelerCount, setTravelerCount] = useState(criteria.guests || 2)
+
+  // Lấy phòng từ REST API (nguồn chung với trang Quản Lý Phòng).
+  useEffect(() => {
+    dispatch(fetchRooms())
+  }, [dispatch])
+
+  const stay = toBookableStay(rooms.find((item) => item.id === stayId))
 
   const minimumBookingDate = getTomorrowDate()
 
@@ -269,12 +277,29 @@ function HotelDetailsPage() {
   })()
 
   if (!stay) {
+    if (roomsStatus === 'idle' || roomsStatus === 'loading') {
+      return (
+        <Container className="page-section">
+          <div className="room-state room-state-loading">
+            <span className="room-spinner" aria-hidden="true" />
+            <p>Đang tải thông tin phòng...</p>
+          </div>
+        </Container>
+      )
+    }
     return <Navigate to="/search" replace />
   }
 
   const detailContent = detailsByTheme[stay.theme] || detailsByTheme.city
   const gallery = [stay.image, ...(galleryByTheme[stay.theme] || galleryByTheme.city)]
-  const baseTotal = stay.pricePerNight * travelerCount
+  // Tính theo số đêm giữa ngày nhận và trả phòng (không nhân theo số khách).
+  const nights = (() => {
+    const diff = Math.round(
+      (new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24),
+    )
+    return diff > 0 ? diff : 1
+  })()
+  const baseTotal = stay.pricePerNight * nights
   const bookingFee = stay.perks.includes('Thanh toán tại chỗ') ? 0 : stay.taxesAndFees
   const total = baseTotal + bookingFee
   const baseTotalVnd = convertBasePriceToVnd(baseTotal)
@@ -310,9 +335,7 @@ function HotelDetailsPage() {
             <h1>{stay.name}</h1>
             <div className="stay-detail-location">
               <span className="material-symbols-outlined">location_on</span>
-              <span>
-                {stay.city}, {stay.country}
-              </span>
+              <span>{stay.location}</span>
               <span>•</span>
               <span>{detailContent.departure}</span>
             </div>
@@ -417,7 +440,7 @@ function HotelDetailsPage() {
                 <span>Từ</span>
                 <strong>{formatBasePriceToVndCurrency(stay.pricePerNight)}</strong>
               </div>
-              <small>mỗi người</small>
+              <small>mỗi đêm</small>
             </div>
 
             <div className="stay-detail-booking-field">
@@ -463,25 +486,9 @@ function HotelDetailsPage() {
               </div>
             )}
 
-            <div className="stay-detail-booking-field">
-              <label>Du Khách</label>
-              <div className="stay-detail-travelers">
-                <button
-                  type="button"
-                  onClick={() => setTravelerCount((current) => Math.max(1, current - 1))}
-                >
-                  <span className="material-symbols-outlined">remove</span>
-                </button>
-                <strong>{travelerCount} người lớn</strong>
-                <button type="button" onClick={() => setTravelerCount((current) => current + 1)}>
-                  <span className="material-symbols-outlined">add</span>
-                </button>
-              </div>
-            </div>
-
             <div className="stay-detail-price-box">
               <div>
-                <span>{formatBasePriceToVndCurrency(stay.pricePerNight)} × {travelerCount} du khách</span>
+                <span>{formatBasePriceToVndCurrency(stay.pricePerNight)} × {nights} đêm</span>
                 <strong>{baseTotalVnd.toLocaleString('vi-VN')}₫</strong>
               </div>
               <div>

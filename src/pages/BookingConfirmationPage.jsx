@@ -10,30 +10,6 @@ const TYPE_CONFIG = {
     backLabel: 'Tìm thêm chỗ ở',
     backPath: '/search',
   },
-  flight: {
-    icon: 'flight',
-    label: 'Đặt Vé Máy Bay',
-    backLabel: 'Tìm chuyến bay khác',
-    backPath: '/search?tab=flights',
-  },
-  taxi: {
-    icon: 'local_taxi',
-    label: 'Đặt Taxi Sân Bay',
-    backLabel: 'Đặt xe khác',
-    backPath: '/search?tab=airport-taxis',
-  },
-  car: {
-    icon: 'directions_car',
-    label: 'Thuê Xe',
-    backLabel: 'Tìm xe khác',
-    backPath: '/search?tab=car-rentals',
-  },
-  experience: {
-    icon: 'confirmation_number',
-    label: 'Vé Tham Quan',
-    backLabel: 'Khám phá thêm trải nghiệm',
-    backPath: '/attractions',
-  },
 }
 
 function formatCurrency(value, currency) {

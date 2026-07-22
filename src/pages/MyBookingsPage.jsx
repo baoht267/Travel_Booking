@@ -8,18 +8,10 @@ import { formatVndCurrency } from '../utils/currency'
 
 const TYPE_ICON = {
   hotel: 'hotel',
-  flight: 'flight',
-  taxi: 'local_taxi',
-  car: 'directions_car',
-  experience: 'confirmation_number',
 }
 
 const TYPE_LABEL = {
   hotel: 'Khách sạn',
-  flight: 'Chuyến bay',
-  taxi: 'Taxi',
-  car: 'Thuê xe',
-  experience: 'Vé tham quan',
 }
 
 const STATUS_CONFIG = {
@@ -191,7 +183,6 @@ function MyBookingsPage() {
           </p>
           <div className="mybk-empty-actions">
             <Link to="/search" className="mybk-btn mybk-btn-primary">Tìm chỗ ở</Link>
-            <Link to="/search?tab=flights" className="mybk-btn mybk-btn-secondary">Tìm chuyến bay</Link>
           </div>
         </div>
       ) : (

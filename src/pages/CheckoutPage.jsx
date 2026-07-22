@@ -1,16 +1,15 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import VNPayQR from '../components/payment/VNPayQR'
 import CardPaymentForm from '../components/payment/CardPaymentForm'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectAllStays, selectCriteria } from '../features/stays/staysSlice'
+import { selectCriteria } from '../features/stays/staysSlice'
+import { fetchRooms, selectRooms, selectRoomsStatus } from '../features/rooms/roomsSlice'
 import { addBooking, selectHotelBookingsByStay } from '../features/bookings/bookingsSlice'
-import { selectSouvenirs } from '../features/souvenirs/souvenirsSlice'
-import { buildSouvenirSelection, deductSouvenirStock } from '../features/souvenirs/souvenirCart'
-import SouvenirAddOns from '../components/souvenir/SouvenirAddOns'
 import { readSession } from '../utils/authSession'
 import { useToast } from '../context/toastState'
+import { toBookableStay } from '../utils/bookableRoom'
 import { convertBasePriceToVnd, formatVndCurrency } from '../utils/currency'
 import { isFutureDate } from '../utils/travelDates'
 
@@ -52,7 +51,8 @@ function splitFullName(fullName) {
 
 function CheckoutPage() {
   const { stayId } = useParams()
-  const stays = useSelector(selectAllStays)
+  const rooms = useSelector(selectRooms)
+  const roomsStatus = useSelector(selectRoomsStatus)
   const criteria = useSelector(selectCriteria)
   const session = useMemo(() => readSession(), [])
   const navigate = useNavigate()
@@ -60,9 +60,13 @@ function CheckoutPage() {
   const dispatch = useDispatch()
   const showToast = useToast()
   const existingBookings = useSelector(selectHotelBookingsByStay(stayId))
-  const souvenirs = useSelector(selectSouvenirs)
-  const [souvenirQty, setSouvenirQty] = useState({})
-  const stay = stays.find((item) => item.id === stayId)
+
+  // Đọc phòng từ REST API (nguồn chung với trang Quản Lý Phòng).
+  useEffect(() => {
+    dispatch(fetchRooms())
+  }, [dispatch])
+
+  const stay = toBookableStay(rooms.find((item) => item.id === stayId))
 
   const initialName = splitFullName(session?.fullName)
   const [payReference] = useState(() => `GC${Date.now().toString(36).toUpperCase().slice(-6)}`)
@@ -85,6 +89,16 @@ function CheckoutPage() {
   }
 
   if (!stay) {
+    if (roomsStatus === 'idle' || roomsStatus === 'loading') {
+      return (
+        <div className="checkout-page">
+          <div className="room-state room-state-loading">
+            <span className="room-spinner" aria-hidden="true" />
+            <p>Đang tải thông tin phòng...</p>
+          </div>
+        </div>
+      )
+    }
     return <Navigate to="/search" replace />
   }
 
@@ -99,13 +113,8 @@ function CheckoutPage() {
   const taxesVnd = convertBasePriceToVnd(taxes)
   const discountVnd = convertBasePriceToVnd(discount)
   const totalVnd = convertBasePriceToVnd(total)
-  const souvenirSelection = buildSouvenirSelection(souvenirs, souvenirQty)
-  const grandTotalVnd = totalVnd + souvenirSelection.totalVnd
+  const grandTotalVnd = totalVnd
   const cardLabel = `Đặt ${stay.propertyType}`
-
-  const handleSouvenirChange = (id, quantity) => {
-    setSouvenirQty((current) => ({ ...current, [id]: quantity }))
-  }
 
   const handleFieldChange = (event) => {
     const { name, value, type, checked } = event.target
@@ -115,7 +124,7 @@ function CheckoutPage() {
     }))
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
     if (!isFutureDate(criteria.checkIn)) {
       showToast('Ngày nhận phòng phải là ngày trong tương lai', 'danger')
@@ -139,22 +148,11 @@ function CheckoutPage() {
       }
     }
 
-    // Trừ tồn kho cho đồ lưu niệm mua kèm (nếu có).
-    try {
-      await deductSouvenirStock(dispatch, souvenirSelection.items)
-    } catch (stockError) {
-      showToast(stockError.message || 'Không thể cập nhật kho đồ lưu niệm, vui lòng thử lại.', 'danger')
-      return
-    }
-
     const details = {
       'Nhận phòng': new Intl.DateTimeFormat('vi-VN').format(new Date(criteria.checkIn)),
       'Trả phòng': new Intl.DateTimeFormat('vi-VN').format(new Date(criteria.checkOut)),
       'Số đêm': `${getNightCount(criteria.checkIn, criteria.checkOut)} đêm`,
       'Số khách': `${criteria.guests} khách · ${criteria.rooms} phòng`,
-    }
-    if (souvenirSelection.items.length > 0) {
-      details['Đồ lưu niệm'] = souvenirSelection.summaryText
     }
 
     const booking = dispatch(addBooking({
@@ -163,7 +161,7 @@ function CheckoutPage() {
       checkIn: criteria.checkIn,
       checkOut: criteria.checkOut,
       title: stay.name,
-      subtitle: `${stay.city}, ${stay.country}`,
+      subtitle: stay.location,
       image: stay.image,
       total: grandTotalVnd,
       currency: 'VND',
@@ -279,8 +277,6 @@ function CheckoutPage() {
                 </div>
               </div>
 
-              <SouvenirAddOns selections={souvenirQty} onChange={handleSouvenirChange} />
-
               <div className="checkout-payment-tabs">
                 <button
                   type="button"
@@ -361,9 +357,7 @@ function CheckoutPage() {
                   </div>
                   <div>
                     <span className="material-symbols-outlined">location_on</span>
-                    <span>
-                      {stay.city}, {stay.country}
-                    </span>
+                    <span>{stay.location}</span>
                   </div>
                   <div>
                     <span className="material-symbols-outlined">person</span>
@@ -383,12 +377,6 @@ function CheckoutPage() {
                     <div className="checkout-discount-row">
                       <span>Giảm Giá Đặt Sớm</span>
                       <span>-{toCurrency(discountVnd)}</span>
-                    </div>
-                  )}
-                  {souvenirSelection.totalVnd > 0 && (
-                    <div>
-                      <span>Đồ Lưu Niệm ({souvenirSelection.summaryText})</span>
-                      <span>{toCurrency(souvenirSelection.totalVnd)}</span>
                     </div>
                   )}
                 </div>

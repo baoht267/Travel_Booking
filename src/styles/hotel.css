@@ -524,38 +524,51 @@
 .stay-detail-booking-card {
   position: sticky;
   top: 88px;
-  padding: 16px;
-  border: 1px solid #e7e7e7;
-  border-radius: 12px;
+  padding: 22px;
+  border: 1px solid #e6e8ef;
+  border-radius: 20px;
   background: #ffffff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 44px -20px rgba(0, 33, 85, 0.3), 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .stay-detail-booking-price {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 0.75rem;
+  padding-bottom: 16px;
   margin-bottom: 18px;
+  border-bottom: 1px solid #eef0f5;
+}
+
+.stay-detail-booking-price > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .stay-detail-booking-price span {
   display: block;
-  color: #434651;
-  font-size: 0.92rem;
+  color: #7a8194;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .stay-detail-booking-price strong {
   display: block;
   color: #002155;
-  font-size: 2rem;
-  line-height: 1;
-  font-weight: 700;
+  font-size: 2.1rem;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .stay-detail-booking-price small {
-  color: #434651;
-  font-size: 0.88rem;
+  color: #7a8194;
+  font-size: 0.8rem;
+  font-weight: 600;
   line-height: 1.35;
   text-align: right;
 }
@@ -566,10 +579,12 @@
 
 .stay-detail-booking-field label {
   display: block;
-  margin-bottom: 6px;
-  color: #1a1c1c;
-  font-size: 0.85rem;
-  font-weight: 600;
+  margin-bottom: 7px;
+  color: #374151;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .stay-detail-booking-input {
@@ -578,21 +593,40 @@
 
 .stay-detail-booking-input input {
   width: 100%;
-  min-height: 38px;
-  padding: 0.55rem 2.2rem 0.55rem 0.75rem;
-  border: 1px solid #c4c6d3;
-  border-radius: 8px;
-  background: #ffffff;
+  min-height: 46px;
+  padding: 0.6rem 0.9rem;
+  border: 1.5px solid #d7dae4;
+  border-radius: 12px;
+  background: #f8f9fc;
   font-size: 0.95rem;
+  font-weight: 500;
+  color: #1a1c1c;
   outline: 0;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
+.stay-detail-booking-input input:hover {
+  border-color: #b9bece;
+}
+
+.stay-detail-booking-input input:focus {
+  border-color: #006ce4;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 108, 228, 0.15);
+}
+
+/* Ẩn icon lịch tùy biến để tránh trùng với icon lịch mặc định của ô ngày. */
 .stay-detail-booking-input .material-symbols-outlined {
-  position: absolute;
-  right: 10px;
-  top: 8px;
-  color: #434651;
-  font-size: 1.1rem;
+  display: none;
+}
+
+.stay-detail-booking-input input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.stay-detail-booking-input input[type='date']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
 }
 
 .stay-detail-travelers {
@@ -625,20 +659,21 @@
 }
 
 .stay-detail-price-box {
-  margin: 16px 0 18px;
-  padding: 12px;
-  border-radius: 8px;
-  background: #f3f3f3;
+  margin: 18px 0;
+  padding: 16px;
+  border-radius: 14px;
+  background: #f6f8fc;
+  border: 1px solid #eef0f5;
 }
 
 .stay-detail-price-box > div {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: baseline;
   gap: 1rem;
-  margin-bottom: 10px;
-  color: #1a1c1c;
-  font-size: 0.9rem;
+  margin-bottom: 12px;
+  color: #4b5563;
+  font-size: 0.92rem;
 }
 
 .stay-detail-price-box > div:last-child {
@@ -647,40 +682,54 @@
 
 .stay-detail-price-box strong {
   white-space: nowrap;
+  color: #1a1c1c;
   font-size: 0.98rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .stay-detail-price-total {
-  padding-top: 8px;
-  border-top: 1px solid #e7e7e7;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed #d0d5e2;
+}
+
+.stay-detail-price-total > span {
+  color: #1a1c1c;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .stay-detail-price-total strong {
   color: #002155;
-  font-size: 1.9rem;
+  font-size: 1.75rem;
   line-height: 1;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .stay-detail-book-now {
   width: 100%;
-  min-height: 42px;
-  margin-bottom: 14px;
-  border: 1px solid #febb02;
-  border-radius: 8px;
-  background: #febb02;
+  min-height: 50px;
+  margin-bottom: 16px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #febb02, #ff9d02);
   color: #002155;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  box-shadow: 0 12px 24px -10px rgba(254, 155, 2, 0.75);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
 }
 
 .stay-detail-book-now:hover,
 .stay-detail-book-now:focus,
 .stay-detail-book-now:active {
   color: #002155 !important;
-  background: #f1b000 !important;
-  border-color: #f1b000 !important;
+  background: linear-gradient(135deg, #ffc522, #ffaa20) !important;
+  box-shadow: 0 16px 28px -10px rgba(254, 155, 2, 0.85) !important;
+  transform: translateY(-1px);
 }
 
 .stay-detail-date-error {
@@ -705,20 +754,24 @@
 .stay-detail-book-now:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 .stay-detail-trust-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #eef0f5;
 }
 
 .stay-detail-trust-list div {
   display: flex;
   align-items: flex-start;
   gap: 0.55rem;
-  color: #434651;
-  font-size: 0.92rem;
+  color: #4b5563;
+  font-size: 0.9rem;
   line-height: 1.45;
 }
 
